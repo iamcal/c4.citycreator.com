@@ -138,7 +138,7 @@
 	if ($thumb){
 		$w = floor($canvas_w * $fraction);
 		$h = floor($canvas_h * $fraction);
-		$new_img = imagecreate($w, $h);
+		$new_img = ImageCreateTrueColor($w, $h);
 		imagecopyresized($new_img, $img, 0, 0, 0, 0, $w, $h, $canvas_w, $canvas_h);
 		ImageDestroy($img);
 		$img = $new_img;
