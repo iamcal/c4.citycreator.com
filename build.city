@@ -128,25 +128,45 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 </div>
 <div id="canvasinner">
 
-	<div id="bordertop"    ><img src="images/generic/border_top.gif"    width="740" height="8"  ></div>
-	<div id="borderbottom" ><img src="images/generic/border_bottom.gif" width="740" height="9"  ></div>
-	<div id="borderleft"   ><img src="images/generic/border_left.gif"   width="10"  height="422"></div>
-	<div id="borderright"  ><img src="images/generic/border_right.gif"  width="10"  height="422"></div>
+	<div id="bordertop"    ><img src="images/frame/border_top.gif"    width="740" height="8"  ></div>
+	<div id="borderbottom" ><img src="images/frame/border_bottom.gif" width="740" height="9"  ></div>
+	<div id="borderleft"   ><img src="images/frame/border_left.gif"   width="10"  height="422"></div>
+	<div id="borderright"  ><img src="images/frame/border_right.gif"  width="10"  height="422"></div>
 
-	<div id="pagebg"><img src="images/generic/main.gif" width="720" height="422"></div>
+	<div id="pagebg"><img src="images/frame/main.gif" width="720" height="422"></div>
 
-	<div id="logo"><img src="images/frame_<?=$city_id?>/logo.gif" width="231" height="45"></div>
+	<div id="logo"><img src="images/frame/logo_<?=$city_id?>.gif" width="231" height="45"></div>
 
 <?
 	$left = 13;
 	$result = mysql_query("SELECT * FROM citycreator_tabs WHERE city_id=$city_id ORDER BY in_order ASC", $db);
 	while($row = mysql_fetch_array($result)){
 ?>
-	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/frame_<?=$city_id?>/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
-	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/frame_<?=$city_id?>/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
+	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/frame/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
+	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/frame/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
 	<div id="palette<?=$row[id]?>" class="palette"></div>
 <?
 		$left += $row[width];
+	}
+?>
+
+	<div style="position: absolute; left: 259px; top: 8px; width: 29px; height: 17px;"><a href="./"          ><img src="images/frame/tab_home_off.gif"    width="29" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 290px; top: 8px; width: 46px; height: 17px;"><a href="members.city"><img src="images/frame/tab_members_off.gif" width="46" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 338px; top: 8px; width: 24px; height: 17px;"><a href="faq.city"    ><img src="images/frame/tab_faq_off.gif"     width="24" height="17" border="0"></a></div>
+<?
+	$left = 726;
+	$result = mysql_query("SELECT * FROM citycreator_cities ORDER BY id DESC", $db);
+	while($row = mysql_fetch_array($result)){
+		$left -= 3 + $row[tab_width];
+		if ($row[id] == $city_id){
+?>
+	<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row[tab_width]?>px; height: 17px;"><img src="images/frame/tab_city_<?=$row[id]?>_on.gif" width="<?=$row[tab_width]?>" height="17" border="0"></div>
+<?
+		}else{
+?>
+	<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row[tab_width]?>px; height: 17px;"><a href="build.city?city=<?=$row[id]?>"><img src="images/frame/tab_city_<?=$row[id]?>_off.gif" width="<?=$row[tab_width]?>" height="17" border="0"></a></div>
+<?
+		}
 	}
 ?>
 
@@ -207,7 +227,7 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 		</div>
 		<img src="images/pop_bottom.gif" width="258" height="12"><br>
 	</div>
-	<div style="position: absolute; left:   4px; top: 426px; width: 740px; height:  15px;">
+	<div style="position: absolute; left:   4px; top: 426px; width: 740px; height:  15px; visibility: hidden;">
 <? $nav = "build_$city_id"; $build=1; include('nav.txt'); ?>
 	</div>
 </div>
