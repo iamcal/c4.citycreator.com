@@ -7,7 +7,9 @@
 
 #include "as/mainframe.as"
 #include "as/button.as"
+#include "as/image_button.as"
 #include "as/canvas.as"
+#include "as/dialog.as"
 
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
@@ -19,6 +21,7 @@
 var gBgColor;
 var gMainFrame;
 var gTileManager;
+var gAboutDialog;
 
 function startup(){
 
@@ -27,6 +30,9 @@ function startup(){
 	Stage.align = 'TL';
 
 	_root._highquality = 0;
+
+	gAboutDialog = new Dialog().initialize(0, 0, 'dialog_about');
+	gAboutDialog.showAt(100,100);
 
 
 	//
@@ -85,17 +91,22 @@ function onPiecesReady(){
 	//
 	// we're ready to rock!
 	//
+	// create the frame and buttons
+	//
 
 	gMainFrame = new MainFrame().initialize(0, 0, 740, 448, gBgColor);
 
-	//
-	// create some debug buttons
-	//
+	var b1 = new ImageButton().initialize(416, 403, 'btn_save', gMainFrame.getMc());
+	b1.onClick = function(){ button_save(); }
 
-	var button_parent = gMainFrame.GetCanvasMc();
+	var b2 = new ImageButton().initialize(355, 403, 'btn_about', gMainFrame.getMc());
+	b2.onClick = function(){ button_about(); }
 
-	var b2 = new MyButton().initialize(10, 40, 75, 25, "delete all", button_parent);
-	b2.onClick = function() { gTileManager.deleteAll(); }
+	var b3 = new ImageButton().initialize(287, 403, 'btn_instructions', gMainFrame.getMc());
+	b3.onClick = function(){ button_instructions(); }
+
+	var b4 = new ImageButton().initialize(491, 403, 'btn_delete', gMainFrame.getMc());
+	b4.onClick = function(){ button_delete_all(); }
 
 
 	//
@@ -105,3 +116,27 @@ function onPiecesReady(){
 	gTileManager.initTiles();
 	gMainFrame.bringCanvasForward();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Button Handlers
+//
+
+function button_delete_all() {
+	trace('are you sure?');
+	gTileManager.deleteAll();
+}
+
+function button_instructions() {
+	trace('instructions');
+}
+
+function button_about() {
+	trace('about');
+}
+
+function button_save() {
+	trace('save');
+}
+
+/////////////////////////////////////////////////////////////////////////////

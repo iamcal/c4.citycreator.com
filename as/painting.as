@@ -30,3 +30,21 @@ function draw_shadow_box(mc, w, h, bg_col, hi_col, sh_col){
 	mc.lineTo(w, h);
 	mc.lineTo(0, h);
 }
+
+function set_hit_area(mc, x, y, w, h){
+
+	mc.hit_mc_id = getNewDepth();
+	mc.hit_mc = mc.createEmptyMovieClip('hit_mc_'+mc.hit_mc_id, mc.hit_mc_id);
+
+	mc.hit_mc._visible = false;
+	mc.hit_mc.lineStyle();
+	mc.hit_mc.beginFill(0x000000);
+	mc.hit_mc.moveTo(x,y);
+	mc.hit_mc.lineTo(x+w, y);
+	mc.hit_mc.lineTo(x+w, y+h);
+	mc.hit_mc.lineTo(x, y+h);
+	mc.hit_mc.lineTo(x, y);
+	mc.hit_mc.endFill();
+
+	mc.hitArea = mc.hit_mc;
+}

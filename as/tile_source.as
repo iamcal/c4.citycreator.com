@@ -33,7 +33,7 @@ TileSource.prototype.initTile = function(canvas){
 
 
 TileSource.prototype.onTileSourceLoad = function(){
-	trace('loaded: '+this._mc._name+' : '+this.src);
+	//trace('loaded: '+this._mc._name+' : '+this.src);
 
 	this._mc.source = this;
 
