@@ -33,13 +33,13 @@ function startup(){
 	// create a test button
 	//
 
-	b = new MyButton().initialize(10, 10, 75, 25, gMainFrame.canvas._mc);
+	b = new MyButton().initialize(10, 10, 75, 25, "load xml", gMainFrame.canvas._mc);
 	b.onClick = function() {
 		trace('clicky!');
 		load_city_xml();
 	}
 
-	b2 = new MyButton().initialize(10, 40, 75, 25, gMainFrame.canvas._mc);
+	b2 = new MyButton().initialize(10, 40, 75, 25, "hide canvas", gMainFrame.canvas._mc);
 	b2.onClick = function() {
 		gMainFrame.getCanvasMc()._visible = false;
 	}

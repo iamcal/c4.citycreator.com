@@ -3,9 +3,12 @@ _global.MyButton = function() {
 	this.hi_col = 0xFFFFFF;
 	this.sh_col = 0x9999CC;
 	this.bg_col = 0xCCCCFF;
+	this.text_format = new TextFormat('arial', 12, 0x000000);
+	this.text_format.align = 'center';
+	this.text_format.bold = true;
 }
 
-MyButton.prototype.initialize = function(x, y, w, h, parent) {
+MyButton.prototype.initialize = function(x, y, w, h, caption, parent) {
 	if (!parent) parent = _root;
 
 	this.id = getNewDepth();
@@ -26,12 +29,30 @@ MyButton.prototype.initialize = function(x, y, w, h, parent) {
 
 	this._mc.onPress   = function (){
 		draw_shadow_box(this, this.button.w, this.button.h, this.button.bg_col, this.button.sh_col, this.button.hi_col);
+		this._tf._x++;
+		this._tf._y++;
 		this.onMouseUp = this.onUnpress;
 		this.button.onClick();
 	}
+
 	this._mc.onUnpress = function (){		
 		draw_shadow_box(this, this.button.w, this.button.h, this.button.bg_col, this.button.hi_col, this.button.sh_col);
+		this._tf._x--;
+		this._tf._y--;
 		delete this.onMouseUp;
+	}
+
+	if (caption != '') {
+		var extent = this.text_format.getTextExtent(caption);
+
+		trace(extent.width+', '+extent.height);
+
+		var t_h = extent.height;
+		var t_y = Math.floor((h/2) - (t_h/2)) - 2;
+
+		this._mc.createTextField("_tf", 0, 0, t_y, w, h);
+		this._mc._tf.setNewTextFormat(this.text_format);
+		this._mc._tf.text = caption;
 	}
 
 	return this;
