@@ -82,8 +82,11 @@
 		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
 		$msg .= " your browser)\n";
 		$msg .= "\n";
+		$msg .= "This city design was sent to you by $your_name ($your_email)\n";
+		$msg .= "\n";
+
 		if ($message){
-			$msg .= "The person who sent you this city also added a message:\n";
+			$msg .= "They also attached a message for you:\n";
 			$msg .= "$message\n";
 			$msg .= "\n";
 		}
