@@ -6,7 +6,7 @@
 var trash_left   = 656 - 257;
 var trash_top    = 387 - 15;
 var trash_width  = 66;
-var trash_height = 48;
+var trash_height = 49;
 
 var piece_count = 0;
 var loaded_count = 0;

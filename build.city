@@ -184,7 +184,7 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 	<div style="position: absolute; left: 190px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
 	<div style="position: absolute; left: 218px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
 
-	<div style="position: absolute; left: 656px; top: 400px; width: 66px; height: 48px; z-index: 5;"><img src="images/truck.gif" width="66" height="48"></div>
+	<div style="position: absolute; left: 656px; top: 400px; width: 66px; height: 49px; z-index: 5;"><img src="images/frame/truck_<?=$city_id?>.gif" width="66" height="49"></div>
 
 	<div style="position: absolute; left: 287px; top: 403px; width: 59px; height: 16px;"><a href="javascript:show_top('instructions');"><img src="images/btn_instructions.gif" width="59" height="16" border="0"></a></div>
 	<div style="position: absolute; left: 355px; top: 403px; width: 52px; height: 16px;"><a href="javascript:show_top('about');"><img src="images/btn_about.gif" width="52" height="16" border="0"></a></div>
