@@ -9,7 +9,7 @@ TileSource.prototype.initialize = function(node, parent) {
 	this.seq_num = node.attributes.num;
 	this.offsetx = node.attributes.offsetx;
 	this.offsety = node.attributes.offsety;
-	this.src = node.attributes.src + '?' + new Date().getTime();
+	this.src = node.attributes.src; // + '?' + new Date().getTime();
 
 	//trace("loading "+this.src);
 

@@ -12,6 +12,9 @@
 #include "as/dialog.as"
 #include "as/progress_bar.as"
 #include "as/label.as"
+#include "as/confimation_dialog.as"
+#include "as/ccdialog.as"
+#include "as/ccdialog_delete.as"
 
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
@@ -25,6 +28,7 @@ var gMainFrame;
 var gTileManager;
 var gAboutDialog;
 var gInstructionsDialog;
+var gDeleteDialog;
 var gLoadingButton;
 var gLoadingLabel;
 var gLoadingProgress;
@@ -138,6 +142,9 @@ function onPiecesReady(){
 	gAboutDialog = new Dialog().initialize(10, 266, 'dialog_about');
 	gInstructionsDialog = new Dialog().initialize(10, 262, 'dialog_instructions');
 
+	gDeleteDialog = new CCDialogDelete().initialize();
+	gDeleteDialog.onClickYes = function(){ this.hide(); gTileManager.deleteAll(); }
+	gDeleteDialog.onClickNo = function(){ this.hide(); }
 
 	//
 	// ready the tilesets
@@ -153,17 +160,17 @@ function onPiecesReady(){
 //
 
 function button_delete_all() {
-	trace('are you sure?');
-	gTileManager.deleteAll();
+	//trace('are you sure?');
+	gDeleteDialog.showAt(391, 160);
 }
 
 function button_instructions() {
-	trace('instructions');
+	//trace('instructions');
 	gInstructionsDialog.showAt(298, 54);
 }
 
 function button_about() {
-	trace('about');
+	//trace('about');
 	gAboutDialog.showAt(396, 86);
 }
 
