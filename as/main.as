@@ -8,8 +8,6 @@
 #include "as/button.as"
 #include "as/canvas.as"
 
-//#include "as/pieces.as"
-
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
 #include "as/tile_set_tab.as"
@@ -63,15 +61,10 @@ function onPiecesLoaded(success){
 
 	if (success){
 
-		trace('start loading pieces');
 		gTileManager = new TileManager().initialize(this.childNodes[0]);
-		trace('end loading pieces');
-		trace(gLoadingManager);
 
 		gLoadingManager.onLoaded = onPiecesReady;
 		gLoadingManager.start_checking();
-
-		trace('end start checking');
 
 	}else{
 		trace("failed to load :(");
@@ -86,49 +79,19 @@ function onPiecesReady(){
 
 	gMainFrame = new MainFrame().initialize(0, 0, 740, 448);
 
+	//
+	// create some debug buttons
+	//
+
 	var button_parent = gMainFrame.GetCanvasMc();
 
-	var b2 = new MyButton().initialize(10, 40, 75, 25, "hide canvas", button_parent);
-	b2.onClick = function() { gMainFrame.getCanvasMc()._visible = false; }
+	var b2 = new MyButton().initialize(10, 40, 75, 25, "nothing", button_parent);
+	b2.onClick = function() { trace("clicked"); }
 
-	var b3 = new MyButton().initialize(10, 70, 75, 25, "set 0", button_parent);
-	b3.onClick = function() { gTileManager.showSet(0); }
+	//
+	// ready the tilesets
+	//
 
-	var b4 = new MyButton().initialize(10, 100, 75, 25, "set 1", button_parent);
-	b4.onClick = function() { gTileManager.showSet(1); }
-
-
-	trace("onPiecesReady()");
 	gTileManager.initTiles();
 	gMainFrame.bringCanvasForward();
 }
-
-_global.library_loaded = function(library){
-	
-	trace('library_loaded()');
-	//trace(library);
-	//trace(library.piece_list);
-	//trace(library.piece_list[0]);
-
-	//var t = new TileSource().initialize(library.piece_list[0]);
-}
-
-function try_load_library(){
-
-	var id = getNewDepth();
-	var mc = _root.createEmptyMovieClip('loading_lib_mc' + id, id);
-
-	mc.loadMovie('test_lib.swf');
-}
-
-function load_local(){
-	m = new TileManager().initialize();
-	m.addTile('piece_1');
-	m.addTile('piece_1');
-	m.addTile('piece_1');
-	m.addTile('piece_1');
-	m.addTile('piece_1');
-	m.addTile('piece_1');
-	m.initTiles();
-}
-
