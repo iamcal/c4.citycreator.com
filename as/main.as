@@ -15,7 +15,7 @@
 #include "as/tile.as"
 
 
-
+var gBgColor;
 var gMainFrame;
 var gTileManager;
 
@@ -25,7 +25,7 @@ function startup(){
 	// first, create the master frame
 	//
 
-	//gMainFrame = new MainFrame().initialize(0, 0, 740, 448);
+	gBgColor = 0x000000;
 
 
 	//
@@ -77,7 +77,7 @@ function onPiecesReady(){
 	// we're ready to rock!
 	//
 
-	gMainFrame = new MainFrame().initialize(0, 0, 740, 448);
+	gMainFrame = new MainFrame().initialize(0, 0, 740, 448, gBgColor);
 
 	//
 	// create some debug buttons
