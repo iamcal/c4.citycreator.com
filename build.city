@@ -106,7 +106,7 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 
 div.taboff	{ position: absolute; top: 43px; height: 15px; }
 div.tabon	{ position: absolute; top: 43px; height: 15px; visibility: hidden; }
-div.palette	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
 
 #instructions	{ position: absolute; left:  357px; top: 60px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
 #about		{ position: absolute; left:  367px; top: 70px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
