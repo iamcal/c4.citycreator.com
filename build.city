@@ -81,7 +81,7 @@ function pre_init(){
 </script>
 <style>
 
-body		{ background-color: #666666; }
+body		{ background-color: #878787; }
 img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 
@@ -89,6 +89,7 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 #canvas		{ position: absolute; left: -370px; top:   0px; width: 740px; height: 439px; z-index: 1; }
 #loading	{ position: absolute; left:    0px; top: 200px; width: 740px; height:  20px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
 #canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: <?=$city_row[bgcolor]?>; }
+#copyright	{ position: absolute; left: -370px; top: 442px; width: 740px; height:  20px; z-index: 1; visibility: hidden; }
 
 #bordertop	{ position: absolute; left:    0px; top:   0px; width: 740px; height:   8px; }
 #borderbottom	{ position: absolute; left:    0px; top: 430px; width: 740px; height:   9px; }
@@ -112,6 +113,8 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 #about		{ position: absolute; left:  367px; top: 70px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
 
 .popup		{ padding: 5px 10px; color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10px; }
+
+.copyright	{ color: #B9B9B9; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px; }
 
 </style>
 </head>
@@ -169,6 +172,7 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 		}
 	}
 ?>
+	<div style="position: absolute; left: <?=($left-38)?>px; top: 8px; width: 35px; height: 16px;"><img src="images/frame/tab_label.gif" width="35" height="16"></div>
 
 	<div id="boardback"></div>
 	<div id="board"><div id="shadow"></div></div>
@@ -231,6 +235,9 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 <? $nav = "build_$city_id"; $build=1; include('nav.txt'); ?>
 	</div>
 </div>
+</div>
+<div id="copyright" class="copyright">
+&copy;2002-2003 Denise Wilton &amp; Cal Henderson
 </div>
 </div>
 

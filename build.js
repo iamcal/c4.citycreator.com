@@ -27,6 +27,7 @@ function init(){
 
 	hide_elm(get_elm("loading"));
 	show_elm(get_elm("canvasinner"));
+	show_elm(get_elm("copyright"));
 
 	if ((readCookie(cookie_hello) == null)){
 		show_elm(get_elm('instructions'));
