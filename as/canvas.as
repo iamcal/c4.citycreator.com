@@ -35,3 +35,11 @@ Canvas.prototype.spawnPiece = function(template){
 Canvas.prototype.bringForward = function(){
 	this._mc.swapDepths(getNewDepth());
 }
+
+Canvas.prototype.show = function(){
+	this._mc._visible = true;
+}
+
+Canvas.prototype.hide = function(){
+	this._mc._visible = false;
+}

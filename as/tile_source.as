@@ -7,7 +7,7 @@ TileSource.prototype.initialize = function(node, parent) {
 
 	this.parent = parent;
 	this.node = node;
-	//this.piece_id = node.attributes.sysid;
+	this.seq_num = node.attributes.num;
 	this.src = node.attributes.src;
 
 	this.preload_id = gLoadingManager.loadMovie(this.src);
@@ -15,11 +15,12 @@ TileSource.prototype.initialize = function(node, parent) {
 	return this;	
 }
 
-TileSource.prototype.initTile = function(seq_num){
+TileSource.prototype.initTile = function(canvas, seq_num){
 
-	this.parent_mc = gMainFrame.getMc();
+	this.canvas = canvas;
+	this.parent_mc = canvas.getMc();
 	this.id = getNewDepth();
-	this.seq_num = seq_num;
+	//this.seq_num = seq_num;
 	this.preload_mc = gLoadingManager.getMovie(this.preload_id);
 
 	var name = 'tile_source_mc_'+this.id;
@@ -50,6 +51,9 @@ TileSource.prototype.onTileSourceLoad = function(){
 
 	var x = 14 + (58 * col);
 	var y = 61 + (67 * row);
+
+	var x = (58 * col);
+	var y = (67 * row);
 
 	x += Math.round((57 / 2) - (this.preload_mc._width / 2));
 	y += Math.round((66 / 2) - (this.preload_mc._height / 2));

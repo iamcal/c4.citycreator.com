@@ -30,19 +30,20 @@ function startup(){
 
 
 	//
-	// create a test button
+	// then some buttons
 	//
 
 	b = new MyButton().initialize(10, 10, 75, 25, "load xml", gMainFrame.canvas._mc);
-	b.onClick = function() {
-		trace('clicky!');
-		load_city_xml();
-	}
+	b.onClick = function() { load_city_xml(); }
 
 	b2 = new MyButton().initialize(10, 40, 75, 25, "hide canvas", gMainFrame.canvas._mc);
-	b2.onClick = function() {
-		gMainFrame.getCanvasMc()._visible = false;
-	}
+	b2.onClick = function() { gMainFrame.getCanvasMc()._visible = false; }
+
+	b3 = new MyButton().initialize(10, 70, 75, 25, "set 0", gMainFrame.canvas._mc);
+	b3.onClick = function() { gTileManager.showSet(0); }
+
+	b4 = new MyButton().initialize(10, 100, 75, 25, "set 1", gMainFrame.canvas._mc);
+	b4.onClick = function() { gTileManager.showSet(1); }
 }
 
 
