@@ -42,18 +42,23 @@ MyButton.prototype.initialize = function(x, y, w, h, caption, parent) {
 		delete this.onMouseUp;
 	}
 
-	if (caption != '') {
-		var extent = this.text_format.getTextExtent(caption);
-
-		trace(extent.width+', '+extent.height);
-
-		var t_h = extent.height;
-		var t_y = Math.floor((h/2) - (t_h/2)) - 2;
-
-		this._mc.createTextField("_tf", 0, 0, t_y, w, h);
-		this._mc._tf.setNewTextFormat(this.text_format);
-		this._mc._tf.text = caption;
-	}
+	this._mc.createTextField("_tf", 0, 0, t_y, w, h);
+	this._mc._tf.setNewTextFormat(this.text_format);
+	this.setCaption(caption);
 
 	return this;
+}
+
+MyButton.prototype.setCaption = function(caption) {
+
+	var extent = this.text_format.getTextExtent(caption);
+
+	var t_h = extent.height;
+	var t_y = Math.floor((this.h/2) - (t_h/2)) - 2;
+
+	this._mc._tf._x = 0;
+	this._mc._tf._y = t_y;
+	this._mc._tf._width = this.w;
+	this._mc._tf._height = this.h;
+	this._mc._tf.text = caption;
 }

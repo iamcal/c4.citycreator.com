@@ -12,6 +12,7 @@
 
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
+#include "as/tile_set_tab.as"
 #include "as/tile_source.as"
 #include "as/tile.as"
 
@@ -26,24 +27,21 @@ function startup(){
 	// first, create the master frame
 	//
 
-	gMainFrame = new MainFrame().initialize(0, 0, 740, 448);
+	//gMainFrame = new MainFrame().initialize(0, 0, 740, 448);
 
 
 	//
 	// then some buttons
 	//
 
-	b = new MyButton().initialize(10, 10, 75, 25, "load xml", gMainFrame.canvas._mc);
-	b.onClick = function() { load_city_xml(); }
+	var button_parent = _root;
 
-	b2 = new MyButton().initialize(10, 40, 75, 25, "hide canvas", gMainFrame.canvas._mc);
-	b2.onClick = function() { gMainFrame.getCanvasMc()._visible = false; }
-
-	b3 = new MyButton().initialize(10, 70, 75, 25, "set 0", gMainFrame.canvas._mc);
-	b3.onClick = function() { gTileManager.showSet(0); }
-
-	b4 = new MyButton().initialize(10, 100, 75, 25, "set 1", gMainFrame.canvas._mc);
-	b4.onClick = function() { gTileManager.showSet(1); }
+	b = new MyButton().initialize(10, 10, 75, 25, "load xml", button_parent);
+	b.onClick = function() {
+		this.setCaption('Loading...');
+		load_city_xml();
+		delete this.onClick;
+	}
 }
 
 
@@ -81,6 +79,25 @@ function onPiecesLoaded(success){
 }
 
 function onPiecesReady(){
+
+	//
+	// we're ready to rock!
+	//
+
+	gMainFrame = new MainFrame().initialize(0, 0, 740, 448);
+
+	var button_parent = gMainFrame.GetCanvasMc();
+
+	var b2 = new MyButton().initialize(10, 40, 75, 25, "hide canvas", button_parent);
+	b2.onClick = function() { gMainFrame.getCanvasMc()._visible = false; }
+
+	var b3 = new MyButton().initialize(10, 70, 75, 25, "set 0", button_parent);
+	b3.onClick = function() { gTileManager.showSet(0); }
+
+	var b4 = new MyButton().initialize(10, 100, 75, 25, "set 1", button_parent);
+	b4.onClick = function() { gTileManager.showSet(1); }
+
+
 	trace("onPiecesReady()");
 	gTileManager.initTiles();
 	gMainFrame.bringCanvasForward();

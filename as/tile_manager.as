@@ -22,9 +22,8 @@ TileManager.prototype.initialize = function(node) {
 TileManager.prototype.initTiles = function(){
 
 	for (var i=0; i<this.tile_sets.length; i++) {
-		this.tile_sets[i].initTiles(i);
+		this.tile_sets[i].initTiles(i, i==0);
 	}
-
 	this.showSet(0);
 }
 
