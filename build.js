@@ -21,7 +21,7 @@ function init(){
 	document.body.onmousemove = mouse_move;
 	document.body.onmouseup   = mouse_up;
 
-	tab(0);
+	tab(first_tab);
 
 	shadow_layer = document.getElementById('shadow');
 
@@ -102,10 +102,12 @@ function get_elm(name){
 }
 
 function show_elm(elm){
+	if (!elm){return;}
 	elm.style.visibility = 'visible';
 }
 
 function hide_elm(elm){
+	if (!elm){return;}
 	elm.style.visibility = 'hidden';
 }
 

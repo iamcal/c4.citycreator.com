@@ -2,7 +2,7 @@
 	include("init.txt");
 	include("login.txt");
 
-	if ($city>2){$city = 2;}
+	if ($city>3){$city = 3;}
 
 	if ($saved_id){
 		$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
@@ -11,6 +11,8 @@
 
 	$city_row = get_city($city);
 	$city_id = $city_row[id];
+
+	list($first_tab) = mysql_fetch_array(mysql_query("SELECT id FROM citycreator_tabs WHERE city_id=$city_id ORDER BY in_order ASC LIMIT 1", $db));
 ?>
 <html>
 <head>
@@ -35,6 +37,7 @@ var bg_string = '#ffffff';
 var cookie_prefix = 'city_<?=$city_id?>_';
 var cookie_hello = 'hello';
 var cookie_badcheck = 'badcheck';
+var first_tab = <?=$first_tab?>;
 
 function pre_init(){
 
@@ -49,7 +52,7 @@ function pre_init(){
 	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
 	echo "\tpiece_count = ".mysql_num_rows($result).";\n";
 	while($row = mysql_fetch_array($result)){
-		echo "\tadd_piece($row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
+		echo "\tadd_piece($row[tab_id], $row[in_order], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
 	}
 ?>
 
@@ -83,36 +86,27 @@ img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 
 #outer		{ position: absolute; left:    50%; top:  20px; }
-#canvas		{ position: absolute; left: -370px; top:  0px; width: 740px; height: 427px; z-index: 1; }
+#canvas		{ position: absolute; left: -370px; top:   0px; width: 740px; height: 439px; z-index: 1; }
 #loading	{ position: absolute; left:    0px; top: 200px; width: 740px; height:  20px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
-#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 427px; z-index: 1; visibility: hidden; background-color: #cccccc; }
+#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: <?=$city_row[bgcolor]?>; }
 
-#borderleft	{ position: absolute; left:    0px; top:   0px; width: 257px; height: 427px; }
-#bordertop	{ position: absolute; left:  257px; top:   0px; width: 469px; height:  15px; }
-#borderbottom	{ position: absolute; left:  257px; top: 379px; width: 469px; height:  48px; }
-#borderright	{ position: absolute; left:  726px; top:   0px; width:  14px; height: 427px; }
-#board		{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; z-index: 10; }
-#boardback	{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; background-color: #ffffff; }
+#bordertop	{ position: absolute; left:    0px; top:   0px; width: 740px; height:   8px; }
+#borderbottom	{ position: absolute; left:    0px; top: 430px; width: 740px; height:   9px; }
+#borderleft	{ position: absolute; left:    0px; top:   8px; width:  10px; height: 422px; }
+#borderright	{ position: absolute; left:  730px; top:   8px; width:  10px; height: 422px; }
+#pagebg		{ position: absolute; left:   10px; top:   8px; width: 720px; height: 422px; }
 
-#grid		{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; z-index: 15; visibility: hidden; }
+#board		{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; z-index: 10; }
+#boardback	{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; background-color: #ffffff; }
+
+#grid		{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; z-index: 15; visibility: hidden; }
 #shadow		{ position: absolute; left:   10px; top:  10px; width: 100px; height: 100px; z-index:  0; visibility: hidden; border: 1px solid #999999; }
 
-#tab0off	{ position: absolute; left:   13px; top:  29px; width:  42px; height:  15px; }
-#tab0on		{ position: absolute; left:   13px; top:  29px; width:  42px; height:  15px; visibility: hidden; }
+#logo		{ position: absolute; left:   14px; top:  12px; width: 231px; height:  45px; }
 
-#tab1off	{ position: absolute; left:   55px; top:  29px; width:  34px; height:  15px; }
-#tab1on		{ position: absolute; left:   55px; top:  29px; width:  34px; height:  15px; visibility: hidden; }
-
-#tab2off	{ position: absolute; left:   89px; top:  29px; width:  74px; height:  15px; }
-#tab2on		{ position: absolute; left:   89px; top:  29px; width:  74px; height:  15px; visibility: hidden; }
-
-#tab3off	{ position: absolute; left:  163px; top:  29px; width:  78px; height:  15px; }
-#tab3on		{ position: absolute; left:  163px; top:  29px; width:  78px; height:  15px; visibility: hidden; }
-
-#palette0	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
-#palette1	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
-#palette2	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
-#palette3	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+div.taboff	{ position: absolute; top: 43px; height: 15px; }
+div.tabon	{ position: absolute; top: 43px; height: 15px; visibility: hidden; }
+div.palette	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
 
 #instructions	{ position: absolute; left:  357px; top: 60px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
 #about		{ position: absolute; left:  367px; top: 70px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
@@ -134,49 +128,48 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 </div>
 <div id="canvasinner">
 
-	<div id="borderleft"   ><img src="images/border_left.gif"     width="257" height="427"></div>
-	<div id="bordertop"    ><img src="images/border_top.gif"      width="469" height="15" ></div>
-	<div id="borderbottom" ><img src="images/border_bottom_2.gif" width="469" height="48" ></div>
-	<div id="borderright"  ><img src="images/border_right.gif"    width="14"  height="427"></div>
+	<div id="bordertop"    ><img src="images/generic/border_top.gif"    width="740" height="8"  ></div>
+	<div id="borderbottom" ><img src="images/generic/border_bottom.gif" width="740" height="9"  ></div>
+	<div id="borderleft"   ><img src="images/generic/border_left.gif"   width="10"  height="422"></div>
+	<div id="borderright"  ><img src="images/generic/border_right.gif"  width="10"  height="422"></div>
 
-	<div id="tab0off"><a href="javascript:tab(0);"><img src="images/tab_0_off.gif" width="42" height="15"></a></div>
-	<div id="tab0on" ><img src="images/tab_0_on.gif"  width="42" height="15"></div>
+	<div id="pagebg"><img src="images/generic/main.gif" width="720" height="422"></div>
 
-	<div id="tab1off"><a href="javascript:tab(1);"><img src="images/tab_1_off.gif" width="34" height="15"></a></div>
-	<div id="tab1on" ><img src="images/tab_1_on.gif"  width="34" height="15"></div>
+	<div id="logo"><img src="images/frame_<?=$city_id?>/logo.gif" width="231" height="45"></div>
 
-	<div id="tab2off"><a href="javascript:tab(2);"><img src="images/tab_2_off.gif" width="74" height="15"></a></div>
-	<div id="tab2on" ><img src="images/tab_2_on.gif"  width="74" height="15"></div>
-
-	<div id="tab3off"><a href="javascript:tab(3);"><img src="images/tab_3_off.gif" width="78" height="15"></a></div>
-	<div id="tab3on" ><img src="images/tab_3_on.gif"  width="78" height="15"></div>
+<?
+	$left = 13;
+	$result = mysql_query("SELECT * FROM citycreator_tabs WHERE city_id=$city_id ORDER BY in_order ASC", $db);
+	while($row = mysql_fetch_array($result)){
+?>
+	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/frame_<?=$city_id?>/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
+	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/frame_<?=$city_id?>/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
+	<div id="palette<?=$row[id]?>" class="palette"></div>
+<?
+		$left += $row[width];
+	}
+?>
 
 	<div id="boardback"></div>
 	<div id="board"><div id="shadow"></div></div>
 
 	<div id="grid"><img src="images/grid.gif" width="469" height="364"></div>
 
-	<div id="palette0"></div>
-	<div id="palette1"></div>
-	<div id="palette2"></div>
-	<div id="palette3"></div>
+	<div style="position: absolute; left:  17px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1]?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  42px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2]?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  78px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 106px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 134px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 162px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 190px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 218px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
 
-	<div style="position: absolute; left:  17px; top: 399px; width: 21px; height: 12px;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1]?>" width="21" height="12" border="0"></a></div>
-	<div style="position: absolute; left:  42px; top: 399px; width: 21px; height: 12px;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2]?>" width="21" height="12" border="0"></a></div>
-	<div style="position: absolute; left:  78px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 106px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 134px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 162px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 190px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 218px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 656px; top: 400px; width: 66px; height: 48px; z-index: 5;"><img src="images/truck.gif" width="66" height="48"></div>
 
-	<div style="position: absolute; left: 656px; top: 387px; width: 66px; height: 48px; z-index: 5;"><img src="images/truck.gif" width="66" height="48"></div>
-
-	<div style="position: absolute; left: 287px; top: 391px; width: 59px; height: 16px;"><a href="javascript:show_top('instructions');"><img src="images/btn_instructions.gif" width="59" height="16" border="0"></a></div>
-	<div style="position: absolute; left: 355px; top: 391px; width: 52px; height: 16px;"><a href="javascript:show_top('about');"><img src="images/btn_about.gif" width="52" height="16" border="0"></a></div>
-<!--	<div style="position: absolute; left: 406px; top: 391px; width: 71px; height: 16px;"><a href="javascript:send_card();"><img src="images/btn_send.gif" width="71" height="16" border="0"></a></div> -->
-	<div style="position: absolute; left: 416px; top: 391px; width: 71px; height: 16px;"><a href="javascript:send_card();"><img src="images/btn_save.gif" width="60" height="16" border="0"></a></div>
-	<div style="position: absolute; left: 491px; top: 391px; width: 50px; height: 16px;"><a href="javascript:delete_all();"><img src="images/btn_delete.gif" width="50" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 287px; top: 403px; width: 59px; height: 16px;"><a href="javascript:show_top('instructions');"><img src="images/btn_instructions.gif" width="59" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 355px; top: 403px; width: 52px; height: 16px;"><a href="javascript:show_top('about');"><img src="images/btn_about.gif" width="52" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 416px; top: 403px; width: 71px; height: 16px;"><a href="javascript:send_card();"><img src="images/btn_save.gif" width="60" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 491px; top: 403px; width: 50px; height: 16px;"><a href="javascript:delete_all();"><img src="images/btn_delete.gif" width="50" height="16" border="0"></a></div>
 
 	<div id="instructions">
 		<img src="images/pop_top_instructions.gif" width="258" height="27"><br>
