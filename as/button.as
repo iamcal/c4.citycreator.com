@@ -15,7 +15,6 @@ MyButton.prototype.initialize = function(x, y, w, h, caption, parent) {
 	this._mc = parent.createEmptyMovieClip('button_mc_' + this.id, this.id);
 	this._mc._x = x;
 	this._mc._y = y;
-	this._mc._highquality = 0;
 	this._mc.button = this;
 
 	draw_shadow_box(this._mc, w, h, this.bg_col, this.hi_col, this.sh_col);

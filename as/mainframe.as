@@ -14,7 +14,6 @@ MainFrame.prototype.initialize = function(x, y, w, h, color, parent) {
 	this._bg = parent.createEmptyMovieClip('frame_bg_mc_' + this.bgid, this.bgid);
 	this._bg._x = 0;
 	this._bg._y = 0;
-	this._bg._highquality = 0;
 	color_in(this._bg, color, w, h-10);
 
 	this.id = getNewDepth();
@@ -24,9 +23,8 @@ MainFrame.prototype.initialize = function(x, y, w, h, color, parent) {
 	this._mc._y = y;
 	this._mc._width = w;
 	this._mc._height = h;
-	this._mc._highquality = 0;
 
-	this.canvas = new Canvas().initialize(257, 28, 469, 364, this._mc, 0x00ff00);
+	this.canvas = new Canvas().initialize(257, 28, 469, 364, this._mc); //, 0x00ff00);
 
 	return this;
 }

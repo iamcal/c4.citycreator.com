@@ -37,3 +37,10 @@ TileManager.prototype.showSet = function(id){
 
 	this.tile_sets[this.current_set].show();
 }
+
+TileManager.prototype.deleteAll = function(){
+	var tiles = gAllTiles;
+	for(id in tiles){
+		tiles[id].deleteTile();
+	}
+}

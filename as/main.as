@@ -21,7 +21,10 @@ var gTileManager;
 
 function startup(){
 
-	_root._highquality = 0;
+	Stage.showMenu = false;
+	Stage.scaleMode = 'NoScale';
+	Stage.align = 'TL';
+
 
 	//
 	// first, create the master frame
@@ -87,8 +90,9 @@ function onPiecesReady(){
 
 	var button_parent = gMainFrame.GetCanvasMc();
 
-	var b2 = new MyButton().initialize(10, 40, 75, 25, "nothing", button_parent);
-	b2.onClick = function() { trace("clicked"); }
+	var b2 = new MyButton().initialize(10, 40, 75, 25, "delete all", button_parent);
+	b2.onClick = function() { gTileManager.deleteAll(); }
+
 
 	//
 	// ready the tilesets

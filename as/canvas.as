@@ -12,14 +12,15 @@ Canvas.prototype.initialize = function(x, y, w, h, parent, color) {
 	this._mc = parent.createEmptyMovieClip('canvas_mc_' + this.bgid, this.bgid);
 	this._mc._x = x;
 	this._mc._y = y;
-	this._mc._highquality = 0;
 
 	if (color){
 		color_in(this._mc, color, w, h);
+	}else{
+		this._mc.attachMovie('spacer', 'spacer', 1);
 	}
 
-	this._mc._width = w;
-	this._mc._height = h;
+	this._mc.spacer._width = w;
+	this._mc.spacer._height = h;
 
 	return this;
 }
