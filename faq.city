@@ -1,0 +1,41 @@
+<?
+	include('init.txt');
+
+	$title = 'Frequently Asked Questions';
+	$long = 1;
+	$nav = 'faq';
+
+	include("inc_head.txt");
+?>
+
+	<b>Frequently Asked Questions</b><br>
+	<br>
+<?
+	$result = mysql_query("SELECT * FROM citycreator_faq ORDER BY in_order ASC",$db);
+	while($row = mysql_fetch_array($result)){
+?>
+	<a href="#faq<?=$row[id]?>" class="white"><?=$row[question]?></a><br>
+<?
+	}
+?>
+	<br>
+<?
+	$result = mysql_query("SELECT * FROM citycreator_faq ORDER BY in_order ASC",$db);
+	while($row = mysql_fetch_array($result)){
+?>
+	<img src="images/white_line.gif" width="445" height="5"><br>
+	<br>
+	<a name="faq<?=$row[id]?>"></a>
+	<b><?=$row[question]?></b><br>
+	<br>
+	<?=$row[answer]?><br>
+	<br>
+<?
+	}
+?>
+	<br>
+	<small>&copy; 2002 Cal Henderson &amp; Denise Wilton. Don't steal our stuff. ta.</small><br>
+
+<?
+	include("inc_foot.txt");
+?>

@@ -1,0 +1,239 @@
+<?
+	include("init.txt");
+	include("login.txt");
+
+	if ($city>2){$city = 2;}
+
+	if ($saved_id){
+		$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
+		$city = $saved_row[city_id];
+	}
+
+	$city_row = get_city($city);
+	$city_id = $city_row[id];
+?>
+<html>
+<head>
+<title>City Creator - Build</title>
+<script language="JavaScript" src="detect.js?revision=2"></script>
+<script language="JavaScript" src="cookies.js"></script>
+<script language="JavaScript" src="build.js?revision=12"></script>
+<script language="JavaScript">
+<!--
+
+var current_tab = -1;
+var currently_dragging = 0;
+var drag_elm = null;
+var drag_offset_x = 0;
+var drag_offset_y = 0;
+var grid_w = 24;
+var grid_h = 12;
+var pieces = new Array();
+var bgs = new Array();
+var bg_id = 0;
+var bg_string = '#ffffff';
+var cookie_prefix = 'city_<?=$city_id?>_';
+var cookie_hello = 'hello';
+var cookie_badcheck = 'badcheck';
+
+function pre_init(){
+
+	if (!is.dom1){
+		if (readCookie(cookie_badcheck) == null){
+			alert("You don't appear to be using a recent browser.\n\nChances are that this site wont work for you. Sorry :(");
+		}
+		saveCookie(cookie_badcheck,'1',365);
+	}
+
+<?
+	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
+	echo "\tpiece_count = ".mysql_num_rows($result).";\n";
+	while($row = mysql_fetch_array($result)){
+		echo "\tadd_piece($row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
+	}
+?>
+
+<?
+	$thumbs = array();
+	$result = mysql_query("SELECT * FROM citycreator_bgs WHERE city_id='$city_id' ORDER BY order_id ASC",$db);
+	while($row = mysql_fetch_array($result)){
+		$thumbs[$row[order_id]] = ($row[thumb])?"bgs/$city_id/$row[thumb]":"images/space.gif";
+		$bg_image = ($row[bg_image])?"bgs/$city_id/$row[bg_image]":"";
+		echo "\tadd_bg($row[order_id], '$bg_image', '$row[bg_color]');\n";
+	}
+?>
+
+<? if ($saved_row[id]){ ?>
+	bg_nosave(<?=$saved_row[city_bg_id]?>);
+	unserialize_all('<?=$saved_row[city_pieces]?>');
+	update_pieces();
+<? }else{ ?>
+	bg_nosave(1); // set default background
+	load_pieces();
+<? } ?>
+
+}
+
+// -->
+</script>
+<style>
+
+body		{ background-color: #666666; }
+img		{ border: 0px; }
+form		{ border: 0px; margin: 0px; padding: 0px; }
+
+#outer		{ position: absolute; left:    50%; top:  20px; }
+#canvas		{ position: absolute; left: -370px; top:  0px; width: 740px; height: 427px; z-index: 1; }
+#loading	{ position: absolute; left:    0px; top: 200px; width: 740px; height:  20px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
+#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 427px; z-index: 1; visibility: hidden; background-color: #cccccc; }
+
+#borderleft	{ position: absolute; left:    0px; top:   0px; width: 257px; height: 427px; }
+#bordertop	{ position: absolute; left:  257px; top:   0px; width: 469px; height:  15px; }
+#borderbottom	{ position: absolute; left:  257px; top: 379px; width: 469px; height:  48px; }
+#borderright	{ position: absolute; left:  726px; top:   0px; width:  14px; height: 427px; }
+#board		{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; z-index: 10; }
+#boardback	{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; background-color: #ffffff; }
+
+#grid		{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; z-index: 15; visibility: hidden; }
+#shadow		{ position: absolute; left:   10px; top:  10px; width: 100px; height: 100px; z-index:  0; visibility: hidden; border: 1px solid #999999; }
+
+#tab0off	{ position: absolute; left:   13px; top:  29px; width:  42px; height:  15px; }
+#tab0on		{ position: absolute; left:   13px; top:  29px; width:  42px; height:  15px; visibility: hidden; }
+
+#tab1off	{ position: absolute; left:   55px; top:  29px; width:  34px; height:  15px; }
+#tab1on		{ position: absolute; left:   55px; top:  29px; width:  34px; height:  15px; visibility: hidden; }
+
+#tab2off	{ position: absolute; left:   89px; top:  29px; width:  74px; height:  15px; }
+#tab2on		{ position: absolute; left:   89px; top:  29px; width:  74px; height:  15px; visibility: hidden; }
+
+#tab3off	{ position: absolute; left:  163px; top:  29px; width:  78px; height:  15px; }
+#tab3on		{ position: absolute; left:  163px; top:  29px; width:  78px; height:  15px; visibility: hidden; }
+
+#palette0	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+#palette1	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+#palette2	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+#palette3	{ position: absolute; left:   14px; top:  47px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+
+#instructions	{ position: absolute; left:  357px; top: 60px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
+#about		{ position: absolute; left:  367px; top: 70px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
+
+.popup		{ padding: 5px 10px; color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10px; }
+
+</style>
+</head>
+<body onLoad="init()">
+
+<div id="outer">
+<div id="canvas">
+<div id="loading">
+	loading, please wait... <img src="images/loading.gif" width="7" height="7"><br>
+	<br>
+	<div style="position: absolute; left: 270px; top: 30px; width: 200px; padding: 2px; border: 2px solid #ffffff; text-align: left;">
+		<div style="width: 0%; background-color: #ffffff" id="loadprogress">&nbsp;</div>
+	</div>
+</div>
+<div id="canvasinner">
+
+	<div id="borderleft"   ><img src="images/border_left.gif"     width="257" height="427"></div>
+	<div id="bordertop"    ><img src="images/border_top.gif"      width="469" height="15" ></div>
+	<div id="borderbottom" ><img src="images/border_bottom_2.gif" width="469" height="48" ></div>
+	<div id="borderright"  ><img src="images/border_right.gif"    width="14"  height="427"></div>
+
+	<div id="tab0off"><a href="javascript:tab(0);"><img src="images/tab_0_off.gif" width="42" height="15"></a></div>
+	<div id="tab0on" ><img src="images/tab_0_on.gif"  width="42" height="15"></div>
+
+	<div id="tab1off"><a href="javascript:tab(1);"><img src="images/tab_1_off.gif" width="34" height="15"></a></div>
+	<div id="tab1on" ><img src="images/tab_1_on.gif"  width="34" height="15"></div>
+
+	<div id="tab2off"><a href="javascript:tab(2);"><img src="images/tab_2_off.gif" width="74" height="15"></a></div>
+	<div id="tab2on" ><img src="images/tab_2_on.gif"  width="74" height="15"></div>
+
+	<div id="tab3off"><a href="javascript:tab(3);"><img src="images/tab_3_off.gif" width="78" height="15"></a></div>
+	<div id="tab3on" ><img src="images/tab_3_on.gif"  width="78" height="15"></div>
+
+	<div id="boardback"></div>
+	<div id="board"><div id="shadow"></div></div>
+
+	<div id="grid"><img src="images/grid.gif" width="469" height="364"></div>
+
+	<div id="palette0"></div>
+	<div id="palette1"></div>
+	<div id="palette2"></div>
+	<div id="palette3"></div>
+
+	<div style="position: absolute; left:  17px; top: 399px; width: 21px; height: 12px;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1]?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  42px; top: 399px; width: 21px; height: 12px;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2]?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  78px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 106px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 134px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 162px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 190px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 218px; top: 387px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
+
+	<div style="position: absolute; left: 656px; top: 387px; width: 66px; height: 48px; z-index: 5;"><img src="images/truck.gif" width="66" height="48"></div>
+
+	<div style="position: absolute; left: 287px; top: 391px; width: 59px; height: 16px;"><a href="javascript:show_top('instructions');"><img src="images/btn_instructions.gif" width="59" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 355px; top: 391px; width: 52px; height: 16px;"><a href="javascript:show_top('about');"><img src="images/btn_about.gif" width="52" height="16" border="0"></a></div>
+<!--	<div style="position: absolute; left: 406px; top: 391px; width: 71px; height: 16px;"><a href="javascript:send_card();"><img src="images/btn_send.gif" width="71" height="16" border="0"></a></div> -->
+	<div style="position: absolute; left: 416px; top: 391px; width: 71px; height: 16px;"><a href="javascript:send_card();"><img src="images/btn_save.gif" width="60" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 491px; top: 391px; width: 50px; height: 16px;"><a href="javascript:delete_all();"><img src="images/btn_delete.gif" width="50" height="16" border="0"></a></div>
+
+	<div id="instructions">
+		<img src="images/pop_top_instructions.gif" width="258" height="27"><br>
+		<div class="popup">
+			Drag and drop pieces from the palettes on the left onto the space on the right. Clicking on a piece brings it to the front.<br>
+			<br>
+			Arrange them to make your city. (It might help to start by adding the roads)<br>
+			<br>
+			<img src="images/truck.gif" width="66" height="48" align="left">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.<br clear="all">
+			<br>
+			You can delete your whole town by clicking the 'Delete all' button.<br>
+			<br>
+			Click 'Save &amp; send' to send your unique city to your friends.<br>
+			<br>
+			<a href="javascript:hide_elm(get_elm('instructions'));"><img src="images/btn_close.gif" width="65" height="16" border="0"></a>
+		</div>
+		<img src="images/pop_bottom.gif" width="258" height="12"><br>
+	</div>
+
+	<div id="about">
+		<img src="images/pop_top_about.gif" width="258" height="27"><br>
+		<div class="popup">
+			City Creator is a joint project by Denise Wilton (also known as Pep) and Cal Henderson. Denise came up with the original idea and design, and Cal helped the idea along and made it all come to life by programming it.<br>
+			<br>
+			If you have an idea or want to get intouch, then drop us an email.<br>
+			<a href="mailto:cal@citycreator.com" style="color: #000000;">cal@citycreator.com</a><br>
+			<a href="mailto:denise@citycreator.com" style="color: #000000;">denise@citycreator.com</a><br>
+			<br>
+			Thanks for visiting, we hope you've enjoyed your stay :)<br>
+			<br>
+			<br>
+			&copy; 2002 Cal Henderson &amp; Denise Wilton. Don't steal our stuff. ta.<br>
+			<br>
+			<a href="javascript:hide_elm(get_elm('about'));"><img src="images/btn_close.gif" width="65" height="16" border="0"></a>
+		</div>
+		<img src="images/pop_bottom.gif" width="258" height="12"><br>
+	</div>
+	<div style="position: absolute; left:   4px; top: 426px; width: 740px; height:  15px;">
+<? $nav = "build_$city_id"; $build=1; include('nav.txt'); ?>
+	</div>
+</div>
+</div>
+</div>
+
+<form action="save.city" method="post" name="sendform">
+<input type="hidden" name="city_id" value="<?=$city_id?>">
+<input type="hidden" name="city_pieces" value="">
+<input type="hidden" name="city_bg" value="">
+</form>
+
+<script language="Javascript">
+<!--
+
+pre_init();
+
+//-->
+</script>
+
+</body>
+</html>

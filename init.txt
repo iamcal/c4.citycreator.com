@@ -1,0 +1,111 @@
+<?
+	include("/var/www/cal/includes/network.txt");
+
+	$cfg = array();
+	$cfg[pickup_url] = 'http://v3.citycreator.com/pickup.city';
+	$cfg[login_url]  = 'http://v3.citycreator.com/login.city';
+	$cfg[share_url]  = 'http://v3.citycreator.com/members.city';
+	$cfg[cp_path] = '/var/www/cal/v3.citycreator.com/cp';
+
+	$cfg[time] = time() + (5 * 60 * 60); # GMT baybee
+
+	function gen_check(){
+		$length = 10;
+		$out = '';
+		for($i=0; $i<$length; $i++){
+			$out .= chr(rand(ord('a'),ord('z')));
+		}
+		return $out;
+	}
+
+	function send_card($id){
+		global $db, $cfg;
+
+		$card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id=$id",$db));
+
+		$msg = '';
+		$msg .= "Someone has made you a special e-card at citycreator.com\n";
+		$msg .= "\n";
+		$msg .= "Click here to see it:\n";
+		$msg .= "$cfg[pickup_url]?c=$card_row[id].$card_row[check]\n";
+		$msg .= "\n";
+		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
+		$msg .= " your browser)\n";
+		$msg .= "\n";
+		$msg .= "----------------------------------------------------------------------\n";
+		$msg .= "This mail was sent to you by citycreator.com\n";
+		$msg .= "\n";
+
+		mail($card_row[friend_email], "You've got an ecard!", $msg, "From: City Creator <cards@citycreator.com>\nReply-to: \"$card_row[your_name]\" <$card_row[your_email]>");
+	}
+
+	function send_password($email, $username, $password){
+		global $cfg;
+
+		$msg = '';
+		$msg .= "You asked to be reminded of your citycreator.com login details:\n";
+		$msg .= "\n";
+		$msg .= "Username: $username\n";
+		$msg .= "Password: $password\n";
+		$msg .= "\n";
+		$msg .= "Click here to log in:\n";
+		$msg .= "$cfg[login_url]\n";
+		$msg .= "\n";
+		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
+		$msg .= " your browser)\n";
+		$msg .= "\n";
+		$msg .= "----------------------------------------------------------------------\n";
+		$msg .= "This mail was sent to you by citycreator.com\n";
+		$msg .= "\n";
+
+		mail($email, "City Creator login reminder", $msg, "From: City Creator <admin@citycreator.com>");
+	}
+
+	function send_share($friend_email, $your_name, $your_email, $share_id, $message){
+		global $db, $cfg;
+
+		$msg = '';
+		$msg .= "A citycreator.com member has designed a city and would like\n";
+		$msg .= "to share it with you.\n";
+		$msg .= "\n";
+		$msg .= "Citycreator.com is a free website which lets you design\n";
+		$msg .= "cities and share them with your friends. It's easy to use\n";
+		$msg .= "and fun too!\n";
+		$msg .= "\n";
+		$msg .= "When you click on the link below, you will be asked to signup\n";
+		$msg .= "if you haven't already. This is free, and the process is very\n";
+		$msg .= "simple - just choose a username and password.\n";
+		$msg .= "\n";
+		$msg .= "Click on this link to start:\n";
+		$msg .= "$cfg[share_url]?share_id=$share_id\n";
+		$msg .= "\n";
+		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
+		$msg .= " your browser)\n";
+		$msg .= "\n";
+		if ($message){
+			$msg .= "The person who sent you this city also added a message:\n";
+			$msg .= "$message\n";
+			$msg .= "\n";
+		}
+		$msg .= "----------------------------------------------------------------------\n";
+		$msg .= "This mail was sent to you by citycreator.com\n";
+		$msg .= "\n";
+
+		mail($friend_email, "You've been sent a city design!", $msg, "From: City Creator <cities@citycreator.com>\nReply-to: \"$your_name\" <$your_email>");
+
+	}
+
+
+	function get_city($city){
+		global $db;
+		
+		if ($city){
+			$city_id = $city + 0;
+			if ($city_id == 0) $city_id = 1;
+		}else{
+			$city_id = 1;
+		}
+
+		return mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cities WHERE id='$city_id'",$db));
+	}
+?>

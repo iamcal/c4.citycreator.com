@@ -1,0 +1,30 @@
+<?
+	$title = '';
+	$nav = 'home';
+	$wide = 1;
+
+	include("inc_head.txt");
+?>
+
+	<span style="color: #ffff00;">After clicking on one of the 'build' buttons below</span>, drag and drop pieces from the palettes on the left onto the space on the right. Clicking on a piece brings it to the front.<br>
+	<br>
+	Arrange them to make your city. (It might help to start by adding the roads)<br>
+	<br>
+	<img src="images/truck.gif" width="66" height="48" align="left">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.<br clear="all">
+	<br>
+	You can delete your whole town by clicking the 'Delete all' button.<br>
+	<br>
+	Click 'Save &amp; send' to send your unique city to your friends.<br>
+	<br>
+	<span style="color: #ffff00;">Have fun,<br>
+	The Construction Crew</span><br>
+	<br>
+	<table width="247" cellpadding="0" cellspacing="0">
+		<tr>
+		<td align="left" ><a href="build.city?city=1"><img src="images/front_button_1.gif" width="115" height="57" border="0"></a></td>
+			<td align="right"><a href="build.city?city=2"><img src="images/front_button_2.gif" width="115" height="57" border="0"></a></td>
+		</tr>
+	</table>
+<?
+	include("inc_foot.txt");
+?>

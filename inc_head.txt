@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>City Creator<?if($title){echo " - $title";}?></title>
+<style>
+
+body		{ background-color: #ffffff; }
+img		{ border: 0px; }
+form		{ border: 0px; margin: 0px; padding: 0px; }
+
+.text		{ color: #ffffff; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px; }
+.white		{ color: #ffffff; }
+.username	{ color: #ffff00; font-weight: bold; }
+
+input.edit	{ width: 200px; }
+textarea.edit	{ width: 200px; height: 100px; }
+
+#outer		{ position: absolute; left:    50%; top: 20px; width:  10px; height: 10px; }
+#canvas		{ position: absolute; left: -256px; top:  0px; width: 513px; }
+
+</style>
+<? if ($loadalert){ ?>
+<body onload="alert('<?=$loadalert?>');">
+<? }else{ ?>
+<body>
+<? } ?>
+
+<div id="outer">
+<div id="canvas">
+
+<table cellpadding="0" cellspacing="0" border="0">
+	<tr>
+<? if ($wide){ ?>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+		<td width="271"><img src="images/space.gif" width="271" height="1"></td>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+		<td width="227"><img src="images/space.gif" width="227" height="1"></td>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+<? }else if ($long){ ?>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+		<td width="473"><img src="images/space.gif" width="473" height="1"></td>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+<? }else{ ?>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+		<td width="241"><img src="images/space.gif" width="241" height="1"></td>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+		<td width="227"><img src="images/space.gif" width="227" height="1"></td>
+		<td width="5"  ><img src="images/space.gif" width="5"   height="1"></td>
+<? } ?>
+	</tr>
+	<tr>
+<? if ($wide){ ?>
+		<td colspan="5"><img src="images/home_top_wide.gif" width="513" height="12"></td>
+<? }else if ($long){ ?>
+		<td colspan="3"><img src="images/home_top.gif" width="483" height="12"></td>
+<? }else{ ?>
+		<td colspan="5"><img src="images/home_top.gif" width="483" height="12"></td>
+<? } ?>
+	</tr>
+	<tr valign="top">
+		<td style="background-color: #000000;" background="images/home_bar_1.gif"><img src="images/space.gif" width="5"   height="1"></td>
+		<td style="background-color: #666666; color: #ffffff;" class="text">
+<? if ($wide){ ?>
+			<a href="./"><img src="images/home_logo_wide.gif" width="271" height="35" border="0"></a><br>
+			<div style="width: 271px;">
+<? }else if ($long){ ?>
+			<a href="./"><img src="images/home_logo_long.gif" width="473" height="35" border="0"></a><br>
+			<div style="width: 473px;">
+<? }else{ ?>
+			<a href="./"><img src="images/home_logo.gif" width="241" height="35" border="0"></a><br>
+			<div style="width: 241px;">
+<? } ?>
+			<div style="padding: 12px;">

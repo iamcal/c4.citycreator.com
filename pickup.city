@@ -1,0 +1,107 @@
+<?
+	include("init.txt");
+
+	list($id,$check) = explode('.',$c,2);
+
+	if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id='$id' AND check='$check'",$db))){
+			$city_row = get_city($card_row[city_id]);
+			$city_id = $city_row[id];
+	}else{
+		header("location: no_card.city");
+		exit;
+	}
+
+	$bg_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_bgs WHERE order_id='$card_row[bg_id]' AND city_id='$city_id'",$db));
+	if ($bg_row[bg_image]){
+		$bg = "url(bgs/$city_id/$bg_row[bg_image])";
+	}else{
+		$bg = $bg_row[bg_color];
+	}
+
+	$pieces = array();
+	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
+	while($row = mysql_fetch_array($result)){
+		$pieces["$row[palette]_$row[id]"] = $row;
+	}
+?>
+<html>
+<head>
+<title>City Creator - Pickup</title>
+<style>
+
+body		{ background-color: #ffffff; }
+img		{ border: 0px; }
+form		{ border: 0px; margin: 0px; padding: 0px; }
+
+#outer		{ position: absolute; left:    50%; top:  20px; }
+#canvas		{ position: absolute; left: -370px; top:  0px; width: 740px; height: 393px; z-index: 1; }
+#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 393px; z-index: 1; background-color: #cccccc; }
+
+#borderleft	{ position: absolute; left:    0px; top:   0px; width: 257px; height: 393px; z-index: 15; }
+#bordertop	{ position: absolute; left:  257px; top:   0px; width: 469px; height:  15px; z-index: 15; }
+#borderbottom	{ position: absolute; left:  257px; top: 379px; width: 469px; height:  14px; z-index: 15; }
+#borderright	{ position: absolute; left:  726px; top:   0px; width:  14px; height: 393px; z-index: 15; }
+#board		{ position: absolute; left:  257px; top:  15px; width: 469px; height: 364px; z-index: 10; clip: rect(0px 469px 364px 0px); }
+
+#textbox	{ position: absolute; left:   17px; top:  39px; width: 224px; height: 331px; z-index: 20; }
+
+</style>
+<script language="Javascript">
+<!--
+
+function print_city(id){
+	var newwin = window.open("print.city?c="+id+"&auto=1", "pickup_print_city", 'toolbar=1,scrollbars=yes,location=0,statusbar=0,menubar=1,resizable=0,width=520,height=380,left=312,top=184');
+	newwin.focus();
+}
+
+// -->
+</script>
+</head>
+<body>
+
+<div id="outer">
+<div id="canvas">
+<div id="canvasinner">
+
+	<div id="borderleft"   ><img src="images/border_left_small.gif"   width="257" height="393"></div>
+	<div id="bordertop"    ><img src="images/border_top.gif"          width="469" height="15" ></div>
+	<div id="borderbottom" ><img src="images/border_bottom_small.gif" width="469" height="14" ></div>
+	<div id="borderright"  ><img src="images/border_right_small.gif"  width="14"  height="393"></div>
+
+	<div id="board" style="background: <?=$bg?>;">
+<?
+	foreach(explode(',',$card_row[pieces]) as $piece){
+		list($palette, $id, $x, $y, $z) = explode('|',$piece);
+		$piece = $pieces["${palette}_${id}"];
+		echo "\t\t<div style=\"position: absolute; left: ${x}px; top: ${y}px; width: $piece[w]px; height: $piece[h]px; z-index: ${z};\"><img src=\"blocks/$city_id/$piece[image]\" width=\"$piece[w]\" height=\"$piece[h]\"></div>\n";
+	}
+?>
+	</div>
+
+	<div id="textbox" style="color: #ffffff; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px;">
+<? if ($card_row[message]){ ?>
+		<?=htmlentities($card_row[your_name])?> (<?=htmlentities($card_row[your_email])?>) made you a city and sent you this message:<br>
+		<br>
+		<i><?=nl2br(htmlentities(chop($card_row[message])))?></i><br>
+<? }else{ ?>
+		<?=htmlentities($card_row[your_name])?> (<?=htmlentities($card_row[your_email])?>) made you a city!<br>
+<? } ?>
+		<br>
+		If you'd like to print this card out, <a href="Javascript:print_city('<?=$c?>');" style="color: #ffffff;">click here</a>.<br>
+		<br>
+		<img src="images/white.gif" width="224" height="1"><br>
+		<br>
+		You can create your very own city, and send it to your friends, by clicking the button below.<br>
+		<br>
+		<a href="./"><img src="images/btn_make.gif" width="101" height="16" border="0"></a>
+	</div>
+
+	<div style="position: absolute; left:   4px; top: 392px; width: 740px; height:  15px;">
+<? $nav = "pickup"; include('nav.txt'); ?>
+	</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
