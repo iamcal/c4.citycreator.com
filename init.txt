@@ -2,10 +2,10 @@
 	include("/var/www/cal/includes/network.txt");
 
 	$cfg = array();
-	$cfg[pickup_url] = 'http://v3.citycreator.com/pickup.city';
-	$cfg[login_url]  = 'http://v3.citycreator.com/login.city';
-	$cfg[share_url]  = 'http://v3.citycreator.com/members.city';
-	$cfg[cp_path] = '/var/www/cal/v3.citycreator.com/cp';
+	$cfg[pickup_url] = 'http://www.citycreator.com/pickup.city';
+	$cfg[login_url]  = 'http://www.citycreator.com/login.city';
+	$cfg[share_url]  = 'http://www.citycreator.com/members.city';
+	$cfg[cp_path] = '/var/www/cal/www.citycreator.com/cp';
 
 	$cfg[time] = time() + (5 * 60 * 60); # GMT baybee
 
