@@ -39,6 +39,11 @@ var gLoadingLabel;
 var gLoadingProgress;
 var gLoadingTimer;
 
+var gBgLoaded = 0;
+var gTilesLoaded = 0;
+
+var gTheBackground = 0;
+var gTheSavedTiles = new Array();
 
 _global.startup = function(){
 
@@ -151,6 +156,51 @@ _global.onPiecesLoading = function(){
 _global.onPiecesReady = function(){
 
 	//
+	// do we need to load a saved city?
+	//
+
+	var xml_src;
+	//xml_src = "mycity.xml";
+	if (_root.thecity != undefined){
+		xml_src = _root.thecity;
+	}
+	if (xml_src != undefined){
+
+		gLoadingLabel.setCaption('Loading Saved City XML...');
+
+		var xmlDoc = new XML();
+		xmlDoc.ignoreWhite = true;
+		xmlDoc.onLoad = onCityLoaded;
+		xmlDoc.load(xml_src);
+
+	}else{
+		startTheGame();
+	}
+}
+
+function onCityLoaded(success){
+
+	if (success){
+
+		for (var i=0; i<this.childNodes.length; i++) {
+			var child = this.childNodes[i];
+
+			if (child.nodeName == 'city'){
+				init_saved_city(child);
+			}
+		}		
+
+		startTheGame();
+
+	}else{
+		gLoadingLabel.setCaption("Failed to load Saved City XML :(");
+	}
+}
+
+function startTheGame() {
+	
+
+	//
 	// we're ready to rock!
 	//
 	// create the frame and buttons
@@ -181,21 +231,30 @@ _global.onPiecesReady = function(){
 	gDeleteDialog.onClickYes = function(){ this.hide(); gTileManager.deleteAll(); }
 	gDeleteDialog.onClickNo = function(){ this.hide(); }
 
+
 	//
 	// ready the tilesets
 	//
 
 	gBgManager.onBgsLoaded = init_bg;
+	gTileManager.onTilesLoaded = init_tiles;
 
 	gTileManager.initTiles();
 	gBgManager.initBgs();
 	gTabManager.initTabs();
 	gMainFrame.bringCanvasForward();
+
 }
 
 function init_bg(){
-	// this is zero indexed!
-	gBgManager.setBg(0);
+	gBgLoaded = 1;
+	initSavedBg();
+	gMainFrame.bringCanvasForward();
+}
+
+function init_tiles(){
+	gTilesLoaded = 1;
+	initSavedTiles();
 	gMainFrame.bringCanvasForward();
 }
 
@@ -225,3 +284,43 @@ _global.button_save = function() {
 
 /////////////////////////////////////////////////////////////////////////////
 
+function init_saved_city(node){
+	//trace("init_saved_city");
+
+	gTheBackground = node.attributes.bg;
+
+	for (var i=0; i<node.childNodes.length; i++) {
+		var child = node.childNodes[i];
+		if (child.nodeName == 'tile'){
+
+			//trace('add tile');
+
+			t = new Object();
+			t.id = child.attributes.id;
+			t.x = child.attributes.x;
+			t.y = child.attributes.y;
+
+			gTheSavedTiles[gTheSavedTiles.length] = t;
+		}
+	}
+
+	if (gBgLoaded){ initSavedBg(); }
+	if (gTilesLoaded){ initSavedTiles(); }
+}
+
+function initSavedBg(){
+	gBgManager.setBg(gTheBackground);
+}
+
+function initSavedTiles(){
+	//trace("restore tiles from saved array here!");
+
+	for(var i=0; i<gTheSavedTiles.length; i++){
+		spawnTile(gTheSavedTiles[i]);
+	}	
+}
+
+function spawnTile(t){
+	var source = gUidTileSources[t.id];
+	var tile = new Tile().initialize(source, 0, t.x, t.y);
+}

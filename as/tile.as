@@ -4,10 +4,12 @@ _global.Tile = function() {
 	this.id = 0;
 }
 
-Tile.prototype.initialize = function(source, start_dragging) {
+Tile.prototype.initialize = function(source, start_dragging, x, y) {
 
 	this.source = source;
 	this.start_dragging = start_dragging;
+	this.start_x = x;
+	this.start_y = y;
 	this.offsetx = Number(source.offsetx);
 	this.offsety = Number(source.offsety);
 
@@ -27,6 +29,8 @@ Tile.prototype.initialize = function(source, start_dragging) {
 }
 
 Tile.prototype.onTileLoad = function(){
+
+	//trace("tile load");
 
 	this._mc.tile = this;
 	this._mc._visible = true;
@@ -53,6 +57,9 @@ Tile.prototype.onTileLoad = function(){
 	if (this.start_dragging){
 		this._mc.onMouseUp = this._mc.onMouseUpFunc;
 		this._mc.startDrag();
+	}else{
+		this._mc._x = this.start_x;
+		this._mc._y = this.start_y;
 	}
 }
 

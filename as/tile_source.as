@@ -1,3 +1,4 @@
+_global.gUidTileSources = new Array();
 
 _global.TileSource = function() {
 }
@@ -10,6 +11,8 @@ TileSource.prototype.initialize = function(node, parent) {
 	this.offsetx = node.attributes.offsetx;
 	this.offsety = node.attributes.offsety;
 	this.src = node.attributes.src; // + '?' + new Date().getTime();
+
+	gUidTileSources[node.attributes.uid] = this;
 
 	//trace("loading "+this.src);
 
@@ -52,4 +55,6 @@ TileSource.prototype.onTileSourceLoad = function(){
 
 	this._mc._x = x;
 	this._mc._y = y;
+
+	this.parent.tileLoaded();
 }

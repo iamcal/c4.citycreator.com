@@ -6,6 +6,7 @@ TileSet.prototype.initialize = function(node, manager) {
 	this.manager = manager;
 	this.tiles = new Array();
 	this.node = node;
+	this.tiles_loaded = 0;
 
 	for (var i=0; i<node.childNodes.length; i++) {
 		var child = node.childNodes[i];
@@ -54,4 +55,11 @@ Tileset.prototype.hide = function(){
 
 Tileset.prototype.switchTo = function(){
 	this.manager.showSet(this.tileset_id);
+}
+
+Tileset.prototype.tileLoaded = function(){
+	this.tiles_loaded++;
+	if (this.tiles_loaded == this.tiles.length){
+		this.manager.setLoaded();
+	}
 }

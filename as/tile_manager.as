@@ -8,6 +8,7 @@ TileManager.prototype.initialize = function(node) {
 	this.current_set = null;
 	this.logo = node.attributes.logo;
 	this.truck = node.attributes.truck;
+	this.sets_loaded = 0;
 
 	gBgColor = node.attributes.bgcolor;
 
@@ -70,4 +71,11 @@ TileManager.prototype.onLogoLoad = function(){
 TileManager.prototype.onTruckLoad = function(){
 	this._truck_mc._x = 656;
 	this._truck_mc._y = 400;
+}
+
+TileManager.prototype.setLoaded = function(){
+	this.sets_loaded++;
+	if (this.sets_loaded == this.tile_sets.length){
+		this.onTilesLoaded();
+	}
 }
