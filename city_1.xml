@@ -1,4 +1,4 @@
-<pieces bgcolor="0x336600">
+<pieces bgcolor="0x336600" logo="swf/logo_1.swf" truck="swf/truck_1.swf">
 	<pieceset id="1" tabx="13" taby="43" tabsrc="tabs/tab_1.swf">
 		<piece num="0" uid="1" offsetx="0" offsety="0" src="http://www.citycreator.com/blocks/test_piece.swf" />
 		<piece num="1" uid="2" offsetx="0" offsety="0" src="http://www.citycreator.com/swf.city?id=2" />
@@ -88,3 +88,21 @@
 		<piece num="19" uid="80" offsetx="14" offsety="5" src="http://www.citycreator.com/swf.city?id=80" />
 	</pieceset>
 </pieces>
+<backgrounds>
+	<background src="swf/bg_full_1_1.swf" thumb="swf/bg_thumb_1_1.swf" x="17" y="412" w="21" h="12" />
+	<background src="swf/bg_full_1_2.swf" thumb="swf/bg_thumb_1_2.swf" x="42" y="412" w="21" h="12" />
+	<background src="swf/bg_full_1_3.swf" thumb="swf/bg_thumb_1_3.swf" x="78" y="400" w="25" h="24" />
+	<background src="swf/bg_full_1_4.swf" thumb="swf/bg_thumb_1_4.swf" x="106" y="400" w="25" h="24" />
+	<background src="swf/bg_full_1_5.swf" thumb="swf/bg_thumb_1_5.swf" x="134" y="400" w="25" h="24" />
+	<background src="swf/bg_full_1_6.swf" thumb="swf/bg_thumb_1_6.swf" x="162" y="400" w="25" h="24" />
+	<background src="swf/bg_full_1_7.swf" thumb="swf/bg_thumb_1_7.swf" x="190" y="400" w="25" h="24" />
+	<background src="swf/bg_full_1_8.swf" thumb="swf/bg_thumb_1_8.swf" x="218" y="400" w="25" h="24" />
+</backgrounds>
+<tabs>
+	<tab src="swf/tab_home.swf"    x="259" y="8" ison="0" url="/" />
+	<tab src="swf/tab_members.swf" x="290" y="8" ison="0" url="/members.city" />
+	<tab src="swf/tab_faq.swf"     x="338" y="8" ison="0" url="/faq.city" />
+	<tab src="swf/tab_city_3.swf" x="673" y="8" ison="0" url="/app.city?id=3" />
+	<tab src="swf/tab_city_2.swf" x="631" y="8" ison="0" url="/app.city?id=2" />
+	<tab src="swf/tab_city_1.swf" x="585" y="8" ison="1" url="/app.city?id=1" />
+</tabs>

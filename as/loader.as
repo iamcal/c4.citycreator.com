@@ -59,6 +59,8 @@ LoadingManager.prototype.check_loaded = function(){
 			mov.checkLoaded();
 			if (!mov.loaded){
 				//trace("clip "+i+" has NOT loaded");
+				//gLoadingLabel.setCaption("clip "+mov.src+" has NOT loaded");
+
 				l_loaded = 0;
 			}else{
 				this.clips_loaded++;

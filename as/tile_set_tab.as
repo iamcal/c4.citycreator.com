@@ -1,5 +1,3 @@
-_global.gAllTileSetTabs = new Array();
-
 _global.TileSetTab = function() {
 }
 
@@ -22,14 +20,11 @@ TileSetTab.prototype.initTab = function(active){
 	this.preload_mc = gLoadingManager.getMovie(this.preload_id);
 
 	var name = 'tile_set__tab_mc_'+this.id;
-	gAllTileSetTabs[name] = this;
 
 	this._mc = this.parent_mc.createEmptyMovieClip(name, this.id);
-	this._mc.onLoad = function(){
-		var tilesettab = gAllTileSetTabs[this._name];
-		tilesettab.onTileSetTabLoad();
-	}
 	this._mc.loadMovie(this.src);
+
+	gLoadingManager2.addListener(this._mc, this, this.onTileSetTabLoad);
 }
 
 

@@ -1,4 +1,4 @@
-#include "as/onload.as"
+
 #include "as/core.as"
 #include "as/painting.as"
 
@@ -16,6 +16,9 @@
 #include "as/ccdialog.as"
 #include "as/ccdialog_delete.as"
 
+#include "as/bg_manager.as"
+#include "as/tab_manager.as"
+
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
 #include "as/tile_set_tab.as"
@@ -26,6 +29,8 @@
 var gBgColor;
 var gMainFrame;
 var gTileManager;
+var gBgManager;
+var gTabManager;
 var gAboutDialog;
 var gInstructionsDialog;
 var gDeleteDialog;
@@ -107,7 +112,21 @@ _global.onPiecesLoaded = function (success){
 
 		gLoadingLabel.setCaption('Loading City Components...');
 
-		gTileManager = new TileManager().initialize(this.childNodes[0]);
+		for (var i=0; i<this.childNodes.length; i++) {
+			var child = this.childNodes[i];
+
+			if (child.nodeName == 'pieces'){
+				gTileManager = new TileManager().initialize(child);
+			}
+
+			if (child.nodeName == 'backgrounds'){
+				gBgManager = new BgManager().initialize(child);
+			}
+
+			if (child.nodeName == 'tabs'){
+				gTabManager = new TabManager().initialize(child);
+			}
+		}		
 
 		gLoadingManager.onLoaded = onPiecesReady;
 		gLoadingManager.onLoading = onPiecesLoading;
@@ -166,7 +185,17 @@ _global.onPiecesReady = function(){
 	// ready the tilesets
 	//
 
+	gBgManager.onBgsLoaded = init_bg;
+
 	gTileManager.initTiles();
+	gBgManager.initBgs();
+	gTabManager.initTabs();
+	gMainFrame.bringCanvasForward();
+}
+
+function init_bg(){
+	// this is zero indexed!
+	gBgManager.setBg(0);
 	gMainFrame.bringCanvasForward();
 }
 
