@@ -55,6 +55,6 @@ Tile.prototype.myStopDrag = function() {
 	this._mc.stopDrag();
 
 	// snap to grid
-	this._mc._x = Math.round(this._mc._x / 30) * 30;
-	this._mc._y = Math.round(this._mc._y / 30) * 30;
+	this._mc._x = Math.round(this._mc._x / 24) * 24;
+	this._mc._y = Math.round(this._mc._y / 12) * 12;
 }
