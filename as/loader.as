@@ -28,7 +28,7 @@ LoadingManager.prototype.getMovie = function(id){
 LoadingManager.prototype.start_checking = function(){
 
 	if (!this.check_timer){
-		trace('starting timer');
+		//trace('starting timer');
 		this.check_timer = setInterval(this, 'check_loaded', 50);
 	}else{
 		//trace('wont start timer');
@@ -36,7 +36,7 @@ LoadingManager.prototype.start_checking = function(){
 }
 
 LoadingManager.prototype.stop_checking = function(){
-	trace('stopping timer');
+	//trace('stopping timer');
 	if (this.check_timer){
 		clearInterval(this.check_timer);
 		this.check_timer = null;
@@ -45,7 +45,7 @@ LoadingManager.prototype.stop_checking = function(){
 
 LoadingManager.prototype.check_loaded = function(){
 
-	trace("TIMER -----------------------------------------------------------------------");
+	//trace("TIMER -----------------------------------------------------------------------");
 
 	var l_loaded = 1;
 

@@ -11,6 +11,7 @@
 #include "as/canvas.as"
 #include "as/dialog.as"
 #include "as/progress_bar.as"
+#include "as/label.as"
 
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
@@ -25,7 +26,9 @@ var gTileManager;
 var gAboutDialog;
 var gInstructionsDialog;
 var gLoadingButton;
+var gLoadingLabel;
 var gLoadingProgress;
+var gLoadingTimer;
 
 function startup(){
 
@@ -45,25 +48,26 @@ function startup(){
 	// loading progress
 	//
 
-	gLoadingProgress = new ProgressBar().initialize(10, 60, 400, 20);
-
+	gLoadingProgress = new ProgressBar().initialize(10, 60, 720, 20);
+	gLoadingLabel = new MyLabel().initialize(10, 30, "Loading Application...");
 
 	//
-	// then some buttons
+	// set a timer running to check when the app itself is loaded
 	//
 
-	var button_parent = _root;
-
-	gLoadingButton = new MyButton().initialize(10, 10, 75, 25, "load xml", button_parent);
-	gLoadingButton.onClick = function() {
-		this.setCaption('Loading...');
-		load_city_xml();
-		delete this.onClick;
-	}
+	gLoadingTimer = setInterval(check_app_loaded, 100);
 }
 
 
-function load_city_xml(){
+function check_app_loaded(){
+
+	if (_root.getBytesLoaded() < _root.getBytesTotal()){
+		return;
+	}
+
+	clearInterval(gLoadingTimer);
+	gLoadingLabel.setCaption('Loading City XML...');
+
 
 	//
 	// load the pieces xml
@@ -75,12 +79,13 @@ function load_city_xml(){
 	xmlDoc.ignoreWhite = true;
 	xmlDoc.onLoad = onPiecesLoaded;
 	xmlDoc.load("city_1.xml");
-	//xmlDoc.load("pieces.xml");
 }
 
 function onPiecesLoaded(success){
 
 	if (success){
+
+		gLoadingLabel.setCaption('Loading City Components...');
 
 		gTileManager = new TileManager().initialize(this.childNodes[0]);
 
@@ -89,7 +94,7 @@ function onPiecesLoaded(success){
 		gLoadingManager.start_checking();
 
 	}else{
-		trace("failed to load :(");
+		trace("Failed to load City XML :(");
 	}
 }
 
