@@ -21,6 +21,8 @@ var gTileManager;
 
 function startup(){
 
+	_root._highquality = 0;
+
 	//
 	// first, create the master frame
 	//
