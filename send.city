@@ -44,7 +44,7 @@
 	<input type="hidden" name="done" value="1">
 	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
 
-	<b>Send Your City</b><br>
+	<b class="heading">Send Your City</b><br>
 	<br>
 
 	Sending your city design an e-card is simple! Just fill out the form below (we've already filled in your name and email address) and click "Send as ecard". Your friend will recieve an email containing a special web address. They can use this web address to view the city you designed, along with the (optional) message you sent them. They can also print out your city design to keep forever.<br>

@@ -43,7 +43,7 @@ function delete_city(id){
 	<br>
 <? if ($cfg[user_ok]){ ?>
 	You are logged in as <span class="username"><?=$cfg[user][username]?></span><br>
-	(<a href="logout.city" style="color: #ffffff;">click here</a> to logout)<br>
+	(<a href="logout.city">click here</a> to logout)<br>
 	<br>
 	As a member, you have your own personal "members page" which contains any city designs that you have created or been sent. To get back to this page at any time, simply click on the "members" tab at the bottom of the page. From this page you can send your cities as e-cards, share your city designs with other designers, continuing working on previously saved cities, print your city designs, and delete cities you don't want to keep any longer.<br>
 	<br>
@@ -63,13 +63,10 @@ function delete_city(id){
 			<td class="text">
 				Saved <?=date('H:i jS F Y',$row[date_create])?><br>
 				<br>
-				<a href="send.city?saved_id=<?=$row[id]?>"><img src="images/btn_send.gif" width="71" height="16" border="0"></a>&nbsp;
-				<a href="share.city?saved_id=<?=$row[id]?>"><img src="images/btn_share.gif" width="53" height="16" border="0"></a>&nbsp;
-				<a href="build.city?saved_id=<?=$row[id]?>"><img src="images/btn_edit.gif" width="44" height="16" border="0"></a>&nbsp;
-				<a href="javascript:print_city(<?=$row[id]?>,1);"><img src="images/btn_print.gif" width="49" height="16" border="0"></a>&nbsp;
-				<a href="shop.city?s=<?=$row[id]?>" target="_blank"><img src="images/btn_shop.gif" width="56" height="16" border="0"></a><br>
-				<!-- <a href="javascript:alert('we\'re currently working on the shop. come back later :)');"><img src="images/btn_shop.gif" width="56" height="16" border="0"></a><br> -->
-
+				<a href="send.city?saved_id=<?=$row[id]?>"><img src="images/btn_send.gif" width="71" height="16" border="0"></a>
+				<a href="share.city?saved_id=<?=$row[id]?>"><img src="images/btn_share.gif" width="53" height="16" border="0"></a>
+				<a href="build.city?saved_id=<?=$row[id]?>"><img src="images/btn_edit.gif" width="44" height="16" border="0"></a>
+				<a href="javascript:print_city(<?=$row[id]?>,1);"><img src="images/btn_print.gif" width="49" height="16" border="0"></a>
 				<a href="javascript:delete_city(<?=$row[id]?>);"><img src="images/btn_delete2.gif" width="55" height="16" border="0"></a>
 			</td>
 		</tr>

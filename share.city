@@ -38,7 +38,7 @@
 	<input type="hidden" name="done" value="1">
 	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
 
-	<b>Share Your City</b><br>
+	<b class="heading">Share Your City</b><br>
 	<br>
 
 	<!-- <img src="image.city?s=<?=$saved_id?>&thumb=1" align="left"> -->

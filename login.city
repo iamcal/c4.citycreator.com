@@ -29,7 +29,7 @@
 	include('inc_head.txt');
 ?>
 
-	<b>Members Area - Log In</b><br>
+	<b class="heading">Members Area - Log In</b><br>
 	<br>
 
 	<form action="login.city" method="post">

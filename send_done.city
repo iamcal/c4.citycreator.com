@@ -13,7 +13,7 @@
 	include("inc_head.txt");
 ?>
 
-	<b>Send Your City</b><br>
+	<b class="heading">Send Your City</b><br>
 	<br>
 
 	Thanks for filling out the form, your ecard has been sent.<br>

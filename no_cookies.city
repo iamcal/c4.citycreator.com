@@ -4,7 +4,7 @@
 	include("inc_head.txt");
 ?>
 
-	<b>There was an error!</b><br>
+	<b class="heading">There was an error!</b><br>
 	<br>
 	It doesn't look like you have cookies enabled, so we can't log you in.<br>
 	<br>

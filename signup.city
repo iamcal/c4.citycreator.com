@@ -78,7 +78,7 @@ function why(){
 //-->
 </script>
 
-	<b>Members Area - Sign Up</b><br>
+	<b class="heading">Members Area - Sign Up</b><br>
 	<br>
 	<form action="signup.city" method="post">
 	<input type="hidden" name="done" value="1">

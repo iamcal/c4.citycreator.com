@@ -43,7 +43,7 @@
 	include("inc_head.txt");
 ?>
 
-	<b>Share A City</b><br>
+	<b class="heading">Share A City</b><br>
 	<br>
 	You have been sent a city by another citycreator.com member. Please choose from the following options:<br>
 	<br>

@@ -14,6 +14,7 @@ var loaded_count = 0;
 var max_cookie_len = 4000; //we're allowed 4k (4096) but that includes the cookie name
 
 var top_count = 0;
+var piece_index = new Array();
 
 var shadow_layer = null;
 
@@ -36,7 +37,7 @@ function init(){
 }
 
 
-function add_piece(palette, id, width, height, ox, oy, src){
+function add_piece(uid, palette, id, width, height, ox, oy, src){
 
 	var row = Math.floor(id / 4);
 	var col = id % 4;
@@ -58,7 +59,7 @@ function add_piece(palette, id, width, height, ox, oy, src){
 	elm.style.fontSize = '1px';
 	elm.style.zIndex = 2;
 
-	elm.id = 'piece'+palette+'x'+id;
+	elm.id = 'piece_'+uid;
 	elm.onmousedown = click_wrapper;
 
 	elm.pos_x = x;
@@ -67,15 +68,18 @@ function add_piece(palette, id, width, height, ox, oy, src){
 	elm.size_y = height;
 	elm.id_palette = palette;
 	elm.id_id = id;
+	elm.uid = uid;
 	elm.img_src = src;
 	elm.offset_x = ox;
 	elm.offset_y = oy;
 
 	add_child(get_elm("palette"+palette), elm);
+
+	piece_index[piece_index.length] = elm;
 }
 
 function click_wrapper(e){
-	make_piece(e, this.id_palette, this.id_id);
+	make_piece(e, this.uid);
 }
 
 function add_bg(id, image, color){
@@ -112,11 +116,11 @@ function hide_elm(elm){
 	elm.style.visibility = 'hidden';
 }
 
-function make_piece(e, palette, id){
+function make_piece(e, uid){
 	var x = (e)? e.pageX : event.x + document.body.scrollLeft;
 	var y = (e)? e.pageY : event.y + document.body.scrollTop;
 
-	var p_elm = get_elm('piece'+palette+'x'+id);
+	var p_elm = get_elm('piece_'+uid);
 
 	var p_x = p_elm.pos_x - 243;
 	var p_y = p_elm.pos_y + 32;
@@ -124,7 +128,7 @@ function make_piece(e, palette, id){
 	drag_offset_x = x - p_x;
 	drag_offset_y = y - p_y;
 
-	var elm = create_elm(p_x, p_y, p_elm.size_x, p_elm.size_y, p_elm.offset_x, p_elm.offset_y, get_max_z() + 1, p_elm.img_src, p_elm.id_palette, p_elm.id_id);
+	var elm = create_elm(p_x, p_y, p_elm.size_x, p_elm.size_y, p_elm.offset_x, p_elm.offset_y, get_max_z() + 1, p_elm.img_src, p_elm.uid, p_elm.id_palette, p_elm.id_id);
 
 	currently_dragging = 1;
 	drag_elm = elm;
@@ -269,17 +273,39 @@ function update_pieces(){
 }
 
 function load_pieces(){
-	var temp = readCookie(cookie_prefix+'bg_id');
+	if (readCookie(cookie_prefix_old+'bg_id')){
+		alert("old format cookies detected - removing and converting");
+		load_pieces_guts(cookie_prefix_old);
+		update_pieces();
+
+		return;
+		// kill old cookies
+		var count = readCookie(cookie_prefix_old+'piece_count');
+		if (count != null){
+			for(i=1; i<=count; i++){
+				saveCookie(cookie_prefix_old+'pieces_'+i, 0, 0);
+			}
+		}
+		saveCookie(cookie_prefix_old+'bg_id', 0, 0);
+		saveCookie(cookie_prefix_old+'piece_count', 0, 0);
+		
+	}else{
+		load_pieces_guts(cookie_prefix);
+	}
+
+function load_pieces_guts(prefix){
+
+	var temp = readCookie(prefix+'bg_id');
 	if (temp != null){
 		bg_nosave(temp);
 	}
 
-	var count = readCookie(cookie_prefix+'piece_count');
+	var count = readCookie(prefix+'piece_count');
 	var temp = null;
 	if (count != null){
 		temp = '';
 		for(i=1; i<=count; i++){
-			temp += readCookie(cookie_prefix+'pieces_'+i);
+			temp += readCookie(prefix+'pieces_'+i);
 		}
 	}
 
@@ -304,16 +330,39 @@ function serialize_all(){
 }
 
 function serialize_elm(elm){
-	return elm.id_palette + '|' + elm.id_id + '|' + elm.pos_x + '|' + elm.pos_y + '|' + elm.style.zIndex;
+	return elm.uid + '|' + elm.pos_x + '|' + elm.pos_y + '|' + elm.style.zIndex;
 }
 
 function unserialize_elm(data){
 	var bits = data.split('|');
-	var p_elm = get_elm('piece'+bits[0]+'x'+bits[1]);
-	create_elm(bits[2], bits[3], p_elm.size_x, p_elm.size_y, p_elm.offset_x, p_elm.offset_y, bits[4], p_elm.img_src, bits[0], bits[1]);
+	if (bits.length == 5){
+		// old format
+		var p_elm = find_elm_old(bits[0], bits[1]);
+		if (p_elm == null){ return; }
+		var x = bits[2];
+		var y = bits[3];
+		var z = bits[4];
+	}else{
+		// new format
+		var p_elm = get_elm('piece_'+bits[0]);
+		var x = bits[1];
+		var y = bits[2];
+		var z = bits[3];
+	}
+	create_elm(x, y, p_elm.size_x, p_elm.size_y, p_elm.offset_x, p_elm.offset_y, z, p_elm.img_src, p_elm.uid, p_elm.palette, p_elm.id);
 }
 
-function create_elm(x, y, w, h, ox, oy, z, src, palette, id){
+function find_elm_old(palette, id){
+	for(var i=0; i<piece_index.length; i++){
+		var elm = piece_index[i];
+		if ((elm.id_id == id) && (elm.id_palette == palette)){
+			return elm;
+		}
+	}
+	return null;
+}
+
+function create_elm(x, y, w, h, ox, oy, z, src, uid, palette, id){
 
 	var elm = document.createElement('DIV');
 	elm.style.position = 'absolute';
@@ -330,6 +379,7 @@ function create_elm(x, y, w, h, ox, oy, z, src, palette, id){
 	elm.pos_y = y;
 	elm.size_x = w;
 	elm.size_y = h;
+	elm.id_uid = uid;
 	elm.id_palette = palette;
 	elm.id_id = id;
 	elm.offset_x = ox;
