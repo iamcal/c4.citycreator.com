@@ -6,7 +6,13 @@
 	if (!$your_email){$your_email = $cfg[user][email];}
 
 	if ($done){
-		mail("cal@citycreator.com", "citycreator.com suggestion", "NAME: $your_name\nEMAIL: $your_email\nCOMMENT:\n$comment", "From: $your_email");
+		#mail("cal@citycreator.com", "citycreator.com suggestion", "NAME: $your_name\nEMAIL: $your_email\nCOMMENT:\n$comment", "From: $your_email");
+
+		mysql_query("INSERT INTO citycreator_suggestions (date_create, from_name, from_email, suggestion) VALUES ('$time', '$your_name', '$your_email', '$comment')", $db);
+
+		if ($your_email){
+			mail($your_email, "Re: citycreator.com suggestion", "Thanks for your suggestion - we've noted it down and might use it in the future!\n\n--cal & denise, citycreator.com\n", "From: cal@citycreator.com");
+		}
 
 		header("location: suggest_done.city");
 		exit;
