@@ -3,6 +3,7 @@
 #include "as/painting.as"
 
 #include "as/loader.as"
+#include "as/loader_2.as"
 
 #include "as/mainframe.as"
 #include "as/button.as"
@@ -24,6 +25,8 @@ function startup(){
 	Stage.showMenu = false;
 	Stage.scaleMode = 'NoScale';
 	Stage.align = 'TL';
+
+	_root._highquality = 0;
 
 
 	//
@@ -59,7 +62,8 @@ function load_city_xml(){
 	xmlDoc = new XML();
 	xmlDoc.ignoreWhite = true;
 	xmlDoc.onLoad = onPiecesLoaded;
-	xmlDoc.load("pieces.xml");
+	xmlDoc.load("city_1.xml");
+	//xmlDoc.load("pieces.xml");
 }
 
 function onPiecesLoaded(success){

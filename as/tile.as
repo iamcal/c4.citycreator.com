@@ -8,19 +8,20 @@ Tile.prototype.initialize = function(source, start_dragging) {
 
 	this.source = source;
 	this.start_dragging = start_dragging;
+	this.offsetx = Number(source.offsetx);
+	this.offsety = Number(source.offsety);
 
 	this.id = getNewDepth();
 	this.canvas_mc = gMainFrame.getCanvasMc();
 
-	var name = 'tile_mc_'+this.id;
-	gAllTiles[name] = this;
-
-	this._mc = this.canvas_mc.createEmptyMovieClip(name, this.id);
-	this._mc.onLoad = function(){
-		var tile = gAllTiles[this._name];
-		tile.onTileLoad();
-	}
+	this._mc = this.canvas_mc.createEmptyMovieClip('tile_mc_'+this.id, this.id);
+	this._mc._y = -1000;
+	this._mc._visible = false;
 	this._mc.loadMovie(this.source.src);
+
+	gLoadingManager2.addListener(this._mc, this, this.onTileLoad);
+
+	gAllTiles[this._mc._name] = this;
 
 	return this;
 }
@@ -72,12 +73,16 @@ Tile.prototype.myStopDrag = function() {
 	//
 	// snap to grid
 	//
-	this._mc._x = Math.round(this._mc._x / 24) * 24;
-	this._mc._y = Math.round(this._mc._y / 12) * 12;
+
+	var px = (Math.round((this._mc._x - this.offsetx) / 24) * 24) + this.offsetx;
+	var py = (Math.round((this._mc._y - this.offsety) / 12) * 12) + this.offsety;
+
+	this._mc._x = px;
+	this._mc._y = py;
 }
 
 Tile.prototype.deleteTile = function() {
-	delete gAllTiles[this._name];
+	delete gAllTiles[this._mc._name];
 	this._mc.unloadMovie();
 	delete this;
 }

@@ -38,7 +38,7 @@ TileSet.prototype.initTiles = function(id, active){
 	}
 
 	for (var i=0; i<this.tiles.length; i++) {
-		this.tiles[i].initTile(this.canvas, i);
+		this.tiles[i].initTile(this.canvas);
 	}
 }
 

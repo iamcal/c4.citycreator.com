@@ -1,4 +1,3 @@
-_global.gAllTileSources = new Array();
 
 _global.TileSource = function() {
 }
@@ -8,34 +7,33 @@ TileSource.prototype.initialize = function(node, parent) {
 	this.parent = parent;
 	this.node = node;
 	this.seq_num = node.attributes.num;
-	this.src = node.attributes.src;
+	this.offsetx = node.attributes.offsetx;
+	this.offsety = node.attributes.offsety;
+	this.src = node.attributes.src + '?' + new Date().getTime();
+
+	//trace("loading "+this.src);
 
 	this.preload_id = gLoadingManager.loadMovie(this.src);
 
 	return this;	
 }
 
-TileSource.prototype.initTile = function(canvas, seq_num){
+TileSource.prototype.initTile = function(canvas){
 
 	this.canvas = canvas;
 	this.parent_mc = canvas.getMc();
 	this.id = getNewDepth();
-	//this.seq_num = seq_num;
 	this.preload_mc = gLoadingManager.getMovie(this.preload_id);
 
-	var name = 'tile_source_mc_'+this.id;
-	gAllTileSources[name] = this;
-
-	this._mc = this.parent_mc.createEmptyMovieClip(name, this.id);
-	this._mc.onLoad = function(){
-		tile_source = gAllTileSources[this._name];
-		tile_source.onTileSourceLoad();
-	}
+	this._mc = this.parent_mc.createEmptyMovieClip('tile_source_mc_'+this.id, this.id);
 	this._mc.loadMovie(this.src);
+
+	gLoadingManager2.addListener(this._mc, this, this.onTileSourceLoad);
 }
 
 
 TileSource.prototype.onTileSourceLoad = function(){
+	trace('loaded: '+this._mc._name+' : '+this.src);
 
 	this._mc.source = this;
 
@@ -45,9 +43,6 @@ TileSource.prototype.onTileSourceLoad = function(){
 
 	var col = this.seq_num % 4;
 	var row = (this.seq_num - col) / 4;
-
-	var x = 14 + (58 * col);
-	var y = 61 + (67 * row);
 
 	var x = (58 * col);
 	var y = (67 * row);

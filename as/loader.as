@@ -28,7 +28,7 @@ LoadingManager.prototype.getMovie = function(id){
 LoadingManager.prototype.start_checking = function(){
 
 	if (!this.check_timer){
-		//trace('starting timer');
+		trace('starting timer');
 		this.check_timer = setInterval(this, 'check_loaded', 1000);
 	}else{
 		//trace('wont start timer');
@@ -36,6 +36,7 @@ LoadingManager.prototype.start_checking = function(){
 }
 
 LoadingManager.prototype.stop_checking = function(){
+	trace('stopping timer');
 	if (this.check_timer){
 		clearInterval(this.check_timer);
 		this.check_timer = null;
@@ -44,14 +45,19 @@ LoadingManager.prototype.stop_checking = function(){
 
 LoadingManager.prototype.check_loaded = function(){
 
+	trace("TIMER -----------------------------------------------------------------------");
+
 	var l_loaded = 1;
 
 	for(var i=0; i<this.movies.length; i++){
 		var mov = this.movies[i];
 
 		if (!mov.loaded){
-			trace("clip "+i+" has NOT loaded");
-			l_loaded = 0;
+			mov.checkLoaded();
+			if (!mov.loaded){
+				trace("clip "+i+" has NOT loaded");
+				l_loaded = 0;
+			}
 		}
 	}
 
@@ -66,9 +72,12 @@ LoadingManager.prototype.onLoaded = function(){
 }
 
 LoadingManager.prototype.clipLoaded = function(clip){
+	//trace('LoadingManager.prototype.clipLoaded');
+
 	for(var i=0; i<this.movies.length; i++){
 		var mov = this.movies[i];
 		if (mov.mc == clip){
+			//trace("loaded "+mov.src);
 			mov.loaded = 1;
 		}
 	}
@@ -92,17 +101,32 @@ LoadingMovie.prototype.initialize = function(parent, src) {
 	this.loaded = 0;
 
 	this.id = getNewDepth();
-	this.mc = _root.createEmptyMovieClip('loading_movie_mc' + this.id, this.id);
+	this.mc = _root.createEmptyMovieClip('loading_movie_mc_' + this.id, this.id);
 	this.mc._x = -100;
 	this.mc._y = -100;
 
-	this.mc.onLoad = function() {
-		this._visible = false;
-		gLoadingManager.clipLoaded(this);
-	}
+	this.mc.onLoad = MovieClipLoaded;
 	this.mc.loadMovie(this.src);
 
 	return this;
+}
+
+LoadingMovie.prototype.checkLoaded = function() {
+	trace("LoadingMovie.prototype.checkLoaded");
+
+	this.mc._visible = false;
+	if ((this.mc.getBytesLoaded() == this.mc.getBytesTotal()) && (this.mc.getBytesTotal())){
+		this.loaded = 1;
+		gLoadingManager.clipLoaded(this.mc);
+	}
+	//trace(this.mc.getBytesLoaded()+' / '+this.mc.getBytesTotal());
+}
+
+function MovieClipLoaded() {
+	delete this.onLoad;
+	//trace('MovieClipLoaded');
+	this._visible = false;
+	gLoadingManager.clipLoaded(this);
 }
 
 // ====================================================================== //
