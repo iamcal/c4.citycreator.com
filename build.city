@@ -231,9 +231,6 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 		</div>
 		<img src="images/pop_bottom.gif" width="258" height="12"><br>
 	</div>
-	<div style="position: absolute; left:   4px; top: 426px; width: 740px; height:  15px; visibility: hidden;">
-<? $nav = "build_$city_id"; $build=1; include('nav.txt'); ?>
-	</div>
 </div>
 </div>
 <div id="copyright" class="copyright">

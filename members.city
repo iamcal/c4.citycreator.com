@@ -39,7 +39,7 @@ function delete_city(id){
 // -->
 </script>
 
-	<b>Members Area</b><br>
+	<b class="heading">Members Area</b><br>
 	<br>
 <? if ($cfg[user_ok]){ ?>
 	You are logged in as <span class="username"><?=$cfg[user][username]?></span><br>
@@ -104,9 +104,9 @@ function delete_city(id){
 	You are not currently logged in.<br>
 	<br>
 	<div align="center">
-		<a href="login.city<?=$extra?>" style="color: #ffffff;"><img src="images/btn_big_login.gif" width="212" height="26"></a>
-		&nbsp;&nbsp;
-		<a href="signup.city<?=$extra?>" style="color: #ffffff;"><img src="images/btn_big_signup.gif" width="212" height="26"></a>
+		<a href="login.city<?=$extra?>" style="color: #ffffff;"><img src="images/btn_big_login.gif" width="212" height="26"></a><br>
+		<br>
+		<a href="signup.city<?=$extra?>" style="color: #ffffff;"><img src="images/btn_big_signup.gif" width="212" height="26"></a><br>
 	</div>
 	<br>
 	<b>Why become a member?</b><br>

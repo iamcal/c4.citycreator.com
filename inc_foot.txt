@@ -1,50 +1,67 @@
-			</div>
-			</div>
 		</td>
-<? if (!$long){ ?>
-		<td style="background-color: #000000;" background="images/home_bar_2.gif"><img src="images/space.gif" width="5"   height="1"></td>
-		<td style="background-color: #000000; color: #ffffff;" class="text">
-			<img src="images/home_demo.gif" width="227" height="315"><br>
-			<div style="width: 227px;">
-			<div align="center" style="padding-top: 9px;">
-				Here's one we made earlier!<br>
-				Click <a href="build.city?city=2" style="color: #ffffff;">here</a> to make your own
-			</div>
-			</div>
+		<td bgcolor="#ffffff"><img src="images/space.gif" width="30"  height="10"></td>
+		<td bgcolor="#878787"><img src="images/space.gif" width="25"  height="10"></td>
+		<td bgcolor="#878787">
+			<img src="images/space.gif" width="215" height="5"><br>
+
+			<a href="build.city?city=3"><img src="images/pages/home_card_3.gif" width="215" height="168" border="0"></a><br>
+
+			<img src="images/space.gif" width="215" height="4"><br>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<td><img src="images/space.gif" width="129" height="18"></td>
+				<td><img src="images/pages/home_label_3.gif" width="45" height="18"></td>
+				<td><a href="build.city?city=3"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></td>
+				<td><img src="images/space.gif" width="2" height="18"></td>
+			</table>
+			<img src="images/space.gif" width="215" height="12"><br>
+
+			<a href="build.city?city=2"><img src="images/pages/home_card_2.gif" width="215" height="168" border="0"></a><br>
+
+			<img src="images/space.gif" width="215" height="4"><br>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<td><img src="images/space.gif" width="129" height="18"></td>
+				<td><img src="images/pages/home_label_2.gif" width="45" height="18"></td>
+				<td><a href="build.city?city=2"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></td>
+				<td><img src="images/space.gif" width="2" height="18"></td>
+			</table>
+			<img src="images/space.gif" width="215" height="12"><br>
+
+			<a href="build.city?city=1"><img src="images/pages/home_card_1.gif" width="215" height="168" border="0"></a><br>
+
+			<img src="images/space.gif" width="215" height="4"><br>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<td><img src="images/space.gif" width="129" height="18"></td>
+				<td><img src="images/pages/home_label_1.gif" width="45" height="18"></td>
+				<td><a href="build.city?city=1"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></td>
+				<td><img src="images/space.gif" width="2" height="18"></td>
+			</table>
+			<img src="images/space.gif" width="215" height="12"><br>
+
+			<a href="suggest.city"><img src="images/pages/home_card_next.gif" width="215" height="168" border="0"></a><br>
+
+			<img src="images/space.gif" width="215" height="4"><br>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<td><img src="images/space.gif" width="140" height="18"></td>
+				<td><a href="suggest.city"><img src="images/pages/btn_suggest.gif" width="73" height="18" border="0"></a></td>
+				<td><img src="images/space.gif" width="2" height="18"></td>
+			</table>
+			<img src="images/space.gif" width="215" height="12"><br>
+
 		</td>
-<? } ?>
-		<td style="background-color: #000000;" background="images/home_bar_3.gif"><img src="images/space.gif" width="5"   height="1"></td>
+		<td bgcolor="#878787"><img src="images/space.gif" width="16"  height="10"></td>
+		<td background="images/pages/inner_right.gif"><img src="images/space.gif" width="14"  height="10"></td>
 	</tr>
 	<tr>
-<? if ($wide){ ?>
-		<td colspan="5"><img src="images/home_foot_wide.gif" width="513" height="12"></td>
-<? }else if ($long){ ?>
-		<td colspan="3"><img src="images/home_foot.gif" width="483" height="12"></td>
-<? }else{ ?>
-		<td colspan="5"><img src="images/home_foot.gif" width="483" height="12"></td>
-<? } ?>
+		<td colspan="8"><img src="images/pages/inner_foot.gif" width="740" height="13"></td>
 	</tr>
 	<tr>
-<? if ($wide){ ?>
-		<td colspan="5">
-			<div style="position: relative; left: 4px; top: -1px; width: 513px; height:  15px;">
-<? }else if ($long){ ?>
-		<td colspan="3">
-			<div style="position: relative; left: 4px; top: -1px; width: 483px; height:  15px;">
-<? }else{ ?>
-		<td colspan="5">
-			<div style="position: relative; left: 4px; top: -1px; width: 483px; height:  15px;">
-<? } ?>
-<? include('nav.txt'); ?>
-			</div>
+		<td colspan="8" class="copyright">
+			<img src="images/space.gif" width="30" height="3"><br>
+			&copy;2002-2003 Denise Wilton &amp; Cal Henderson
 		</td>
 	</tr>
 </table>
-<br>
-<br>
 
-</div>
-</div>
 
 </body>
 </html>

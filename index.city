@@ -65,7 +65,7 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 		<br>
 		Arrange them to make your city. (It might help to start by adding the roads)<br>
 		<br>
-		<img src="images/truck.gif" width="66" height="48" align="left">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.<br clear="all">
+		<img src="images/truck.gif" width="66" height="48" align="left" style="z-index: 20;">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.<br clear="all">
 		<br>
 		You can delete your whole town by clicking the 'Delete all' button.<br>
 		<br>
@@ -76,10 +76,10 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 	</div>
 
 	<div id="board">
-		<div style="position: absolute; left:  11px; top:   9px; width: 215px; height: 168px"><img src="images/pages/home_card_3.gif" width="215" height="168"></div>
-		<div style="position: absolute; left: 244px; top:   9px; width: 215px; height: 168px"><img src="images/pages/home_card_2.gif" width="215" height="168"></div>
-		<div style="position: absolute; left:  11px; top: 201px; width: 215px; height: 168px"><img src="images/pages/home_card_1.gif" width="215" height="168"></div>
-		<div style="position: absolute; left: 244px; top: 201px; width: 215px; height: 168px"><img src="images/pages/home_card_next.gif" width="215" height="168"></div>
+		<div style="position: absolute; left:  11px; top:   9px; width: 215px; height: 168px"><a href="build.city?city=3"><img src="images/pages/home_card_3.gif"    width="215" height="168" border="0"></a></div>
+		<div style="position: absolute; left: 244px; top:   9px; width: 215px; height: 168px"><a href="build.city?city=2"><img src="images/pages/home_card_2.gif"    width="215" height="168" border="0"></a></div>
+		<div style="position: absolute; left:  11px; top: 201px; width: 215px; height: 168px"><a href="build.city?city=1"><img src="images/pages/home_card_1.gif"    width="215" height="168" border="0"></a></div>
+		<div style="position: absolute; left: 244px; top: 201px; width: 215px; height: 168px"><a href="suggest.city"     ><img src="images/pages/home_card_next.gif" width="215" height="168" border="0"></a></div>
 
 		<div style="position: absolute; left: 185px; top: 181px; width:  39px; height:  18px"><a href="build.city?city=3"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></div>
 		<div style="position: absolute; left: 417px; top: 181px; width:  39px; height:  18px"><a href="build.city?city=2"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></div>
