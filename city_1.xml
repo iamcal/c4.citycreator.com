@@ -43,7 +43,7 @@
 		<piece num="18" uid="39" offsetx="7" offsety="8" src="http://www.citycreator.com/swf.city?id=39" />
 		<piece num="19" uid="40" offsetx="10" offsety="6" src="http://www.citycreator.com/swf.city?id=40" />
 	</pieceset>
-	<pieceset id="3" tabx="89" taby="43" tabsrc="tabs/tab_1.swf">
+	<pieceset id="3" tabx="89" taby="43" tabsrc="tabs/tab_3.swf">
 		<piece num="0" uid="41" offsetx="19" offsety="9" src="http://www.citycreator.com/swf.city?id=41" />
 		<piece num="1" uid="42" offsetx="19" offsety="10" src="http://www.citycreator.com/swf.city?id=42" />
 		<piece num="2" uid="43" offsetx="12" offsety="10" src="http://www.citycreator.com/swf.city?id=43" />
@@ -65,7 +65,7 @@
 		<piece num="18" uid="59" offsetx="6" offsety="16" src="http://www.citycreator.com/swf.city?id=59" />
 		<piece num="19" uid="60" offsetx="8" offsety="16" src="http://www.citycreator.com/swf.city?id=60" />
 	</pieceset>
-	<pieceset id="4" tabx="163" taby="43" tabsrc="tabs/tab_1.swf">
+	<pieceset id="4" tabx="163" taby="43" tabsrc="tabs/tab_4.swf">
 		<piece num="0" uid="61" offsetx="0" offsety="0" src="http://www.citycreator.com/swf.city?id=61" />
 		<piece num="1" uid="62" offsetx="0" offsety="0" src="http://www.citycreator.com/swf.city?id=62" />
 		<piece num="2" uid="63" offsetx="0" offsety="0" src="http://www.citycreator.com/swf.city?id=63" />

@@ -39,7 +39,7 @@ LoadingManager2.prototype.timerTick = function(){
 	for(var i=this.movies.length-1; i>=0; i--){
 		if (this.isLoaded(this.movies[i].mc)){
 			this.movies[i].method.call(this.movies[i].obj);
-			this.movies.splice(i);
+			this.movies.splice(i,1);
 		}
 	}
 
@@ -51,7 +51,9 @@ LoadingManager2.prototype.timerTick = function(){
 LoadingManager2.prototype.isLoaded = function(mc){
 	if (mc.getBytesTotal()){
 		if (mc.getBytesLoaded() == mc.getBytesTotal()){
-			return 1;
+			if (mc._framesloaded == mc._totalframes){
+				return 1;
+			}
 		}
 	}
 	return 0;

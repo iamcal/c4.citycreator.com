@@ -129,8 +129,10 @@ LoadingMovie.prototype.checkLoaded = function() {
 
 	this.mc._visible = false;
 	if ((this.mc.getBytesLoaded() == this.mc.getBytesTotal()) && (this.mc.getBytesTotal())){
-		this.loaded = 1;
-		gLoadingManager.clipLoaded(this.mc);
+		if (this.mc._framesloaded == this.mc._totalframes){
+			this.loaded = 1;
+			gLoadingManager.clipLoaded(this.mc);
+		}
 	}
 	//trace(this.mc.getBytesLoaded()+' / '+this.mc.getBytesTotal());
 }

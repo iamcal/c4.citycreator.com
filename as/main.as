@@ -34,7 +34,14 @@ var gLoadingLabel;
 var gLoadingProgress;
 var gLoadingTimer;
 
-function startup(){
+
+_global.startup = function(){
+
+	_global.clientV = 8;
+	_global.traceAllXML = true;
+
+	System.security.allowDomain("citycreator.com");
+	System.security.allowDomain("flash.citycreator.com");
 
 	Stage.showMenu = false;
 	Stage.scaleMode = 'NoScale';
@@ -62,14 +69,24 @@ function startup(){
 	gLoadingTimer = setInterval(check_app_loaded, 100);
 }
 
-
-function check_app_loaded(){
+_global.check_app_loaded = function (){
 
 	if (_root.getBytesLoaded() < _root.getBytesTotal()){
 		return;
 	}
 
 	clearInterval(gLoadingTimer);
+
+
+	//
+	// where is the pieces xml?
+	//
+
+	var xml_src = "city_1.xml";
+	if (_root.thexml != undefined){
+		xml_src = _root.thexml;
+	}
+
 	gLoadingLabel.setCaption('Loading City XML...');
 
 
@@ -77,15 +94,14 @@ function check_app_loaded(){
 	// load the pieces xml
 	//
 
-	var xmlDoc;
-
-	xmlDoc = new XML();
+	var xmlDoc = new XML();
 	xmlDoc.ignoreWhite = true;
 	xmlDoc.onLoad = onPiecesLoaded;
-	xmlDoc.load("city_1.xml");
+	xmlDoc.load(xml_src);
+	
 }
 
-function onPiecesLoaded(success){
+_global.onPiecesLoaded = function (success){
 
 	if (success){
 
@@ -98,11 +114,11 @@ function onPiecesLoaded(success){
 		gLoadingManager.start_checking();
 
 	}else{
-		trace("Failed to load City XML :(");
+		gLoadingLabel.setCaption("Failed to load City XML :(");
 	}
 }
 
-function onPiecesLoading(){
+_global.onPiecesLoading = function(){
 
 	var percent = 100 * gLoadingManager.clips_loaded / gLoadingManager.clips_total;
 
@@ -113,7 +129,7 @@ function onPiecesLoading(){
 	gLoadingButton.setCaption(percent+'%');
 }
 
-function onPiecesReady(){
+_global.onPiecesReady = function(){
 
 	//
 	// we're ready to rock!
@@ -159,23 +175,24 @@ function onPiecesReady(){
 // Button Handlers
 //
 
-function button_delete_all() {
+_global.button_delete_all = function() {
 	//trace('are you sure?');
 	gDeleteDialog.showAt(391, 160);
 }
 
-function button_instructions() {
+_global.button_instructions = function() {
 	//trace('instructions');
 	gInstructionsDialog.showAt(298, 54);
 }
 
-function button_about() {
+_global.button_about = function() {
 	//trace('about');
 	gAboutDialog.showAt(396, 86);
 }
 
-function button_save() {
+_global.button_save = function() {
 	trace('save');
 }
 
 /////////////////////////////////////////////////////////////////////////////
+

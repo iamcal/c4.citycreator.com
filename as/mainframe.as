@@ -8,7 +8,7 @@ MainFrame.prototype.initialize = function(x, y, w, h, color, parent) {
 	this.w = w;
 	this.h = h;
 
-	trace("creating bg with "+color);
+	//trace("creating bg with "+color);
 
 	this.bgid = getNewDepth();
 	this._bg = parent.createEmptyMovieClip('frame_bg_mc_' + this.bgid, this.bgid);
