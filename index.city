@@ -65,7 +65,13 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 		<br>
 		Arrange them to make your city. (It might help to start by adding the roads)<br>
 		<br>
-		<img src="images/truck.gif" width="66" height="48" align="left" style="z-index: 20;">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.<br clear="all">
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr valign="top">
+				<td><img src="images/truck.gif" width="66" height="48"></td>
+				<td><img src="images/space.gif" width="4" height="48"></td>
+				<td class="text">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.</td>
+			</tr>
+		</table>
 		<br>
 		You can delete your whole town by clicking the 'Delete all' button.<br>
 		<br>
