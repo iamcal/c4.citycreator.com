@@ -53,7 +53,7 @@ function pre_init(){
 	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
 	echo "\tpiece_count = ".mysql_num_rows($result).";\n";
 	while($row = mysql_fetch_array($result)){
-		echo "\tadd_piece($row[uid], $row[tab_id], $row[in_order], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
+		echo "\tadd_piece($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
 	}
 ?>
 

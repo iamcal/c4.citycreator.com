@@ -37,7 +37,7 @@ function init(){
 }
 
 
-function add_piece(uid, palette, id, width, height, ox, oy, src){
+function add_piece(uid, palette, id, old_palette, old_id, width, height, ox, oy, src){
 
 	var row = Math.floor(id / 4);
 	var col = id % 4;
@@ -75,7 +75,7 @@ function add_piece(uid, palette, id, width, height, ox, oy, src){
 
 	add_child(get_elm("palette"+palette), elm);
 
-	piece_index[piece_index.length] = elm;
+	piece_index[old_palette+"_"+old_id] = elm;
 }
 
 function click_wrapper(e){
@@ -356,13 +356,7 @@ function unserialize_elm(data){
 }
 
 function find_elm_old(palette, id){
-	for(var i=0; i<piece_index.length; i++){
-		var elm = piece_index[i];
-		if ((elm.id_id == id) && (elm.id_palette == palette)){
-			return elm;
-		}
-	}
-	return null;
+	return piece_index[palette+"_"+id];
 }
 
 function create_elm(x, y, w, h, ox, oy, z, src, uid, palette, id){
