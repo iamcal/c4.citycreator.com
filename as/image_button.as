@@ -11,6 +11,7 @@ ImageButton.prototype.initialize = function(x, y, src, parent) {
 	this._mc._y = y;
 	this._mc.button = this;
 
+	this._mc.pressed = 0;
 	this._mc.attachMovie(src, 's', 1);
 
 	this.onClick = function() {}

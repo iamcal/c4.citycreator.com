@@ -40,7 +40,7 @@ Tile.prototype.onTileLoad = function(){
 			trace("hit test ok");
 		}
 
-		this.swapDepths(getNewDepth());
+		_global.gBringToFront(this);
 		this.onMouseUp = this.onMouseUpFunc;
 		this.startDrag();
 	}

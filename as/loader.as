@@ -29,7 +29,7 @@ LoadingManager.prototype.start_checking = function(){
 
 	if (!this.check_timer){
 		trace('starting timer');
-		this.check_timer = setInterval(this, 'check_loaded', 1000);
+		this.check_timer = setInterval(this, 'check_loaded', 50);
 	}else{
 		//trace('wont start timer');
 	}
@@ -49,26 +49,39 @@ LoadingManager.prototype.check_loaded = function(){
 
 	var l_loaded = 1;
 
+	this.clips_total = this.movies.length;
+	this.clips_loaded = 0;
+
 	for(var i=0; i<this.movies.length; i++){
 		var mov = this.movies[i];
 
 		if (!mov.loaded){
 			mov.checkLoaded();
 			if (!mov.loaded){
-				trace("clip "+i+" has NOT loaded");
+				//trace("clip "+i+" has NOT loaded");
 				l_loaded = 0;
+			}else{
+				this.clips_loaded++;
 			}
+		}else{
+			this.clips_loaded++;
 		}
 	}
 
 	if (l_loaded){
 		this.stop_checking();
 		this.onLoaded();
+	}else{
+		this.onLoading();
 	}
 }
 
 LoadingManager.prototype.onLoaded = function(){
 	trace("loadingManager.onLoaded()");
+}
+
+LoadingManager.prototype.onLoading = function(){
+	trace("loadingManager.onLoading()");
 }
 
 LoadingManager.prototype.clipLoaded = function(clip){
@@ -112,7 +125,7 @@ LoadingMovie.prototype.initialize = function(parent, src) {
 }
 
 LoadingMovie.prototype.checkLoaded = function() {
-	trace("LoadingMovie.prototype.checkLoaded");
+	//trace("LoadingMovie.prototype.checkLoaded");
 
 	this.mc._visible = false;
 	if ((this.mc.getBytesLoaded() == this.mc.getBytesTotal()) && (this.mc.getBytesTotal())){

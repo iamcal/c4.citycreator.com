@@ -15,14 +15,16 @@ Dialog.prototype.initialize = function(x, y, src, parent) {
 
 	this._mc.attachMovie(src, 's', 1);
 
-	set_hit_area(this._mc, 0, 0, this._mc._width, 27);
+	make_dragable_area(this._mc, 0, 0, this._mc._width, 27);
 
-	this._mc.onPress = function (){
-		this.startDrag();
-	}
+	//set_hit_area(this._mc, 0, 0, this._mc._width, 27);
 
-	this._mc.onRelease = function (){
-		this.stopDrag();
+	this.close_button = new ImageButton().initialize(x, y, 'btn_close', this._mc);
+	this.close_button.dialog = this;
+	this.close_button.onClick = function(){ this.dialog.hide(); }
+
+	this._mc.onDragStart = function() {
+		this.bringToFront();
 	}
 
 	return this;
@@ -33,11 +35,12 @@ Dialog.prototype.hide = function() {
 }
 
 Dialog.prototype.show = function() {
+	this._mc.bringToFront();
 	this._mc._visible = true;
 }
 
 Dialog.prototype.showAt = function(x, y) {
 	this._mc._x = x;
 	this._mc._y = y;
-	this._mc._visible = true;
+	this.show();
 }

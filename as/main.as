@@ -10,6 +10,7 @@
 #include "as/image_button.as"
 #include "as/canvas.as"
 #include "as/dialog.as"
+#include "as/progress_bar.as"
 
 #include "as/tile_manager.as"
 #include "as/tile_set.as"
@@ -22,6 +23,9 @@ var gBgColor;
 var gMainFrame;
 var gTileManager;
 var gAboutDialog;
+var gInstructionsDialog;
+var gLoadingButton;
+var gLoadingProgress;
 
 function startup(){
 
@@ -31,15 +35,17 @@ function startup(){
 
 	_root._highquality = 0;
 
-	gAboutDialog = new Dialog().initialize(0, 0, 'dialog_about');
-	gAboutDialog.showAt(100,100);
-
-
 	//
 	// first, create the master frame
 	//
 
 	gBgColor = 0x000000;
+
+	//
+	// loading progress
+	//
+
+	gLoadingProgress = new ProgressBar().initialize(10, 60, 400, 20);
 
 
 	//
@@ -48,8 +54,8 @@ function startup(){
 
 	var button_parent = _root;
 
-	b = new MyButton().initialize(10, 10, 75, 25, "load xml", button_parent);
-	b.onClick = function() {
+	gLoadingButton = new MyButton().initialize(10, 10, 75, 25, "load xml", button_parent);
+	gLoadingButton.onClick = function() {
 		this.setCaption('Loading...');
 		load_city_xml();
 		delete this.onClick;
@@ -79,11 +85,23 @@ function onPiecesLoaded(success){
 		gTileManager = new TileManager().initialize(this.childNodes[0]);
 
 		gLoadingManager.onLoaded = onPiecesReady;
+		gLoadingManager.onLoading = onPiecesLoading;
 		gLoadingManager.start_checking();
 
 	}else{
 		trace("failed to load :(");
 	}
+}
+
+function onPiecesLoading(){
+
+	var percent = 100 * gLoadingManager.clips_loaded / gLoadingManager.clips_total;
+
+	gLoadingProgress.setProgress(percent);
+
+	percent = Math.round(percent);
+
+	gLoadingButton.setCaption(percent+'%');
 }
 
 function onPiecesReady(){
@@ -108,6 +126,13 @@ function onPiecesReady(){
 	var b4 = new ImageButton().initialize(491, 403, 'btn_delete', gMainFrame.getMc());
 	b4.onClick = function(){ button_delete_all(); }
 
+	//
+	// create dialogs
+	//
+
+	gAboutDialog = new Dialog().initialize(10, 266, 'dialog_about');
+	gInstructionsDialog = new Dialog().initialize(10, 262, 'dialog_instructions');
+
 
 	//
 	// ready the tilesets
@@ -129,10 +154,12 @@ function button_delete_all() {
 
 function button_instructions() {
 	trace('instructions');
+	gInstructionsDialog.showAt(298, 54);
 }
 
 function button_about() {
 	trace('about');
+	gAboutDialog.showAt(396, 86);
 }
 
 function button_save() {

@@ -34,7 +34,7 @@ Canvas.prototype.spawnPiece = function(template){
 }
 
 Canvas.prototype.bringForward = function(){
-	this._mc.swapDepths(getNewDepth());
+	this._mc.bringToFront();
 }
 
 Canvas.prototype.show = function(){
