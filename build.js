@@ -272,6 +272,12 @@ function update_pieces(){
 	}
 	saveCookie(cookie_prefix+'piece_count', cookie_count, 365);
 	saveCookie(cookie_prefix+'bg_id', bg_id, 365);
+
+	// hack to clear any left-over cookies
+	while(cookie_count <= 5){
+		cookie_count++;
+		saveCookie(cookie_prefix+'pieces_'+cookie_count, "", 365);
+	}
 }
 
 function load_pieces(){
