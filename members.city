@@ -85,7 +85,7 @@ function delete_city(id){
 	<b>Members Downloads</b><br>
 	<br>
 	Now you can build a tiny city on your desktop, with our City Creator icons.<br>
-	There are eight all togther and you can choose for <a href="extras/mac_icons.sit" style="color: #ffffff;">mac</a> or <a href="extras/pc_icons.zip" style="color: #ffffff;">pc</a>. Have fun!<br>
+	There are eight all togther and you can choose for <a href="extras/mac_icons.sit">mac</a> or <a href="extras/pc_icons.zip">pc</a>. Have fun!<br>
 
 	<img src="images/space.gif" width="161" height="8"><br>
 	<table cellpadding="4" cellspacing="0" border="0">

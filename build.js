@@ -273,12 +273,12 @@ function update_pieces(){
 }
 
 function load_pieces(){
-	if (readCookie(cookie_prefix_old+'bg_id')){
-		alert("old format cookies detected - removing and converting");
+	if (readCookie(cookie_prefix_old+'bg_id') > 0){
+
+		//alert("old format cookies detected - removing and converting");
 		load_pieces_guts(cookie_prefix_old);
 		update_pieces();
 
-		return;
 		// kill old cookies
 		var count = readCookie(cookie_prefix_old+'piece_count');
 		if (count != null){
@@ -292,6 +292,7 @@ function load_pieces(){
 	}else{
 		load_pieces_guts(cookie_prefix);
 	}
+}
 
 function load_pieces_guts(prefix){
 
@@ -301,6 +302,7 @@ function load_pieces_guts(prefix){
 	}
 
 	var count = readCookie(prefix+'piece_count');
+
 	var temp = null;
 	if (count != null){
 		temp = '';
@@ -315,6 +317,7 @@ function load_pieces_guts(prefix){
 }
 
 function unserialize_all(data){
+	//alert('unserialize_all:'+data);
 	var bits = data.split(',');
 	for(var i=0; i<bits.length; i++){
 		unserialize_elm(bits[i]);
@@ -379,7 +382,7 @@ function create_elm(x, y, w, h, ox, oy, z, src, uid, palette, id){
 	elm.pos_y = y;
 	elm.size_x = w;
 	elm.size_y = h;
-	elm.id_uid = uid;
+	elm.uid = uid;
 	elm.id_palette = palette;
 	elm.id_id = id;
 	elm.offset_x = ox;

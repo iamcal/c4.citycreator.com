@@ -7,7 +7,6 @@
 
 	if ($cfg[user_ok]){
 		mysql_query("UPDATE citycreator_saved SET user_id='{$cfg[user][id]}' WHERE id=$saved_id",$db);
-		# header("location: send.city?saved_id=$saved_id");
 		header("location: members.city");
 	}else{
 		header("location: members.city?saved_id=$saved_id");		

@@ -37,10 +37,13 @@
 
 	#######################################################################
 
-	$pieces = array();
+	$pieces_index_1 = array();
+	$pieces_index_2 = array();
+
 	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
 	while($row = mysql_fetch_array($result)){
-		$pieces["$row[palette]_$row[id]"] = $row;
+		$pieces_index_1["$row[uid]"] = $row;
+		$pieces_index_2["$row[palette]_$row[id]"] = $row;
 	}
 
 	#######################################################################
@@ -89,14 +92,27 @@
 	$card_pieces = array();
 
 	foreach($card_pieces_un as $piece){
-		list($palette, $id, $x, $y, $z) = explode('|',$piece);
-		$card_pieces[] = array(
-			'palette' => $palette,
-			'id' => $id,
-			'x' => $x,
-			'y' => $y,
-			'z' => $z,
-		);
+		$bits = explode('|',$piece);
+
+		if (count($bits) == 5){
+		
+			list($palette, $id, $x, $y, $z) = explode('|',$piece);
+			$card_pieces[] = array(
+				'piece' => $pieces_index_2[$palette.'_'.$id],
+				'x' => $x,
+				'y' => $y,
+				'z' => $z,
+			);
+		}else{
+
+			list($uid, $x, $y, $z) = explode('|',$piece);
+			$card_pieces[] = array(
+				'piece' => $pieces_index_1[$uid],
+				'x' => $x,
+				'y' => $y,
+				'z' => $z,
+			);
+		}
 	}
 
 	# sort by z order
@@ -109,12 +125,12 @@
 	#######################################################################
 
 	foreach($card_pieces as $card_piece){
-		
-		$piece = $pieces["${card_piece[palette]}_${card_piece[id]}"];
-
+		$piece = $card_piece['piece'];
 		$piece[image] = str_replace(".gif", ".png", $piece[image]);
-		$sub_img = imagecreatefrompng("blocks/{$city_id}_png/$piece[image]");
-		imagecopy($img, $sub_img, $card_piece[x], $card_piece[y] ,0 ,0, $piece[w], $piece[h]);
+		if ($piece[image]){
+			$sub_img = imagecreatefrompng("blocks/{$city_id}_png/$piece[image]");
+			imagecopy($img, $sub_img, $card_piece[x], $card_piece[y] ,0 ,0, $piece[w], $piece[h]);
+		}
 	}
 
 	#######################################################################
