@@ -11,6 +11,7 @@ TileManager.prototype.initialize = function(node) {
 	this.sets_loaded = 0;
 
 	gBgColor = node.attributes.bgcolor;
+	gCityId = node.attributes.city;
 
 	for (var i=0; i<node.childNodes.length; i++) {
 		var child = node.childNodes[i];

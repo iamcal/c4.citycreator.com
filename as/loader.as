@@ -117,8 +117,8 @@ LoadingMovie.prototype.initialize = function(parent, src) {
 
 	this.id = getNewDepth();
 	this.mc = _root.createEmptyMovieClip('loading_movie_mc_' + this.id, this.id);
-	this.mc._x = -100;
-	this.mc._y = -100;
+	this.mc._x = -1000;
+	this.mc._y = -1000;
 
 	this.mc.onLoad = MovieClipLoaded;
 	this.mc.loadMovie(this.src);

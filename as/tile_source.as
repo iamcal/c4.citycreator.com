@@ -11,8 +11,9 @@ TileSource.prototype.initialize = function(node, parent) {
 	this.offsetx = node.attributes.offsetx;
 	this.offsety = node.attributes.offsety;
 	this.src = node.attributes.src; // + '?' + new Date().getTime();
+	this.uid = node.attributes.uid;
 
-	gUidTileSources[node.attributes.uid] = this;
+	gUidTileSources[this.uid] = this;
 
 	//trace("loading "+this.src);
 

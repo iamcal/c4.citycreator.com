@@ -38,6 +38,7 @@ var gLoadingButton;
 var gLoadingLabel;
 var gLoadingProgress;
 var gLoadingTimer;
+var gCityId;
 
 var gBgLoaded = 0;
 var gTilesLoaded = 0;
@@ -279,7 +280,28 @@ _global.button_about = function() {
 }
 
 _global.button_save = function() {
-	trace('save');
+	//trace('save');
+
+	var pieces = new Array();
+
+	for(i in gAllTiles){
+		var tile = gAllTiles[i];
+		var t_id = tile.source.uid;
+		var t_x = tile._mc._x;
+		var t_y = tile._mc._y;
+		var t_z = tile._mc.getDepth();
+
+		pieces.push(t_id+'|'+t_x+'|'+t_y+'|'+t_z);
+	}
+
+	var city_id = gCityId;
+	var city_bg = parseInt(gBgManager.current_bg) + 1;
+	var city_pieces = pieces.join(',');
+
+	var url = "save.city?city_id="+city_id+"&city_bg="+city_bg+"&city_pieces="+city_pieces;
+
+	getUrl(url, '_self', 'POST');
+	//trace(url);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -287,7 +309,7 @@ _global.button_save = function() {
 function init_saved_city(node){
 	//trace("init_saved_city");
 
-	gTheBackground = node.attributes.bg;
+	gTheBackground = parseInt(node.attributes.bg) - 1;
 
 	for (var i=0; i<node.childNodes.length; i++) {
 		var child = node.childNodes[i];
@@ -316,6 +338,7 @@ function initSavedTiles(){
 	//trace("restore tiles from saved array here!");
 
 	for(var i=0; i<gTheSavedTiles.length; i++){
+
 		spawnTile(gTheSavedTiles[i]);
 	}	
 }

@@ -1,6 +1,6 @@
 _global.ProgressBar = function() {
 	this.id = 0;
-	this.border_col = 0x000000;
+	this.border_col = 0xFFFFFF;
 	this.progress_col = 0xCCCCFF;
 }
 

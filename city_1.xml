@@ -1,4 +1,4 @@
-<pieces bgcolor="0x336600" logo="swf/logo_1.swf" truck="swf/truck_1.swf">
+<pieces bgcolor="0x336600" logo="swf/logo_1.swf" truck="swf/truck_1.swf" city="1">
 	<pieceset id="1" tabx="13" taby="43" tabsrc="tabs/tab_1.swf">
 		<piece num="0" uid="1" offsetx="0" offsety="0" src="http://www.citycreator.com/blocks/test_piece.swf" />
 		<piece num="1" uid="2" offsetx="0" offsety="0" src="http://www.citycreator.com/swf.city?id=2" />

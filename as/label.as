@@ -1,6 +1,6 @@
 _global.MyLabel = function() {
 	this.id = 0;
-	this.text_format = new TextFormat('arial', 14, 0x000000);
+	this.text_format = new TextFormat('arial', 14, 0xFFFFFF);
 }
 
 MyLabel.prototype.initialize = function(x, y, caption, parent) {
