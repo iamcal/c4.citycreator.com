@@ -26,13 +26,12 @@ LoadingManager.prototype.getMovie = function(id){
 }
 
 LoadingManager.prototype.start_checking = function(){
-	//return;
 
 	if (!this.check_timer){
-		trace('starting timer');
+		//trace('starting timer');
 		this.check_timer = setInterval(this, 'check_loaded', 1000);
 	}else{
-		trace('wont start timer');
+		//trace('wont start timer');
 	}
 }
 
@@ -67,7 +66,6 @@ LoadingManager.prototype.onLoaded = function(){
 }
 
 LoadingManager.prototype.clipLoaded = function(clip){
-	trace('clip loaded');
 	for(var i=0; i<this.movies.length; i++){
 		var mov = this.movies[i];
 		if (mov.mc == clip){
@@ -99,6 +97,7 @@ LoadingMovie.prototype.initialize = function(parent, src) {
 	this.mc._y = -100;
 
 	this.mc.onLoad = function() {
+		this._visible = false;
 		gLoadingManager.clipLoaded(this);
 	}
 	this.mc.loadMovie(this.src);

@@ -16,8 +16,6 @@ TileSetTab.prototype.initialize = function(node, parent_set) {
 
 TileSetTab.prototype.initTab = function(active){
 
-	trace("TileSetTab.prototype.initTab");
-
 	this.id = getNewDepth();
 	this.start_active = active;
 	this.parent_mc = gMainFrame.getMc();
@@ -36,8 +34,6 @@ TileSetTab.prototype.initTab = function(active){
 
 
 TileSetTab.prototype.onTileSetTabLoad = function(){
-
-	trace("TileSetTab.prototype.onTileSetTabLoad");
 
 	if (this.start_active){
 		this.down();

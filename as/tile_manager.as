@@ -7,8 +7,6 @@ TileManager.prototype.initialize = function(node) {
 	this.tile_sets = new Array();
 	this.current_set = null;
 
-	trace("loading tile manager...");
-
 	for (var i=0; i<node.childNodes.length; i++) {
 		var child = node.childNodes[i];
 		if (child.nodeName == 'pieceset'){

@@ -6,7 +6,6 @@ TileSet.prototype.initialize = function(node, manager) {
 	this.manager = manager;
 	this.tiles = new Array();
 	this.node = node;
-	//this.tab_id = node.attributes.id;
 
 	for (var i=0; i<node.childNodes.length; i++) {
 		var child = node.childNodes[i];
@@ -23,8 +22,6 @@ TileSet.prototype.initialize = function(node, manager) {
 TileSet.prototype.initTiles = function(id, active){
 
 	this.tileset_id = id;
-
-	trace("TileSet.prototype.initTiles");
 
 	this.tab.initTab(active);
 
