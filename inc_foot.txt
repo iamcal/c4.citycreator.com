@@ -63,6 +63,9 @@
 	</tr>
 </table>
 
+<map name="topbarmap" id="topbarmap">
+	<area shape="rect" coords="53,17,204,47" href="./">
+</map>
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 <title>City Creator<?if($title){echo " - $title";}?></title>
 <style>
 
-body		{ background-color: #878787; }
+body		{ background-color: #777777; }
 img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 
@@ -11,6 +11,8 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 .copyright	{ color: #B9B9B9; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px; }
 .heading	{ color: #999900; }
 a		{ color: #444444; }
+
+textarea.edit	{ width: 300px; height: 100px; }
 
 </style>
 </head>
@@ -35,7 +37,7 @@ a		{ color: #444444; }
 		<td colspan="8">
 			<div style="position: relative; width: 740px; height: 53px;">
 
-				<div style="position: relative; width: 740px; height: 53px;"><img src="images/pages/inner_head.gif" width="740" height="53"></div>
+				<div style="position: relative; width: 740px; height: 53px;"><img src="images/pages/inner_head.gif" width="740" height="53" usemap="#topbarmap"></div>
 
 				<div style="position: absolute; left: 259px; top: 8px; width: 29px; height: 17px;"><a href="./"          ><img src="images/frame/tab_home_off.gif"    width="29" height="17" border="0"></a></div>
 				<div style="position: absolute; left: 290px; top: 8px; width: 46px; height: 17px;"><a href="members.city"><img src="images/frame/tab_members_<?=($nav=='members')?'on':'off'?>.gif" width="46" height="17" border="0"></a></div>

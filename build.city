@@ -82,7 +82,7 @@ function pre_init(){
 </script>
 <style>
 
-body		{ background-color: #878787; }
+body		{ background-color: #777777; }
 img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 

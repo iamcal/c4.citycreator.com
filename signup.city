@@ -85,7 +85,7 @@ function why(){
 	<input type="hidden" name="saved_id" value="<?=$saved_id?>">
 	<input type="hidden" name="share_id" value="<?=$share_id?>">
 
-	If you're already a member, <a href="login.city<?=$extra?>" style="color: #ffffff;">click here</a><br>
+	If you're already a member, <a href="login.city<?=$extra?>">click here</a><br>
 	<br>
 	We require you to register for a few reasons. Firstly, it cuts down abuse of the system. Secondly, it means we can let you save older cities and work on them later. Thirdly, it means we can let you share cities, so you can collaborate with your friends.<br>
 
@@ -99,7 +99,7 @@ function why(){
 
 	<br>
 	Enter your email address:<br>
-	<input type="text" class="edit" name="signup_email" value="<?=htmlentities(StripSlashes($signup_email))?>"> <a href="javascript:why();" style="color: #ffffff; font-size: 10px;">Why do we ask this?</a><br>
+	<input type="text" class="edit" name="signup_email" value="<?=htmlentities(StripSlashes($signup_email))?>"> <a href="javascript:why();" font-size: 10px;">Why do we ask this?</a><br>
 
 	<br>
 	<input type="checkbox" name="maillist" checked> Add me to the mailing list<br>

@@ -15,6 +15,7 @@ var max_cookie_len = 4000; //we're allowed 4k (4096) but that includes the cooki
 
 var top_count = 0;
 var piece_index = new Array();
+var preloads = new Array();
 
 var shadow_layer = null;
 
@@ -48,6 +49,7 @@ function add_piece(uid, palette, id, old_palette, old_id, width, height, ox, oy,
 	var img = new Image();
 	img.onload = PieceLoaded;
 	img.src = "blocks/"+src;
+	preloads[preloads.length] = img;
 
 	var elm = document.createElement('DIV');
 	elm.style.position = 'absolute';

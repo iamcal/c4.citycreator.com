@@ -37,8 +37,8 @@
 	<input type="hidden" name="share_id" value="<?=$share_id?>">
 
 	Please type in your login details.<br>
-	If you're not yet a member, <a href="signup.city<?=$extra?>" style="color: #ffffff;">click here</a><br>
-	If you've forgotten your password, <a href="password.city<?=$extra?>" style="color: #ffffff;">click here</a><br>
+	If you're not yet a member, <a href="signup.city<?=$extra?>">click here</a><br>
+	If you've forgotten your password, <a href="password.city<?=$extra?>">click here</a><br>
 
 	<br>
 	Username:<br>

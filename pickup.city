@@ -31,7 +31,7 @@
 <title>City Creator - Pickup Card</title>
 <style>
 
-body		{ background-color: #878787; }
+body		{ background-color: #777777; }
 img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 
@@ -47,7 +47,8 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 #pagebg		{ position: absolute; left:   10px; top:   8px; width: 720px; height: 422px; }
 
 #welcome	{ position: absolute; left:   22px; top:  87px; width: 214px; height: 330px; z-index: 10; }
-#board		{ position: absolute; left:  257px; top:  28px; width: 469px; height: 398px; z-index: 10; }
+#board		{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; z-index: 10; clip: rect(0px 469px 364px 0px); }
+#bar		{ position: absolute; left:  255px; top: 392px; width: 473px; height:  35px; z-index: 10; }
 
 .text		{ color: #ffffff; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px; }
 .copyright	{ color: #B9B9B9; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px; }
@@ -75,7 +76,7 @@ function print_city(id){
 	<div id="borderleft"   ><img src="images/frame/border_left.gif"   width="10"  height="422"></div>
 	<div id="borderright"  ><img src="images/frame/border_right.gif"  width="10"  height="422"></div>
 
-	<div id="pagebg"><img src="images/frame/main_home.gif" width="720" height="422"></div>
+	<div id="pagebg"><img src="images/frame/main_home.gif" width="720" height="422" usemap="#topbarmap"></div>
 
 	<div style="position: absolute; left: 259px; top: 8px; width: 29px; height: 17px;"><a href="./"          ><img src="images/frame/tab_home_off.gif"    width="29" height="17" border="0"></a></div>
 	<div style="position: absolute; left: 290px; top: 8px; width: 46px; height: 17px;"><a href="members.city"><img src="images/frame/tab_members_off.gif" width="46" height="17" border="0"></a></div>
@@ -130,6 +131,7 @@ function print_city(id){
 ?>
 	</div>
 
+	<div id="bar"><a href="./"><img src="/images/pages/pickup_bar.gif" width="473" height="35" border="0"></a></div>
 
 </div>
 </div>
@@ -137,6 +139,10 @@ function print_city(id){
 &copy;2002-2003 Denise Wilton &amp; Cal Henderson
 </div>
 </div>
+
+<map name="topbarmap" id="topbarmap">
+	<area shape="rect" coords="43,9,194,39" href="./">
+</map>
 
 </body>
 </html>

@@ -50,7 +50,7 @@ function delete_city(id){
 	<span class="username">New!</span> You can now get christmas cards, stickers, postcards and other goodies with your very own city design on them. Just click on the "My Shop" button next to the city you create.<br>
 	<br>
 <?
-	$result = mysql_query("SELECT * FROM citycreator_saved WHERE user_id='{$cfg[user][id]}' ORDER BY date_create ASC",$db);
+	$result = mysql_query("SELECT * FROM citycreator_saved WHERE user_id='{$cfg[user][id]}' ORDER BY date_create DESC",$db);
 	if (mysql_num_rows($result)){
 ?>
 	You have saved the following cities:<br>

@@ -6,7 +6,7 @@
 <title>City Creator</title>
 <style>
 
-body		{ background-color: #878787; }
+body		{ background-color: #777777; }
 img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 
@@ -40,7 +40,7 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 	<div id="borderleft"   ><img src="images/frame/border_left.gif"   width="10"  height="422"></div>
 	<div id="borderright"  ><img src="images/frame/border_right.gif"  width="10"  height="422"></div>
 
-	<div id="pagebg"><img src="images/frame/main_home.gif" width="720" height="422"></div>
+	<div id="pagebg"><img src="images/frame/main_home.gif" width="720" height="422" usemap="#topbarmap"></div>
 
 	<div style="position: absolute; left: 259px; top: 8px; width: 29px; height: 17px;"><a href="./"          ><img src="images/frame/tab_home_on.gif"    width="29" height="17" border="0"></a></div>
 	<div style="position: absolute; left: 290px; top: 8px; width: 46px; height: 17px;"><a href="members.city"><img src="images/frame/tab_members_off.gif" width="46" height="17" border="0"></a></div>
@@ -104,6 +104,10 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 &copy;2002-2003 Denise Wilton &amp; Cal Henderson
 </div>
 </div>
+
+<map name="topbarmap" id="topbarmap">
+	<area shape="rect" coords="43,9,194,39" href="./">
+</map>
 
 </body>
 </html>
