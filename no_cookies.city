@@ -8,7 +8,7 @@
 	<br>
 	It doesn't look like you have cookies enabled, so we can't log you in.<br>
 	<br>
-	Enable cookies on your browser then <a href="login.city" style="color: #ffffff;">try logging in again</a> :)
+	Enable cookies on your browser then <a href="login.city">try logging in again</a> :)
 <?
 	include("inc_foot.txt");
 ?>

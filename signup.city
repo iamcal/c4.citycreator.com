@@ -109,7 +109,7 @@ function why(){
 	<input type="image" src="images/btn_signup.gif" width="40" height="16"><br>
 
 	<br>
-	<small>Worried about giving us your email address? <a href="faq.city#faq16" style="color: #ffffff;">Read this</a>.</small>
+	<small>Worried about giving us your email address? <a href="faq.city#faq16">Read this</a>.</small>
 
 	</form>
 
