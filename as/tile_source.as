@@ -40,10 +40,7 @@ TileSource.prototype.onTileSourceLoad = function(){
 	this._mc.source = this;
 
 	this._mc.onPress = function() {
-		trace('this._mc.onPress');
-		trace(this.source);
-		var x_tile = new Tile().initialize(this.source, 1);
-		trace('done');
+		var temp = new Tile().initialize(this.source, 1);
 	}
 
 	var col = this.seq_num % 4;

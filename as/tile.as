@@ -6,8 +6,6 @@ _global.Tile = function() {
 
 Tile.prototype.initialize = function(source, start_dragging) {
 
-	trace('Tile.prototype.initialize()');
-
 	this.source = source;
 	this.start_dragging = start_dragging;
 
@@ -19,7 +17,7 @@ Tile.prototype.initialize = function(source, start_dragging) {
 
 	this._mc = this.canvas_mc.createEmptyMovieClip(name, this.id);
 	this._mc.onLoad = function(){
-		tile = gAllTiles[this._name];
+		var tile = gAllTiles[this._name];
 		tile.onTileLoad();
 	}
 	this._mc.loadMovie(this.source.src);
@@ -29,13 +27,11 @@ Tile.prototype.initialize = function(source, start_dragging) {
 
 Tile.prototype.onTileLoad = function(){
 
-	trace('Tile.prototype.onTileLoad()');
-
 	this._mc.tile = this;
 	this._mc._highquality = 0;
 	this._mc._visible = true;
-	this._mc._x = this.source._mc._x - this.canvas_mc._x;
-	this._mc._y = this.source._mc._y - this.canvas_mc._y;
+	this._mc._x = this.source._mc._x - this.canvas_mc._x + this.source.parent.canvas._mc._x;
+	this._mc._y = this.source._mc._y - this.canvas_mc._y + this.source.parent.canvas._mc._y;
 
 	this._mc.onPress = function() {
 		this.swapDepths(getNewDepth());
