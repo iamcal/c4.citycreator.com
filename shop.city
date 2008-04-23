@@ -1,0 +1,113 @@
+<?	
+	include("init.txt");
+	include("login.txt");
+	include("cp_lib.txt");
+	include("image_lib.txt");
+
+	if ($saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$s' AND user_id='{$cfg[user][id]}'",$db))){
+		# ok!
+		$id = $s;
+	}else{
+		header("location: no_card.city");
+		exit;
+	}
+
+	if ($saved_row[cp_store_id]){
+		header("location: http://www.cafeshops.com/$saved_row[cp_store_id]");
+		exit;
+	}else{
+		if ($go){
+			if (cp_create($id)){
+				header("location: shop.city?s=$id");
+				exit;
+			}else{
+				echo "error creating store :(";
+				exit;
+			}
+		}else{
+?>
+<html>
+<head>
+<title>Please wait...</title>
+<style>
+
+body {
+	background-color: #ffffff;
+	color: #000000;
+}
+
+</style>
+</head>
+<body onload="window.location.href='shop.city?s=<?=$id?>&go=1';">
+
+Please wait while we build your shop - it should only take a minute or two...<br>
+<br>
+
+</body>
+</html>
+<?
+			exit;
+		}
+	}
+
+	function cp_create($city_id){
+		global $db, $cfg, $debug;
+
+		if (cp_login()){
+
+			$store_id = "c5c".time();
+			if (!cp_createstore($store_id)){
+				echo "CAN'T CREATE STORE!<br><br>";
+				return 0;
+			}
+
+			chdir($cfg[cp_path]);
+
+			# postcards
+			$image_id = cp_uploadimage(make_city_image($city_id, 975, 675));
+			if ($debug){echo "uploaded image: $image_id<br>";}
+			$prod_id = cp_add_product($store_id, 77, $image_id, "Postcards (Pack of 8)", 10);
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			# christmas cards
+			$image_id = cp_uploadimage(make_city_image($city_id, 825, 605));
+			if ($debug){echo "uploaded image: $image_id<br>";}
+			$prod_id = cp_add_product($store_id, 78, $image_id, "Greeting Cards (Pack of 6)", 15);
+			cp_set_image_height($prod_id, "3.00");
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			# rectangular sticker
+			$image_id = cp_uploadimage(make_city_image($city_id, 1100, 700));
+			if ($debug){echo "uploaded image: $image_id<br>";}
+			$prod_id = cp_add_product($store_id, 50, $image_id, "Retangular Sticker", 5);
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			# mouse mat
+			$image_id = cp_uploadimage(make_city_image($city_id, 950, 800));
+			if ($debug){echo "uploaded image: $image_id<br>";}
+			$prod_id = cp_add_product($store_id, 3, $image_id, "Mouse Pad", 15);
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			# bag
+			$image_id = cp_uploadimage(make_city_image($city_id, 1000, 800));
+			if ($debug){echo "uploaded image: $image_id<br>";}
+
+			$prod_id = cp_add_product($store_id, 17, $image_id, "Bag", 15);
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			$prod_id = cp_add_product($store_id, 2, $image_id, "T-Shirt", 20);
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			$prod_id = cp_add_product($store_id, 6, $image_id, "Girl's T-Shirt", 20);
+			if ($debug){echo "product created: $prod_id<br>";}
+
+			if ($debug){echo "store $store_id created... (<a href=\"http://www.cafeshops.com/$store_id\">http://www.cafeshops.com/$store_id</a>)\n";}
+			mysql_query("UPDATE citycreator_saved SET cp_store_id='$store_id' WHERE id='$city_id'", $db);
+			return 1;
+		}else{
+			echo "COULDN'T LOG IN!<br><br>";
+			return 0;
+		}
+	}
+
+?>

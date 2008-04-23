@@ -1,0 +1,79 @@
+<?
+	include("init.txt");
+	include("login.txt");
+
+	if (!$cfg[user_ok]){
+		header("location: members.city?share_id=$share_id");
+		exit;
+	}
+
+	list($id,$check) = explode('.',$share_id,2);
+
+	$share_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$id' AND share_check='$check' AND user_id='0'",$db));
+
+	if (!$share_row){
+		# not a share we can accept
+		header("location: members.city");
+		exit;
+	}
+
+	if ($done){
+		if ($done == 1){
+			mysql_query("DELETE FROM citycreator_saved WHERE id='$id'",$db);
+			header("location: members.city");
+			exit;
+		}
+
+		if ($done == 2){
+			mysql_query("UPDATE citycreator_saved SET user_id='{$cfg[user][id]}',date_create='$cfg[time]' WHERE id='$id'",$db);
+			header("location: members.city");
+			exit;
+		}
+
+		if ($done == 3){
+			mysql_query("UPDATE citycreator_saved SET user_id='{$cfg[user][id]}',date_create='$cfg[time]' WHERE id='$id'",$db);
+			header("location: build.city?saved_id=$id");
+			exit;
+		}
+	}
+
+	$title = "Share Your City";
+	$long = 1;
+
+	include("inc_head.txt");
+?>
+
+	<b class="heading">Share A City</b><br>
+	<br>
+	You have been sent a city by another citycreator.com member. Please choose from the following options:<br>
+	<br>
+	<table cellpadding="5" cellspacing="0" border"0">
+		<tr valign="middle">
+			<td><a href="share_take.city?share_id=<?=$share_id?>&done=2" class="white"><img src="images/share_yes.gif" width="17" height="16" border="0"></a></td>
+			<td class="text"><a href="share_take.city?share_id=<?=$share_id?>&done=2" class="white">Add this city design to my account</a></td>
+		</tr>
+		<tr valign="middle">
+			<td><a href="share_take.city?share_id=<?=$share_id?>&done=3" class="white"><img src="images/share_edit.gif" width="17" height="16" border="0"></a></td>
+			<td class="text"><a href="share_take.city?share_id=<?=$share_id?>&done=3" class="white">Add this city design and let me edit it straight away!</a></td>
+		</tr>
+		<tr valign="middle">
+			<td><a href="Javascript:confirm_delete();" class="white"><img src="images/share_no.gif" width="17" height="16" border="0"></a></td>
+			<td class="text"><a href="Javascript:confirm_delete();" class="white">I don't want this city design</a></td>
+		</tr>
+	</table>
+
+<script language="Javascript">
+<!--
+
+function confirm_delete(){
+	if (window.confirm('Are you sure you don\'t want this design?')){
+		window.location.href = 'share_take.city?share_id=<?=$share_id?>&done=1';
+	}
+}
+
+//-->
+</script>
+
+<?
+	include("inc_foot.txt");
+?>

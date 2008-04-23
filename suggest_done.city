@@ -1,0 +1,20 @@
+<?
+	include("init.txt");
+	include("login.txt");
+
+	$title = 'Suggest City';
+	$long = 1;
+
+	include("inc_head.txt");
+?>
+
+	<b class="heading">Suggest A New City</b><br>
+	<br>
+
+	Thanks for your suggestion! If you entered your email address and we like your idea, then we'll be in touch with you shortly.<br>
+	<br>
+	<a href="./">Click here</a> to return to the homepage.
+
+<?
+	include("inc_foot.txt");
+?>
