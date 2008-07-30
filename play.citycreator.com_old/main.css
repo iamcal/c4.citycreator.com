@@ -1,0 +1,81 @@
+/* $Id: main.css,v 1.6 2006/03/17 03:00:39 cal Exp $ */
+
+body {
+	margin: 0px;
+}
+
+#main {
+	margin: 16px;
+}
+
+body, .normal {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #000000;
+}
+
+img {
+	border: 0px;
+}
+
+img.border {
+	border: 1px solid #000000;
+}
+
+hr {
+	color: #999999;
+	background-color: #999999;
+	height: 1px;
+}
+
+p.error {
+	border: 1px dashed #ff0000;
+	background-color: #ffeeee;
+	padding: 8px;
+	font-weight: bold; 
+	width: 400px;
+}
+
+td.header {
+	background-color: #D9D6C6;
+}
+
+td.light {
+	background-color: #F6F5F1;
+}
+
+td.dark {
+	background-color: #EEECE1;
+}
+
+a.editlink,
+span.editlink {
+	color: #000000;
+	font-size: 11px;
+}
+
+div.buildingoff {
+	position: absolute;
+	background-color: silver;
+	overflow: hidden;
+}
+
+div.buildingon {
+	position: absolute;
+	background-color: pink;
+	overflow: hidden;
+}
+
+div.emptytile {
+	position: absolute;
+	background-color: lime;
+	overflow: hidden;
+}
+
+td.bigtext {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+#minihelp {font-size:8pt;background-color:#fdfcdd;border:1px solid #e5e490;padding:4px 4px 4px 12px}
+#minihelp img { vertical-align: bottom; }

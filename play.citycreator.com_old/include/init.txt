@@ -1,0 +1,23 @@
+<?
+	# $Id: init.txt,v 1.2 2004/06/30 20:37:43 Cal Henderson Exp $
+
+	include("include/config.txt");
+
+	#############################################################
+
+	$GLOBALS[libs] = array();
+
+	function loadlib($lib){
+
+		if (!in_array($lib, $GLOBALS[libs])){
+			include("include/lib_$lib.txt");
+			$GLOBALS[libs][] = $lib;
+		}
+	}
+
+	#############################################################
+
+	loadlib('db');
+	loadlib('smarty');
+	loadlib('login');
+?>

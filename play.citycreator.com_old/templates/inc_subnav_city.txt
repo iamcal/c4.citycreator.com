@@ -1,0 +1,11 @@
+	<hr />
+	<p>
+		<a href="/city.php">Overview</a>
+		|
+		<a href="/map.php">Map</a>
+		|
+		<a href="/bank.php">Finances</a>
+		|
+		<a href="/purchase.php">Purchase</a>
+	</p>
+	<hr />

@@ -1,0 +1,60 @@
+<?
+	# $Id: lib_login.txt,v 1.3 2006/03/17 03:00:39 cal Exp $
+
+	$GLOBALS[cfg][user_ok] = 0;
+	$GLOBALS[cfg][user] = 0;
+
+	###
+
+	function login_init(){
+
+		$session = base64_decode($_COOKIE[s]);
+
+		list($id, $time, $hash) = explode('-', $session);
+
+		$id = intval($id);
+
+		if ($id){
+
+			if ($row = db_fetch_one("SELECT * FROM users WHERE id='$id'")){
+
+				$hash2 = login_compute_hash($time, $row[password]);
+
+				if ($hash == $hash2){
+
+					$GLOBALS[cfg][user] = $row;
+					$GLOBALS[cfg][user_ok] = 1;
+				}
+			}
+		}
+	}
+
+	function login_set_cookie($id, $password){
+
+		$time = date('YmdHis');
+		$hash = login_compute_hash($time, $password);
+		$session = base64_encode("$id-$time-$hash");
+
+		setcookie('s', $session, time()+155520000, $GLOBALS[cfg][cookie_path], $GLOBALS[cfg][cookie_domain]);
+	}
+
+	function login_clear_cookie(){
+		setcookie('s', "", time()-3600, $GLOBALS[cfg][cookie_path], $GLOBALS[cfg][cookie_domain]);
+	}
+
+	function login_compute_hash($time, $password){
+
+		return sha1($time.$password.$GLOBALS[cfg][session_secret]);
+	}
+
+	function login_check_loggedin(){
+		if (!$GLOBALS[cfg][user_ok]){
+			header("location: login.php?target=".urlencode($_SERVER['REQUEST_URI']));
+			exit;
+		}
+	}
+
+	###
+
+	login_init();
+?>

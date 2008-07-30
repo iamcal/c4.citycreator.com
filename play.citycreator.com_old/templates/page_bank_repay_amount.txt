@@ -1,0 +1,29 @@
+{assign var='page_title' value="Your Finances"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_bank_repay_amount.txt,v 1.1 2004/08/06 19:11:27 Cal Henderson Exp $ -->
+
+	<h1>{$cfg.user.city_name|escape} - Your Finances</h1>
+
+{include file='inc_subnav_city.txt'}
+
+	<h2>Repay a loan</h2>
+{if $cfg.user.loan}
+{if $cfg.user.cash > 0}
+{if $cfg.user.cash >= $cfg.user.loan}
+	<p>How much of your loan would you like to pay off? (Enter an amount between 1 and {$cfg.user.loan})</p>
+{else}
+	<p>How much of your loan would you like to pay off? (Enter an amount between 1 and {$cfg.user.cash})</p>
+{/if}
+	<form action="/bank_repay.php" method="post">
+	<p><input type="text" name="amount" /> <input type="submit" value="Repay Loan" /></p>
+	</form>
+{else}
+	<p>You have no cash with which to pay off your loan.</p>
+{/if}
+{else}
+	<p>You have no outstanding loan at the bank.</p>
+{/if}
+
+
+{include file="inc_foot.txt"}

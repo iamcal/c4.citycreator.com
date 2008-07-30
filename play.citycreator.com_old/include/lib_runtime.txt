@@ -1,0 +1,80 @@
+<?
+	$GLOBALS[_runtime_row_cache] = array();
+
+	#################################################################
+
+	function runtime_execute_method($row_type, $row_id, &$state, &$world, $method, $args=0){
+
+		$row = runtime_loadrow($row_type, $row_id);
+		runtime_prep_method($row_type, &$row, $method);
+
+		$context = array(
+			'row_type' => $row_type,
+			'method' => $method,
+			'call_stack' => array(&$row),
+			'state' => &$state,
+			'world' => &$world,
+		);
+
+		$row["{$method}_func"](&$context, $args);
+	}
+
+	#################################################################
+
+	function runtime_loadrow($row_type, $row_id){
+
+		$hash = "$row_type:$row_id";
+
+		if (!$GLOBALS[_runtime_row_cache][$hash][id]){
+
+			$id_enc = AddSlashes($row_id);
+
+			if ($row_type == 'building'){ $table = 'buildings'; }
+			if ($row_type == 'building_option'){ $table = 'building_options'; }
+
+			$row = db_fetch_array(db_query("SELECT * FROM $table WHERE id='$id_enc'"));
+			$GLOBALS[_runtime_row_cache][$hash] = &$row;
+		}
+
+		return $GLOBALS[_runtime_row_cache][$hash];
+	}
+
+	#################################################################
+
+	function runtime_prep_method($row_type, &$row, $method){
+
+		if ($row["{$method}_func"]){
+			return;
+		}
+
+		$code = str_replace('SUPER', 'runtime_super(&$context, $args)', $row[$method]);
+		if (!$code && $row[parent_id]){ $code = 'runtime_super(&$context, $args);'; }
+
+		#echo "compiling code for $row_type($row[id]).$method (parent:$row[parent_id]): ".HtmlSpecialChars($code)."<br />";
+
+		$row["{$method}_func"] = create_function('&$context, $args', $code);
+	}
+
+	#################################################################
+
+	function runtime_super(&$context, $args){
+
+		$stack_top = $context[call_stack][count($context[call_stack])-1];
+
+		if ($stack_top[parent_id] == 0){
+
+			die("ERROR: called 'call_super()' on a base class");
+		}
+
+		$new_row = runtime_loadrow($context[row_type], $stack_top[parent_id]);
+		runtime_prep_method($context[row_type], &$new_row, $context[method]);
+
+		$context[call_stack][] = $new_row;
+
+		$new_row["{$context[method]}_func"](&$context, $args);
+
+		array_pop($context[call_stack]);
+	}
+
+	#################################################################
+?>

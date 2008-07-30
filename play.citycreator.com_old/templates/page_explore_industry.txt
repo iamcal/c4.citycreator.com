@@ -1,0 +1,70 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_explore_industry.txt,v 1.2 2006/03/17 05:36:42 cal Exp $ -->
+
+<h1><a href="explore.php">Explore</a> / Industry: {$class.name_single}</h1>
+
+<!-- ########################################################## -->
+
+<h3>Goods: Input</h3>
+
+<ul>
+{foreach from=$inputs item='row'}
+	<li><a href="explore_goods.php?id={$row.goods_class_id}">{$row.goods_class.name_plural}</a> ({$row.units_per_tick} units per tick)</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Goods: Output</h3>
+
+<ul>
+{foreach from=$outputs item='row'}
+	<li><a href="explore_goods.php?id={$row.goods_class_id}">{$row.goods_class.name_plural}</a> ({$row.units_per_tick} units per tick)</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Buildings which provide this industry</h3>
+
+<ul>
+{foreach from=$buildings item='row'}
+	<li><a href="explore_building.php?id={$row.building_class_id}">{$row.building_class.name_plural}</a> x {$row.multiplier}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Jobs provided by this industry</h3>
+
+<ul>
+{foreach from=$jobs item='row'}
+	<li><a href="explore_job.php?id={$row.job_class_id}">{$row.job_class.name_single}</a> x {$row.job_count}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Facilities provided by this industry</h3>
+
+<ul>
+{foreach from=$facilities item="row"}
+	<li><a href="explore_facility.php?id={$row.facility_class_id}">{$row.facility_class.name_single|escape}</a> x {$row.multiplier}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+{include file="inc_foot.txt"}

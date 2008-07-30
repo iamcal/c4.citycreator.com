@@ -1,0 +1,11 @@
+{assign var='page_title' value="Login"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_login_check.txt,v 1.1 2006/03/17 03:00:39 cal Exp $ -->
+
+	<h1>Login Failed!</h1>
+
+	<p class="error">Oops - we couldn't set the cookies needed to log you in. Please enable cookies for this site and <a href="/login.php">try again</a>.</p>
+
+
+{include file="inc_foot.txt"}

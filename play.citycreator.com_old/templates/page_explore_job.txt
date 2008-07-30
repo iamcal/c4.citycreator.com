@@ -1,0 +1,53 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_explore_job.txt,v 1.2 2006/03/17 05:36:42 cal Exp $ -->
+
+<h1><a href="explore.php">Explore</a> / Job: {$class.name_plural}</h1>
+
+<!-- ########################################################## -->
+
+<h3>Industries which provide this job</h3>
+
+<ul>
+{foreach from=$industries item='row'}
+	<li><a href="explore_industry.php?id={$row.industry_class_id}">{$row.industry_class.name_single}</a> ({$row.job_count} jobs)</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Buildings which can be built by this job</h3>
+
+<ul>
+{foreach from=$builders item='row'}
+	<li>
+		<a href="explore_building.php?id={$row.buildingclass_id}">{$row.building_class.name_plural}</a>
+{if $row.min_workers==$row.max_workers}
+		({$row.min_workers} workers)
+{else}
+		({$row.min_workers} to {$row.max_workers} workers)
+{/if}
+	</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Residences suitable for this job</h3>
+
+<ul>
+{foreach from=$residences item='row'}
+	<li><a href="explore_residence.php?id={$row.residence_class_id}">{$row.residence_class.name_single}</a></li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+{include file="inc_foot.txt"}

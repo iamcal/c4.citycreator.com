@@ -1,0 +1,76 @@
+<?
+	# $Id: lib_db.txt,v 1.3 2006/03/17 03:00:39 cal Exp $
+
+	$GLOBALS[db_cfg] = array(
+		'host' => 'localhost',
+		'user' => "root",
+		'pass' => "bob",
+		'name' => "citycreator_play",
+	);
+
+	# create a connection 
+	$GLOBALS[db] = db_connect();
+
+
+	function db_connect() {
+		$conn = mysql_pconnect($GLOBALS[db_cfg][host], $GLOBALS[db_cfg][user], $GLOBALS[db_cfg][pass]);
+		if (!$conn) {
+			db_show_error(mysql_error());
+		}else{
+			mysql_select_db($GLOBALS[db_cfg][name], $conn);
+		}
+		return $conn;
+	}
+
+	function db_query($sql) {
+		$rs = mysql_query($sql);
+		if (!$rs) {
+			db_show_error(mysql_error());
+		} else {
+			return $rs;
+		}
+	}
+
+	function db_num_rows($qhandle) {
+		if ($qhandle) {
+			return mysql_numrows($qhandle);
+		} else {
+			return 0;
+		}
+	}
+
+	function db_fetch_array($qhandle) {
+		return mysql_fetch_array($qhandle, MYSQL_ASSOC);
+	}
+
+	function db_fetch_hash($qhandle) {
+		return mysql_fetch_array($qhandle, MYSQL_ASSOC);
+	}
+
+	function db_fetch_one($sql) {
+		return db_fetch_array(db_query($sql));
+	}
+
+	function db_insertid() {
+		return mysql_insert_id();
+	}
+
+	function db_show_error($msg) {
+		return "\n<b>Database Error:</b><br />\n".HtmlSpecialChars($msg)."<hr>\n";
+	}
+
+	function db_insert($tbl, $hash){
+		$fields = array_keys($hash);
+		db_query("INSERT INTO $tbl (`".implode('`,`',$fields)."`) VALUES ('".implode("','",$hash)."')");
+		return db_insertid();
+	}
+
+	function db_update($tbl, $hash, $where){
+		$bits = array();
+		foreach(array_keys($hash) as $k){
+			$bits[] = "`$k`='$hash[$k]'";
+		}
+
+		db_query("UPDATE $tbl SET ".implode(', ',$bits)." WHERE $where");
+	}
+?>

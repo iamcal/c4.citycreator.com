@@ -1,0 +1,11 @@
+{assign var='page_title' value="Logout"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_logout.txt,v 1.2 2004/07/08 23:45:11 Cal Henderson Exp $ -->
+
+	<h1>Logout</h1>
+
+	<p>You have now been logged out.</p>
+	<p><a href="/">Go back to the homepage</a>.</p>
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,19 @@
+{assign var='page_title' value="City Map"}
+{include file="inc_head.txt"}
+
+<!-- $Id -->
+
+	<h1>{$cfg.user.city_name|escape} - Map</h1>
+
+{include file='inc_subnav_city.txt'}
+
+<div style="position: relative; width: {$w}px; height: {$h}px;">
+{foreach from=$pieces item=row}
+	<div style="left: {$row.x}px; top: {$row.y}px; width: {$row.w}px; height: {$row.h}px;" class="buildingoff" id="building_{$row.id}" onmouseover="building_on({$row.id});" onmouseout="building_off({$row.id});">{$row.pos}</div>
+{/foreach}
+{foreach from=$blanks item=row}
+	<div style="left: {$row.x}px; top: {$row.y}px; width: {$row.w}px; height: {$row.h}px;" class="emptytile">{$row.pos}</div>
+{/foreach}
+</div>
+
+{include file="inc_foot.txt"}

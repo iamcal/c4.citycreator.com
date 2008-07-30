@@ -1,0 +1,77 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_explore_building.txt,v 1.2 2006/03/17 05:36:42 cal Exp $ -->
+
+<h1><a href="explore.php">Explore</a> / Building: {$class.name_single}</h1>
+
+<!-- ########################################################## -->
+
+<table>
+	<tr>
+		<td><b>Base build time:</b></td>
+		<td>{$class.build_time|format_time}</td>
+	</tr>
+</table>
+
+<p>Build time is affected by technological advancements (which can reduce build time) and worker availability (which can increase build time).</p>
+
+<!-- ########################################################## -->
+
+<h3>Industries within this building</h3>
+
+<ul>
+{foreach from=$industries item='row'}
+	<li><a href="explore_industry.php?id={$row.industry_class_id}">{$row.industry_class.name_single}</a> x {$row.multiplier}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Residences within this building</h3>
+
+<ul>
+{foreach from=$residences item='row'}
+	<li><a href="explore_residence.php?id={$row.residence_class_id}">{$row.residence_class.name_single}</a> x {$row.homes_count}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Materials needed to build this building</h3>
+
+<ul>
+{foreach from=$materials item='row'}
+	<li><a href="explore_goods.php?id={$row.goods_class_id}">{$row.goods_class.name_plural}</a> x {$row.quantity}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Workers needed to build this building</h3>
+
+<ul>
+{foreach from=$builders item='row'}
+	<li>
+		<a href="explore_job.php?id={$row.job_class_id}">{$row.job_class.name_plural}</a>
+{if $row.min_workers==$row.max_workers}
+		x {$row.min_workers}
+{else}
+		x {$row.min_workers} to {$row.max_workers}
+{/if}
+	</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+
+{include file="inc_foot.txt"}

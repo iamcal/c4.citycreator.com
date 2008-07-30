@@ -1,0 +1,23 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_explore_facility.txt,v 1.1 2006/03/17 05:36:42 cal Exp $ -->
+
+<h1><a href="explore.php">Explore</a> / Facility: {$class.name_plural}</h1>
+
+<!-- ########################################################## -->
+
+<h3>Industries which provide this facility</h3>
+
+<ul>
+{foreach from=$industries item='row'}
+	<li><a href="explore_industry.php?id={$row.industry_class_id}">{$row.industry_class.name_single}</a> x {$row.multiplier}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+
+{include file="inc_foot.txt"}

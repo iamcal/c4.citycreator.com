@@ -1,0 +1,28 @@
+{assign var='page_title' value="Purchase"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_purchase.txt,v 1.1 2004/08/21 00:28:37 Cal Henderson Exp $ -->
+
+	<h1>{$cfg.user.city_name|escape} - Purchase</h1>
+
+{include file='inc_subnav_city.txt'}
+
+	<h3>Buildings</h3>
+
+	<table cellpadding="10">
+{foreach from=$buildings item=row}
+		<tr valign="middle">
+			<td><a href="purchase_building.php?id={$row.id}"><img src="/images/thumbs/{$row.id}.gif" width="75" height="75" alt="{$row.name|escape}" class="border" /></a></td>
+			<td class="bigtext">
+				{$row.name|escape}, starting at {$row.base_price|format_cash} Credits<br />
+				<a href="purchase_building.php?id={$row.id}">Buy it &raquo;</a>
+			</td>
+		</tr>
+{/foreach}
+	</table>
+
+	<h3>Misc</h3>
+
+	<p>bar</p>
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,35 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_explore_residence.txt,v 1.1 2006/03/17 05:16:36 cal Exp $ -->
+
+<h1><a href="explore.php">Explore</a> / Residence: {$class.name_plural}</h1>
+
+<!-- ########################################################## -->
+
+<h3>Buildings which provide this residence</h3>
+
+<ul>
+{foreach from=$buildings item='row'}
+	<li><a href="explore_building.php?id={$row.building_class_id}">{$row.building_class.name_plural}</a> x {$row.homes_count}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Workers who can live here</h3>
+
+<ul>
+{foreach from=$workers item='row'}
+	<li><a href="explore_job.php?id={$row.job_class_id}">{$row.job_class.name_plural}</a></li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+
+{include file="inc_foot.txt"}
