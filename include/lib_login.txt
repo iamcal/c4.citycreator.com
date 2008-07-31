@@ -1,11 +1,13 @@
 <?
+	#
 	# $Id: lib_login.txt 11 2007-11-21 23:23:03Z iamcal $
+	#
 
 	$GLOBALS[cfg][user_ok] = 0;
 	$GLOBALS[cfg][user] = 0;
 	$GLOBALS[cfg][global_props] = array();
 
-	###
+	##################################################################
 
 	function login_init(){
 
@@ -23,14 +25,13 @@
 
 				if ($hash == $hash2){
 
-					$GLOBALS[cfg][user] = $row;
-					$GLOBALS[cfg][user_ok] = 1;
-
-					$GLOBALS[cfg][global_props] = unserialize($row[global_props]);
+					login_set_user($row);
 				}
 			}
 		}
 	}
+
+	##################################################################
 
 	function login_set_cookie($id, $password){
 
@@ -41,14 +42,20 @@
 		setcookie('s', $session, time()+155520000, $GLOBALS[cfg][cookie_path], $GLOBALS[cfg][cookie_domain]);
 	}
 
+	##################################################################
+
 	function login_clear_cookie(){
 		setcookie('s', "", time()-3600, $GLOBALS[cfg][cookie_path], $GLOBALS[cfg][cookie_domain]);
 	}
+
+	##################################################################
 
 	function login_compute_hash($time, $password){
 
 		return sha1($time.$password.$GLOBALS[cfg][session_secret]);
 	}
+
+	##################################################################
 
 	function login_check_loggedin(){
 		if (!$GLOBALS[cfg][user_ok]){
@@ -57,7 +64,37 @@
 		}
 	}
 
-	###
+	##################################################################
+
+	function login_set_user(&$row){
+
+		$GLOBALS[cfg][user] = $row;
+		$GLOBALS[cfg][user_ok] = 1;
+
+		$GLOBALS[cfg][global_props] = unserialize($row[global_props]);
+	}
+
+	##################################################################
+
+	function login_save_global_props(){
+
+		if ($GLOBALS[cfg][user][id]){
+
+			$serial = serialize($GLOBALS[cfg][global_props]);
+
+			if ($serial != $GLOBALS[cfg][user][global_props]){
+
+				db_update('users', array(
+
+					'global_props' => AddSlashes($serial),
+
+				), "id={$GLOBALS[cfg][user][id]}");
+			}
+		}
+
+	}
+
+	##################################################################
 
 	login_init();
 ?>

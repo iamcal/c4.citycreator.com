@@ -32,6 +32,8 @@
 
 		function save_local_props(){
 
+			if (!$this->props_dirty) return;
+
 			$id_enc = intval($this->id);
 
 			db_update('user_buildings', array(
