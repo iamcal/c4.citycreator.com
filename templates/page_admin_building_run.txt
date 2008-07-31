@@ -59,12 +59,30 @@
 </div>
 
 </td>
-<td>
+<td style="padding-right: 10px;">
 
-<h2>Final Props</h2>
+<h2>Local Props</h2>
 
 <table border="1">
 {foreach from=$instance->props key='key' item='value'}
+	<tr>
+		<td><b>{$key|escape}</b></td>
+{if $value|@is_array}
+		<td>Array()</td>
+{else}
+		<td><code>{$value|escape}</code></td>
+{/if}
+	</tr>
+{/foreach}
+</table>
+
+</td>
+<td style="padding-right: 10px;">
+
+<h2>Global Props</h2>
+
+<table border="1">
+{foreach from=$cfg.global_props.test key='key' item='value'}
 	<tr>
 		<td><b>{$key|escape}</b></td>
 {if $value|@is_array}
@@ -84,6 +102,7 @@
 
 <p>This preview is created by running <code>on_design</code>, applying custom options, running <code>on_build</code>, applying custom options again, and finally running <code>on_refresh</code>.</p>
 
+<p>Example custom line: <code>$i-&gt;set_local_prop('growth', 4);</code></p>
 
 
 

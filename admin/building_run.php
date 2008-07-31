@@ -26,6 +26,7 @@
 
 	$b =& load_building($_REQUEST[id]);
 	$i =& new play_building_instance();
+	$i->id = 'test';
 
 	$b->on_design($i);
 
