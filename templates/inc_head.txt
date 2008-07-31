@@ -25,7 +25,6 @@
 			<a href="/account.php">Your Account</a>
 			|
 			<a href="/explore.php">Tech Explorer</a>
-			(<a href="/explore2.php">2</a>)
 {else}
 			<a href="/tour.php">What is this?</a>
 			|

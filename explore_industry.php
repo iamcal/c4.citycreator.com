@@ -1,100 +1,79 @@
 <?
-	# $Id: explore_industry.php 2 2007-11-21 17:54:11Z iamcal $
+	#
+	# $Id$
+	#
 
 	include('include/init.txt');
 
-	login_check_loggedin();
-
-
-	mysql_select_db('play2', $GLOBALS[db]);
+	loadlib('industry');
+	loadlib('goods');
+	loadlib('jobs');
 
 
 	#
 	# fetch main class row
 	#
 
-	$id = intval($_GET[id]);
+	$o = load_industry($_GET[id]);
 
-	$class = db_fetch_hash(db_query("SELECT * FROM industry_class WHERE id=$id"));
-
-	$smarty->assign_by_ref('class', $class);
+	$smarty->assign_by_ref('o', $o);
 
 
 	#
-	# fetch inputs/outputs
+	# run build event
+	#
+
+	$i = new play_industry_instance();
+	$o->on_build($i);
+
+	$smarty->assign_by_ref('i', $i);
+
+
+	#
+	# load inputs
 	#
 
 	$inputs = array();
-	$outputs = array();
-
 	$smarty->assign_by_ref('inputs', $inputs);
+
+	foreach ($i->inputs as $k => $v){
+
+		$x = load_goods(0, $k);
+		$x->number = $v;
+
+		$inputs[] = $x;
+	}
+
+
+	#
+	# load outputs
+	#
+
+	$outputs = array();
 	$smarty->assign_by_ref('outputs', $outputs);
 
-	$result = db_query("SELECT * FROM industry_input WHERE industry_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
+	foreach ($i->outputs as $k => $v){
 
-		$row[goods_class] = db_fetch_hash(db_query("SELECT * FROM goods_class WHERE id=$row[goods_class_id]"));
+		$x = load_goods(0, $k);
+		$x->number = $v;
 
-		$inputs[] = $row;
-	}
-
-	$result = db_query("SELECT * FROM industry_output WHERE industry_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
-
-		$row[goods_class] = db_fetch_hash(db_query("SELECT * FROM goods_class WHERE id=$row[goods_class_id]"));
-
-		$outputs[] = $row;
+		$outputs[] = $x;
 	}
 
 
 	#
-	# fetch buildings
-	#
-
-	$buildings = array();
-
-	$smarty->assign_by_ref('buildings', $buildings);
-
-	$result = db_query("SELECT * FROM building_industries WHERE industry_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
-
-		$row[building_class] = db_fetch_hash(db_query("SELECT * FROM building_class WHERE id=$row[building_class_id]"));
-
-		$buildings[] = $row;
-	}
-
-
-	#
-	# fetch jobs
+	# load jobs
 	#
 
 	$jobs = array();
-
 	$smarty->assign_by_ref('jobs', $jobs);
 
-	$result = db_query("SELECT * FROM industry_job WHERE industry_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
+	foreach ($i->jobs as $k => $v){
 
-		$row[job_class] = db_fetch_hash(db_query("SELECT * FROM job_class WHERE id=$row[job_class_id]"));
+		$x = load_job(0, $k);
+		$x->number = $v;
 
-		$jobs[] = $row;
-	}
-
-
-	#
-	# fetch facilities
-	#
-
-	$facilities = array();
-
-	$smarty->assign_by_ref('facilities', $facilities);
-
-	$result = db_query("SELECT * FROM industry_facilities WHERE industry_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
-
-		$row[facility_class] = db_fetch_hash(db_query("SELECT * FROM facility_class WHERE id=$row[facility_class_id]"));
-
-		$facilities[] = $row;
+		$jobs[] = $x;
 	}
 
 

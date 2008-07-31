@@ -1,17 +1,17 @@
 {assign var='page_title' value="Explore"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_explore_industry.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+<!-- $Id$ -->
 
-<h1><a href="explore.php">Explore</a> / Industry: {$class.name_single}</h1>
+<h1><a href="explore.php">Explore</a> / Industry: {$o->row.name}</h1>
 
 <!-- ########################################################## -->
 
 <h3>Goods: Input</h3>
 
 <ul>
-{foreach from=$inputs item='row'}
-	<li><a href="explore_goods.php?id={$row.goods_class_id}">{$row.goods_class.name_plural}</a> ({$row.units_per_tick} units per tick)</li>
+{foreach from=$inputs item='obj'}
+	<li><a href="explore_goods.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
@@ -22,8 +22,8 @@
 <h3>Goods: Output</h3>
 
 <ul>
-{foreach from=$outputs item='row'}
-	<li><a href="explore_goods.php?id={$row.goods_class_id}">{$row.goods_class.name_plural}</a> ({$row.units_per_tick} units per tick)</li>
+{foreach from=$outputs item='obj'}
+	<li><a href="explore_goods.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
@@ -31,6 +31,7 @@
 
 <!-- ########################################################## -->
 
+<div style="background-color: pink">
 <h3>Buildings which provide this industry</h3>
 
 <ul>
@@ -40,21 +41,24 @@
 	<li><i>none</i></li>
 {/foreach}
 </ul>
+</div>
 
 <!-- ########################################################## -->
 
 <h3>Jobs provided by this industry</h3>
 
 <ul>
-{foreach from=$jobs item='row'}
-	<li><a href="explore_job.php?id={$row.job_class_id}">{$row.job_class.name_single}</a> x {$row.job_count}</li>
+{foreach from=$jobs item='obj'}
+	<li><a href="explore_jobs.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
 </ul>
 
+
 <!-- ########################################################## -->
 
+<div style="background-color: pink">
 <h3>Facilities provided by this industry</h3>
 
 <ul>
@@ -64,6 +68,7 @@
 	<li><i>none</i></li>
 {/foreach}
 </ul>
+</div>
 
 <!-- ########################################################## -->
 

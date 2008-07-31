@@ -1,16 +1,16 @@
 {assign var='page_title' value="Explore"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_explore_building.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+<!-- $Id$ -->
 
-<h1><a href="explore.php">Explore</a> / Building: {$class.name_single}</h1>
+<h1><a href="explore.php">Explore</a> / Building: {$b->row.name}</h1>
 
 <!-- ########################################################## -->
 
 <table>
 	<tr>
 		<td><b>Base build time:</b></td>
-		<td>{$class.build_time|format_time}</td>
+		<td>??? {$class.build_time|format_time}</td>
 	</tr>
 </table>
 
@@ -21,15 +21,15 @@
 <h3>Industries within this building</h3>
 
 <ul>
-{foreach from=$industries item='row'}
-	<li><a href="explore_industry.php?id={$row.industry_class_id}">{$row.industry_class.name_single}</a> x {$row.multiplier}</li>
+{foreach from=$industries item='obj'}
+	<li><a href="explore_industry.php?id={$obj->row.id}">{$obj->row.name}</a> x {$obj->number}</li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
 </ul>
 
 <!-- ########################################################## -->
-
+<div style="background-color: pink">
 <h3>Residences within this building</h3>
 
 <ul>
@@ -39,14 +39,14 @@
 	<li><i>none</i></li>
 {/foreach}
 </ul>
-
+</div>
 <!-- ########################################################## -->
 
 <h3>Materials needed to build this building</h3>
 
 <ul>
-{foreach from=$materials item='row'}
-	<li><a href="explore_goods.php?id={$row.goods_class_id}">{$row.goods_class.name_plural}</a> x {$row.quantity}</li>
+{foreach from=$build_goods item='obj'}
+	<li><a href="explore_goods.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
@@ -57,15 +57,8 @@
 <h3>Workers needed to build this building</h3>
 
 <ul>
-{foreach from=$builders item='row'}
-	<li>
-		<a href="explore_job.php?id={$row.job_class_id}">{$row.job_class.name_plural}</a>
-{if $row.min_workers==$row.max_workers}
-		x {$row.min_workers}
-{else}
-		x {$row.min_workers} to {$row.max_workers}
-{/if}
-	</li>
+{foreach from=$build_people item='obj'}
+	<li><a href="explore_job.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}

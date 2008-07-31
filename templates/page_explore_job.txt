@@ -1,12 +1,13 @@
 {assign var='page_title' value="Explore"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_explore_job.txt 8 2007-11-21 18:22:50Z iamcal $ -->
+<!-- $Id$ -->
 
-<h1><a href="explore.php">Explore</a> / Job: {$class.name_plural}</h1>
+<h1><a href="explore.php">Explore</a> / Job: {$o->row.name_plural}</h1>
 
 <!-- ########################################################## -->
 
+<div style="background-color: pink">
 <h3>Industries which provide this job</h3>
 
 <ul>
@@ -16,9 +17,11 @@
 	<li><i>none</i></li>
 {/foreach}
 </ul>
+</div>
 
 <!-- ########################################################## -->
 
+<div style="background-color: pink">
 <h3>Buildings which can be built by this job</h3>
 
 <ul>
@@ -35,9 +38,11 @@
 	<li><i>none</i></li>
 {/foreach}
 </ul>
+</div>
 
 <!-- ########################################################## -->
 
+<div style="background-color: pink">
 <h3>Residences suitable for this job</h3>
 
 <ul>
@@ -47,6 +52,7 @@
 	<li><i>none</i></li>
 {/foreach}
 </ul>
+</div>
 
 <!-- ########################################################## -->
 

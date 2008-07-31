@@ -1,27 +1,15 @@
 {assign var='page_title' value="Explore"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_explore.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+<!-- $Id$ -->
 
 <!-- ########################################################## -->
 
 <h1>Buildings</h1>
 
 <ul>
-{foreach from=$classes.building item="row"}
-	<li><a href="explore_building.php?id={$row.id}">{$row.name_single|escape}</a></li>
-{foreachelse}
-	<li><i>none</i></li>
-{/foreach}
-</ul>
-
-<!-- ########################################################## -->
-
-<h1>Residences</h1>
-
-<ul>
-{foreach from=$classes.residence item="row"}
-	<li><a href="explore_residence.php?id={$row.id}">{$row.name_single|escape}</a></li>
+{foreach from=$classes.buildings item="row"}
+	<li><a href="explore_building.php?id={$row.id}">{$row.name|escape}</a></li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
@@ -32,7 +20,7 @@
 <h1>Jobs</h1>
 
 <ul>
-{foreach from=$classes.job item="row"}
+{foreach from=$classes.jobs item="row"}
 	<li><a href="explore_job.php?id={$row.id}">{$row.name_single|escape}</a></li>
 {foreachelse}
 	<li><i>none</i></li>
@@ -44,8 +32,8 @@
 <h1>Industries</h1>
 
 <ul>
-{foreach from=$classes.industry item="row"}
-	<li><a href="explore_industry.php?id={$row.id}">{$row.name_single|escape}</a></li>
+{foreach from=$classes.industries item="row"}
+	<li><a href="explore_industry.php?id={$row.id}">{$row.name|escape}</a></li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}
@@ -59,18 +47,6 @@
 <ul>
 {foreach from=$classes.goods item="row"}
 	<li><a href="explore_goods.php?id={$row.id}">{$row.name_plural|escape}</a></li>
-{foreachelse}
-	<li><i>none</i></li>
-{/foreach}
-</ul>
-
-<!-- ########################################################## -->
-
-<h1>Facilities</h1>
-
-<ul>
-{foreach from=$classes.facility item="row"}
-	<li><a href="explore_facility.php?id={$row.id}">{$row.name_single|escape}</a></li>
 {foreachelse}
 	<li><i>none</i></li>
 {/foreach}

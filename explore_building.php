@@ -1,90 +1,78 @@
 <?
-	# $Id: explore_building.php 2 2007-11-21 17:54:11Z iamcal $
+	# $Id$
 
 	include('include/init.txt');
 
-	login_check_loggedin();
-
-
-	mysql_select_db('play2', $GLOBALS[db]);
+	loadlib('building');
+	loadlib('industry');
+	loadlib('goods');
+	loadlib('jobs');
 
 
 	#
 	# fetch main class row
 	#
 
-	$id = intval($_GET[id]);
+	$b = load_building($_GET[id]);
 
-	$class = db_fetch_hash(db_query("SELECT * FROM building_class WHERE id=$id"));
-
-	$smarty->assign_by_ref('class', $class);
+	$smarty->assign_by_ref('b', $b);
 
 
 	#
-	# fetch industries
+	# run build event
+	#
+
+	$i = new play_building_instance();
+	$b->on_build($i);
+
+	$smarty->assign_by_ref('i', $i);
+
+
+	#
+	# load industries
 	#
 
 	$industries = array();
-
 	$smarty->assign_by_ref('industries', $industries);
 
-	$result = db_query("SELECT * FROM building_industries WHERE building_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
+	foreach ($i->industries as $k => $v){
 
-		$row[industry_class] = db_fetch_hash(db_query("SELECT * FROM industry_class WHERE id=$row[industry_class_id]"));
+		$in = load_industry(0, $k);
+		$in->number = $v;
 
-		$industries[] = $row;
+		$industries[] = $in;
 	}
 
 
 	#
-	# fetch residences
+	# load building goods
 	#
 
-	$residences = array();
+	$build_goods = array();
+	$smarty->assign_by_ref('build_goods', $build_goods);
 
-	$smarty->assign_by_ref('residences', $residences);
+	foreach ($i->build_goods as $k => $v){
 
-	$result = db_query("SELECT * FROM building_residences WHERE building_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
+		$gd = load_goods(0, $k);
+		$gd->number = $v;
 
-		$row[residence_class] = db_fetch_hash(db_query("SELECT * FROM residence_class WHERE id=$row[residence_class_id]"));
-
-		$residences[] = $row;
+		$build_goods[] = $gd;
 	}
 
 
 	#
-	# fetch materials
+	# load building workers
 	#
 
-	$materials = array();
+	$build_people = array();
+	$smarty->assign_by_ref('build_people', $build_people);
 
-	$smarty->assign_by_ref('materials', $materials);
+	foreach ($i->build_people as $k => $v){
 
-	$result = db_query("SELECT * FROM building_materials WHERE building_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
+		$pl = load_job(0, $k);
+		$pl->number = $v;
 
-		$row[goods_class] = db_fetch_hash(db_query("SELECT * FROM goods_class WHERE id=$row[goods_class_id]"));
-
-		$materials[] = $row;
-	}
-
-
-	#
-	# fetch builders
-	#
-
-	$builders = array();
-
-	$smarty->assign_by_ref('builders', $builders);
-
-	$result = db_query("SELECT * FROM building_builders WHERE building_class_id=$class[id]");
-	while ($row = db_fetch_hash($result)){
-
-		$row[job_class] = db_fetch_hash(db_query("SELECT * FROM job_class WHERE id=$row[job_class_id]"));
-
-		$builders[] = $row;
+		$build_people[] = $pl;
 	}
 
 
