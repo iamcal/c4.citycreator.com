@@ -1,7 +1,7 @@
 {assign var='page_title' value="Page not found"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_404.txt,v 1.2 2006/03/17 03:00:39 cal Exp $ -->
+<!-- $Id: page_404.txt 2 2007-11-21 17:54:11Z iamcal $ -->
 
 	<h1>Oops - Page not found</h1>
 

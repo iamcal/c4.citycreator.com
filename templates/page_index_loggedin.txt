@@ -1,6 +1,6 @@
 {include file="inc_head.txt"}
 
-<!-- $Id: page_index_loggedin.txt,v 1.4 2004/08/06 19:10:32 Cal Henderson Exp $ -->
+<!-- $Id: page_index_loggedin.txt 2 2007-11-21 17:54:11Z iamcal $ -->
 
 	<h1>Hello {$cfg.user.name|escape} :)</h1>
 

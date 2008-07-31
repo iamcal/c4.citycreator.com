@@ -1,7 +1,7 @@
 {assign var='page_title' value="Login"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_login.txt,v 1.3 2004/07/09 02:21:33 Cal Henderson Exp $ -->
+<!-- $Id: page_login.txt 2 2007-11-21 17:54:11Z iamcal $ -->
 
 {if $http_get.target || $http_post.target}
 	<h1>You need to login to view this page</h1>

@@ -1,0 +1,25 @@
+{assign var='page_title' value="Purchase"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_build.txt 42 2008-01-05 06:13:22Z iamcal $ -->
+
+	<h1>{$cfg.user.city_name|escape} - Build</h1>
+
+{include file='inc_subnav_city.txt'}
+
+	<h3>Buildings</h3>
+
+	<table border="1">
+		<tr>
+			<th>Building</th>
+			<th>Base cost</th>
+		</tr>
+{foreach from=$buildings item='i'}
+		<tr>
+			<td><a href="build_instance.php?id={$i->b->row.id}">{$i->b->row.name}</a></td>
+			<td>${$i->get_local_prop('cost')}</td>
+		</tr>
+{/foreach}
+	</table>
+
+{include file="inc_foot.txt"}

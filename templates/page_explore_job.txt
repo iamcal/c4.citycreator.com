@@ -1,7 +1,7 @@
 {assign var='page_title' value="Explore"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_explore_job.txt,v 1.2 2006/03/17 05:36:42 cal Exp $ -->
+<!-- $Id: page_explore_job.txt 8 2007-11-21 18:22:50Z iamcal $ -->
 
 <h1><a href="explore.php">Explore</a> / Job: {$class.name_plural}</h1>
 
@@ -24,7 +24,7 @@
 <ul>
 {foreach from=$builders item='row'}
 	<li>
-		<a href="explore_building.php?id={$row.buildingclass_id}">{$row.building_class.name_plural}</a>
+		<a href="explore_building.php?id={$row.building_class.id}">{$row.building_class.name_plural}</a>
 {if $row.min_workers==$row.max_workers}
 		({$row.min_workers} workers)
 {else}

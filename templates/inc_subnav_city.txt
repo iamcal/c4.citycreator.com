@@ -6,6 +6,8 @@
 		|
 		<a href="/bank.php">Finances</a>
 		|
-		<a href="/purchase.php">Purchase</a>
+		<a href="/build.php">Build</a>
+		|
+		<a href="/goods.php">Goods</a>
 	</p>
 	<hr />

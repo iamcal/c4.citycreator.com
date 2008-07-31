@@ -1,5 +1,5 @@
 //
-// $Id: main.js,v 1.1 2004/08/20 23:50:54 Cal Henderson Exp $
+// $Id: main.js 2 2007-11-21 17:54:11Z iamcal $
 //
 
 function building_on(id){

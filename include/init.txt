@@ -1,7 +1,24 @@
 <?
-	# $Id: init.txt,v 1.2 2004/06/30 20:37:43 Cal Henderson Exp $
+	#
+	# $Id: init.txt 48 2008-07-31 00:01:32Z iamcal $
+	#
 
-	include("include/config.txt");
+	$inc_dir = dirname(__FILE__);
+
+	#############################################################
+
+	$GLOBALS[cfg] = array();
+
+	$GLOBALS[cfg][root_path]		= dirname(__FILE__).'/..';
+
+	$GLOBALS[cfg][templates_path]		= $GLOBALS[cfg][root_path].'/templates/';
+	$GLOBALS[cfg][templates_compile_path]	= $GLOBALS[cfg][root_path].'/templates_c/';
+
+	$GLOBALS[cfg][smarty_path] 		= $GLOBALS[cfg][root_path].'/include/smarty/Smarty.class.php';
+
+	$GLOBALS[cfg][style_table]		= ' border="0" cellpadding="4" cellspacing="2"';
+
+	include("$inc_dir/config.txt");
 
 	#############################################################
 
@@ -10,9 +27,21 @@
 	function loadlib($lib){
 
 		if (!in_array($lib, $GLOBALS[libs])){
-			include("include/lib_$lib.txt");
+			include("$GLOBALS[inc_dir]/lib_$lib.txt");
 			$GLOBALS[libs][] = $lib;
 		}
+	}
+
+	function dumper(&$x){
+		echo "<pre style=\"text-align: left;\">";
+		echo HtmlSpecialChars(var_export($x, 1));
+		echo "</pre>\n";
+	}
+
+	function error_404(){
+
+		$GLOBALS[smarty]->display('page_404.txt');
+		exit;
 	}
 
 	#############################################################
@@ -20,4 +49,6 @@
 	loadlib('db');
 	loadlib('smarty');
 	loadlib('login');
+	loadlib('objects');
+	loadlib('instances');
 ?>

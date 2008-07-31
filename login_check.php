@@ -1,5 +1,5 @@
 <?
-	# $Id: login_check.php,v 1.2 2004/07/09 02:21:33 Cal Henderson Exp $
+	# $Id: login_check.php 2 2007-11-21 17:54:11Z iamcal $
 
 	include('include/init.txt');
 

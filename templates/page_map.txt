@@ -1,19 +1,124 @@
 {assign var='page_title' value="City Map"}
 {include file="inc_head.txt"}
 
+<style>{literal}
+
+div.tileset {
+	position: absolute;
+	xbackground-color: lime;
+	xborder: 1px solid blue;
+	text-align: center;
+}
+
+div.tileroot {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+div.tilebit {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+</style>{/literal}
+
 <!-- $Id -->
 
 	<h1>{$cfg.user.city_name|escape} - Map</h1>
 
 {include file='inc_subnav_city.txt'}
 
-<div style="position: relative; width: {$w}px; height: {$h}px;">
-{foreach from=$pieces item=row}
-	<div style="left: {$row.x}px; top: {$row.y}px; width: {$row.w}px; height: {$row.h}px;" class="buildingoff" id="building_{$row.id}" onmouseover="building_on({$row.id});" onmouseout="building_off({$row.id});">{$row.pos}</div>
+<div style="position: relative; background-color: pink; width: 600px; height: 200px;">
+
+{foreach from=$tiles item='row'}
+	<div style="position: absolute; left: {$row.p.0}px; top: {$row.p.1}px; background-image: url(images/large/empty.gif); width: 56px; height: 29px; text-align: center;">
+		{$row.x},{$row.y}
+	</div>
 {/foreach}
-{foreach from=$blanks item=row}
-	<div style="left: {$row.x}px; top: {$row.y}px; width: {$row.w}px; height: {$row.h}px;" class="emptytile">{$row.pos}</div>
+
+{foreach from=$buildings item='row'}
+	<div class="tileset" style="left: {$row.box.x}px; top: {$row.box.y}px; width: {$row.box.w}px; height: {$row.box.h}px; border: 0px solid red">
+{if 0}
+		<div class="tileroot"><a href="/building_instance.php?id={$row.id}"><img src="images/space.gif" width="{$row.tile_w}" height="{$row.tile_h}" alt="" /></a></div>
+{/if}
+{foreach from=$row.tile_bits item='bit'}
+		<div class="tilebit" style="left: {$bit.0}px; top: {$bit.1}px; width: {$bit.2}px; height: {$bit.3}px; background-image: url('images/{$bit.6}'); background-position: -{$bit.4}px -{$bit.5}px;"></div>
 {/foreach}
+	</div>
+
+{/foreach}
+
+	<div style="position: absolute; left: 0px; top: 0px; width: 56px; height: 28px; background-image: url(/images/large/mouse.gif)" id="mapcursor"></div>
+	<div style="position: absolute; left: 0px; top: 0px; width: 600px; height: 200px;" id="mapcover"></div>
 </div>
+
+<div style="background-color: yellow" id="console"></div>
+
+<script>{literal}
+
+var e = document.getElementById('mapcover');
+e.onmousemove = function(event){
+
+	var c_x = event.layerX;
+	var c_y = event.layerY;
+
+	var sq_x = Math.floor(c_x / 56);
+	var sq_y = Math.floor(c_y / 28);
+
+	var ex = document.getElementById('mapcursor');
+	ex.style.left = (sq_x * 56)+'px';
+	ex.style.top  = (sq_y * 28)+'px';
+
+	document.getElementById('console').innerHTML = sq_x + ',' + sq_y;
+
+}
+
+
+
+
+function parse_obj(prefix, x, no_recurse){
+
+	//myDump('called with '+no_recurse+' and '+prefix.length);
+
+	if (typeof(x)=='object'){
+
+		if (no_recurse && prefix != ''){
+
+			return 'object';
+		}
+
+		var buffer = "{\n";
+		for (var i in x){
+
+			//myDump('found prop '+i);
+
+			var value = '[Exception]';
+
+			try {
+				value = parse_obj(prefix+"\t", x[i], no_recurse);
+			}catch(e){ }
+
+			buffer += prefix+"\t"+i+": "+value+"\n";
+		}
+
+		buffer += prefix+"}";
+
+		return buffer;
+
+	}else if (typeof(x)=='function'){
+
+		return 'function(){}';
+
+		try { return x.toString(); }catch(e){ }
+	}else{
+		try { return x.toString(); }catch(e){ }
+	}
+
+	return '[Exception]';
+}
+
+</script>{/literal}
 
 {include file="inc_foot.txt"}

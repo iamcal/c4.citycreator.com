@@ -1,5 +1,5 @@
 <?
-	# $Id: signup.php,v 1.1 2006/03/17 03:00:39 cal Exp $
+	# $Id: signup.php 2 2007-11-21 17:54:11Z iamcal $
 
 	include('include/init.txt');
 

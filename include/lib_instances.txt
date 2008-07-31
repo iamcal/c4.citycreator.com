@@ -1,0 +1,100 @@
+<?
+	#
+	# $Id$
+	#
+
+	###############################################################################
+
+	class play_instance {
+
+		var $props = array();
+		var $id = 0;
+		var $row = null;
+		var $obj = null;
+		var $event = null;
+
+		#############
+
+		function init_from_row($row){
+
+			$this->id = $row[id];
+			$this->row = $row;
+			$this->import_local_props($row[local_props]);
+		}
+
+		#############
+
+		function save_global_props(){
+
+			if ($GLOBALS[cfg][user][id]){
+
+				db_update('users', array(
+
+					'global_props' => AddSlashes(serialize($GLOBALS[cfg][global_props])),
+
+				), "id={$GLOBALS[cfg][user][id]}");
+			}
+		}
+
+		#############
+
+		function has_local_prop($key){
+			return isset($this->props[$key]);
+		}
+
+		function get_local_prop($key){
+			return isset($this->props[$key]) ? $this->props[$key] : null;
+		}
+
+		function set_local_prop($key, $value){
+			$this->props[$key] = $value;
+		}
+
+		function clear_local_prop($key){
+			unset($this->props[$key]);
+		}
+
+		#############
+
+		function get_global_prop($key){
+			return isset($GLOBALS[cfg][global_props][$this->id][$key]) ? $GLOBALS[cfg][global_props][$this->id][$key] : null;
+		}
+
+		function set_global_prop($key, $value){
+			$GLOBALS[cfg][global_props][$this->id][$key] = $value;
+		}
+
+		function clear_global_prop($key){
+			unset($GLOBALS[cfg][global_props][$this->id][$key]);
+		}
+
+		function clear_global_props(){
+			unset($GLOBALS[cfg][global_props][$this->id]);
+		}
+
+		#############
+
+		function export_local_props(){
+			return serialize($this->props);
+		}
+
+		function import_local_props($x){
+			$this->props = unserialize($x);
+		}
+
+		#############
+
+		function dump(){
+
+			echo "<pre style=\"text-align: left;\">";
+			echo HtmlSpecialChars(var_export($this, 1));
+			echo "</pre>\n";
+
+		}
+
+		#############
+	}
+
+	###############################################################################
+
+?>

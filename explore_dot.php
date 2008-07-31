@@ -1,5 +1,5 @@
 <?
-	# $Id: explore_dot.php,v 1.1 2006/03/18 03:45:54 cal Exp $
+	# $Id: explore_dot.php 2 2007-11-21 17:54:11Z iamcal $
 
 	include('include/init.txt');
 

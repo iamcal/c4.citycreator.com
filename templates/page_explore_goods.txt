@@ -1,7 +1,7 @@
 {assign var='page_title' value="Explore"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_explore_goods.txt,v 1.2 2006/03/17 05:16:36 cal Exp $ -->
+<!-- $Id: page_explore_goods.txt 2 2007-11-21 17:54:11Z iamcal $ -->
 
 <h1><a href="explore.php">Explore</a> / Goods: {$class.name_plural}</h1>
 

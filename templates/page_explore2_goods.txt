@@ -1,0 +1,52 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id$ -->
+
+<h1><a href="explore2.php">Explore</a> / Goods: {$o->row.name_plural}</h1>
+
+<!-- ########################################################## -->
+
+<h3>Industries which use these goods</h3>
+
+<div style="background-color: pink">
+<ul>
+{foreach from=$industries_in item='row'}
+	<li><a href="explore_industry.php?id={$row.industry_class_id}">{$row.industry_class.name_single}</a> ({$row.units_per_tick} units per tick)</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+</div>
+
+<!-- ########################################################## -->
+
+<h3>Industries which produce these goods</h3>
+
+<div style="background-color: pink">
+<ul>
+{foreach from=$industries_out item='row'}
+	<li><a href="explore_industry.php?id={$row.industry_class_id}">{$row.industry_class.name_single}</a> ({$row.units_per_tick} units per tick)</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+</div>
+
+<!-- ########################################################## -->
+
+<h3>Buildings Constructed using these goods</h3>
+
+<div style="background-color: pink">
+<ul>
+{foreach from=$buildings item='row'}
+	<li><a href="explore_building.php?id={$row.building_class_id}">{$row.building_class.name_plural}</a> x {$row.quantity}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+</div>
+
+<!-- ########################################################## -->
+
+{include file="inc_foot.txt"}

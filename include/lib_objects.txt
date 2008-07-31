@@ -1,0 +1,81 @@
+<?
+	#
+	# $Id$
+	#
+
+	########################################################################################################
+
+	function load_object($id, $uid, $cache, $table, $class){
+
+		$check = $id ? "ID_$id" : "UID_$uid";
+
+		if (!$GLOBALS[$cache][$check]){
+
+			if ($id){
+				$id_enc = intval($id);
+				$row = db_fetch_array(db_query("SELECT * FROM $table WHERE id=$id_enc"));
+			}else{
+				$uid_enc = AddSlashes($uid);
+				$row = db_fetch_array(db_query("SELECT * FROM $table WHERE uid='$uid_enc'"));
+			}
+
+			$obj = new $class();
+			$obj->row = $row;
+
+			$GLOBALS[$cache]["ID_$row[id]"] =& $obj;
+			$GLOBALS[$cache]["UID_$row[uid]"] =& $obj;
+
+		}
+
+		return $GLOBALS[$cache][$check];
+	}
+
+	########################################################################################################
+
+	class play_class {
+
+		var $row = null;
+		var $funcs = array();
+
+		##################################################################################
+
+		function call_user_func($name, &$instance){
+
+			if ($name == 'on_refresh'){
+				$instance->clear_global_props();
+			}
+
+			if (!$this->funcs[$name]){
+
+				$src = preg_replace('!^\s*#().*$!s', '', $this->row[$name]);
+
+				$this->funcs[$name] = create_function('&$o,&$i', $src);
+
+				if (!$this->funcs[$name]){
+
+					echo "Failed to create a function from source:";
+
+					dumper($this->row[$name]);
+					exit;
+				}
+			}
+
+			$f = $this->funcs[$name];
+			$f($this, $instance);
+		}
+
+		##################################################################################
+
+		function dump(){
+
+			echo "<pre style=\"text-align: left;\">";
+			echo HtmlSpecialChars(var_export($this, 1));
+			echo "</pre>\n";
+
+		}
+
+		##################################################################################
+	}
+
+	########################################################################################################
+?>

@@ -1,7 +1,7 @@
 {assign var='page_title' value="Your City"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_city.txt,v 1.3 2004/08/06 19:10:31 Cal Henderson Exp $ -->
+<!-- $Id: page_city.txt 2 2007-11-21 17:54:11Z iamcal $ -->
 
 	<h1>{$cfg.user.city_name|escape} - Your City</h1>
 

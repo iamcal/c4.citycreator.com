@@ -1,5 +1,5 @@
 <?
-	# $Id: logout.php,v 1.2 2004/07/08 23:45:11 Cal Henderson Exp $
+	# $Id: logout.php 2 2007-11-21 17:54:11Z iamcal $
 
 	include('include/init.txt');
 

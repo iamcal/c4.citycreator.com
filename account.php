@@ -1,5 +1,5 @@
 <?
-	# $Id: account.php,v 1.1 2004/07/21 03:36:07 Cal Henderson Exp $
+	# $Id: account.php 2 2007-11-21 17:54:11Z iamcal $
 
 	include('include/init.txt');
 

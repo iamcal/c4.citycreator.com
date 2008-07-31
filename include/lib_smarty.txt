@@ -1,5 +1,7 @@
 <?
-	# $Id: lib_smarty.txt,v 1.4 2006/03/17 03:00:39 cal Exp $
+	#
+	# $Id: lib_smarty.txt 48 2008-07-31 00:01:32Z iamcal $
+	#
 
 	require($GLOBALS[cfg][smarty_path]);
 
@@ -58,4 +60,12 @@
 
 	####################################################################
 
+	function smarty_plural($args){
+
+		return $args[count] == 1 ? $args[single] : $args[plural];
+	}
+
+	$GLOBALS[smarty]->register_function('plural', 'smarty_plural');
+
+	####################################################################
 ?>

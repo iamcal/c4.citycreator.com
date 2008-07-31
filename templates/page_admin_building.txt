@@ -1,0 +1,84 @@
+<style>{literal}
+
+textarea.eventedit {
+	width: 500px;
+	height: 200px;
+}
+
+</style>{/literal}
+
+<h1>
+	<a href="/admin/">Admin</a>
+	/
+	<a href="/admin/buildings.php">Buildings</a>
+	/
+	{$building.name|escape}
+</h1>
+
+<form action="/admin/building.php?id={$building.id}" method="post">
+<input type="hidden" name="done" value="1" />
+
+<table border="1">
+	<tr>
+		<td>ID</td>
+		<td>{$building.id}</td>
+	</tr>
+	<tr>
+		<td>UID</td>
+		<td><input type="text" name="uid" value="{$building.uid|escape}" /></td>
+	</tr>
+	<tr>
+		<td>Name</td>
+		<td><input type="text" name="name" value="{$building.name|escape}" /></td>
+	</tr>
+	<tr>
+		<td>On Design</td>
+		<td><textarea name="on_design" class="eventedit" wrap="off">{$building.on_design|escape}</textarea></td>
+		<td>
+			<ul>
+				<li>This event is run when the user is choosing what options to build a building with.</li>
+				<li>This event should set the <code>cost</code> property to the building cost (with options).</li>
+				<li>This event should set the <code>thumb</code> property to a thumbnail for the building.</li>
+				<li>This event should set up any options for customizing the building.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>On Build</td>
+		<td><textarea name="on_build" class="eventedit" wrap="off">{$building.on_build|escape}</textarea></td>
+		<td>
+			<ul>
+				<li>This event is run when an instance of the building is first created.</li>
+				<li>This event should set up initial properties.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>On Refresh</td>
+		<td><textarea name="on_refresh" class="eventedit" wrap="off">{$building.on_refresh|escape}</textarea></td>
+		<td>
+			<ul>
+				<li>This event is run after every other event and used to update effects of the building.</li>
+				<li>This is a good place to set up the tileset and any global services.</li>
+				<li>This event can be re-run at any time.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>On Event</td>
+		<td><textarea name="on_event" class="eventedit" wrap="off">{$building.on_event|escape}</textarea></td>
+		<td>
+			<ul>
+				<li>This event is run when a building instance event is fired.</li>
+				<li>Check <code>$i->event</code> for the event name.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><input type="submit" value="Save Changes" /></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+</form>

@@ -1,5 +1,5 @@
 <?
-	# $Id: bank.php,v 1.1 2004/07/28 01:56:58 Cal Henderson Exp $
+	# $Id: bank.php 2 2007-11-21 17:54:11Z iamcal $
 
 	include('include/init.txt');
 	loadlib('bank');

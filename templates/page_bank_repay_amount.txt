@@ -1,7 +1,7 @@
 {assign var='page_title' value="Your Finances"}
 {include file="inc_head.txt"}
 
-<!-- $Id: page_bank_repay_amount.txt,v 1.1 2004/08/06 19:11:27 Cal Henderson Exp $ -->
+<!-- $Id: page_bank_repay_amount.txt 2 2007-11-21 17:54:11Z iamcal $ -->
 
 	<h1>{$cfg.user.city_name|escape} - Your Finances</h1>
 

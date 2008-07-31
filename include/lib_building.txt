@@ -1,0 +1,63 @@
+<?
+	#
+	# $Id: lib_building.txt 23 2007-12-24 04:38:58Z iamcal $
+	#
+
+	loadlib('building_instance');
+
+	###############################################################################
+
+	function load_building($id, $uid=''){
+
+		return load_object($id, $uid, 'building_cache', 'class_buildings', 'play_building');
+	}
+
+	###############################################################################
+
+	class play_building extends play_class {
+
+		var $options = array();
+
+		###############################################################################
+
+		function on_design( &$instance){ $this->call_user_func('on_design' , $instance); }
+		function on_build(  &$instance){ $this->call_user_func('on_build'  , $instance); }
+		function on_refresh(&$instance){ $this->call_user_func('on_refresh', $instance); }
+		function on_event(  &$instance){ $this->call_user_func('on_event'  , $instance); }
+
+		###############################################################################
+
+		function add_option(&$instance, $type, $key, $label, $values, $default){
+
+			if (!$instance->has_local_prop($key)){
+
+				$instance->set_local_prop($key, $default);
+			}
+
+			$this->options[$key] = array(
+				'key'		=> $key,
+				'type'		=> $type,
+				'label'		=> $label,
+				'values'	=> $values,
+				'default'	=> $default,
+			);
+		}
+
+		###############################################################################
+
+		function add_event(&$instance, $time, $event){
+
+			db_insert('events', array(
+
+				'user_id'		=> $instance->row[user_id],
+				'building_instance_id'	=> $instance->row[id],
+				'date_fire'		=> intval(time() + $time),
+				'event'			=> AddSlashes($event),
+			));
+		}
+
+	}
+
+	###############################################################################
+
+?>
