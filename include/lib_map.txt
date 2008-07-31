@@ -51,7 +51,7 @@
 			$style .= " top: {$bit[1]}px;";
 			$style .= "  width: {$bit[2]}px;";
 			$style .= "  height: {$bit[3]}px;";
-			$style .= "  background-image: url('images/{$bit[6]}');";
+			$style .= "  background-image: url('/images/{$bit[6]}');";
 			$style .= "  background-position: -{$bit[4]}px -{$bit[5]}px;";
 
 			$out .= "<div style=\"$style\"></div>\n";

@@ -15,6 +15,8 @@ textarea.eventedit {
 	{$building.name|escape}
 </h1>
 
+<p><a href="building_run.php?id={$building.id}">Preview this building &raquo;</a></p>
+
 <form action="/admin/building.php?id={$building.id}" method="post">
 <input type="hidden" name="done" value="1" />
 

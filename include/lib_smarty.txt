@@ -14,13 +14,13 @@
 	$GLOBALS[smarty]->debugging = false;
 	$GLOBALS[smarty]->compile_check = true;
 
-	$GLOBALS[smarty]->assign_by_ref('cfg', &$GLOBALS[cfg]);
-	$GLOBALS[smarty]->assign_by_ref('error', &$GLOBALS[error]);
+	$GLOBALS[smarty]->assign_by_ref('cfg', $GLOBALS[cfg]);
+	$GLOBALS[smarty]->assign_by_ref('error', $GLOBALS[error]);
 
-	$GLOBALS[smarty]->assign_by_ref('http_get', &$_GET);
-	$GLOBALS[smarty]->assign_by_ref('http_post', &$_POST);
-	$GLOBALS[smarty]->assign_by_ref('http_session', &$_SESSION);
-	$GLOBALS[smarty]->assign_by_ref('http_server', &$_SERVER);
+	$GLOBALS[smarty]->assign_by_ref('http_get', $_GET);
+	$GLOBALS[smarty]->assign_by_ref('http_post', $_POST);
+	$GLOBALS[smarty]->assign_by_ref('http_session', $_SESSION);
+	$GLOBALS[smarty]->assign_by_ref('http_server', $_SERVER);
 
 	####################################################################
 
