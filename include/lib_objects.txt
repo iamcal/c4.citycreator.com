@@ -55,7 +55,7 @@
 
 					echo "Failed to create a function from source:";
 
-					dumper($this->row[$name]);
+					echo "<pre>".HtmlSpecialChars($src)."</pre>";
 					exit;
 				}
 			}

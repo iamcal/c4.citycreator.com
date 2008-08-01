@@ -1,0 +1,54 @@
+<style>{literal}
+
+textarea.eventedit {
+	width: 500px;
+	height: 200px;
+}
+
+</style>{/literal}
+
+<h1>
+	<a href="/admin/">Admin</a>
+	/
+	<a href="/admin/industries.php">Industries</a>
+	/
+	{$industry.name|escape}
+</h1>
+
+<p><a href="industry_run.php?id={$industry.id}">Preview this industry &raquo;</a></p>
+
+<form action="/admin/industry.php?id={$industry.id}" method="post">
+<input type="hidden" name="done" value="1" />
+
+<table border="1">
+	<tr>
+		<td>ID</td>
+		<td>{$industry.id}</td>
+	</tr>
+	<tr>
+		<td>UID</td>
+		<td><input type="text" name="uid" value="{$industry.uid|escape}" /></td>
+	</tr>
+	<tr>
+		<td>Name</td>
+		<td><input type="text" name="name" value="{$industry.name|escape}" /></td>
+	</tr>
+	<tr>
+		<td>On Build</td>
+		<td><textarea name="on_build" class="eventedit" wrap="off">{$industry.on_build|escape}</textarea></td>
+		<td>
+			<ul>
+				<li>This event is run when an instance of a building containing this industry is first created.</li>
+				<li>This event should set up initial properties.</li>
+			</ul>
+		</td>
+	</tr>
+
+	<tr>
+		<td>&nbsp;</td>
+		<td><input type="submit" value="Save Changes" /></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+</form>
