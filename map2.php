@@ -11,10 +11,10 @@
 	#
 
 	$extents = array(
-		't' => 3,
-		'l' => 3,
-		'b' => 3,
-		'r' => 3,
+		't' => 6,
+		'l' => 6,
+		'b' => 6,
+		'r' => 6,
 	);
 
 	$smarty->assign('extents', $extents);

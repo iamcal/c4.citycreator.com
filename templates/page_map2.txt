@@ -8,7 +8,7 @@
 <style>{literal}
 
 #playspace {
-	width: 800px;
+	width: 798px;
 	height: 400px;
 	position: relative;
 	background-color: pink;
@@ -42,7 +42,67 @@
 	z-index: 2;
 }
 
+#buildbox {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+	width: 200px;
+	height: 300px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	padding: 8px;
+	z-index: 3;
+}
+
+.closebutton {
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+
+.closebutton:hover {
+	background-color: red;
+}
+
+.closebutton a {
+	display: block;
+	padding: 2px;
+}
+
+
+#toolbar {
+	padding: 4px 0;
+}
+
+.toolbarbutton {
+	float: left;
+	border: 1px solid #ccc;
+	background-color: #f5f5f5;
+	margin-right: 8px;
+}
+
+.toolbarbutton a {
+	display: block;
+	padding: 4px;
+	color: #000;
+	text-decoration: none;
+}
+
+.toolbarbutton:hover {
+	border: 1px solid #999;
+	background-color: #eeeeee;
+}
+
 </style>{/literal}
+
+<div id="toolbar">
+
+	<div class="toolbarbutton"><a href="#" onclick="alert('build'); return false;">Build</a></div>
+	<div class="toolbarbutton"><a href="#" onclick="alert('blah'); return false;">Something</a></div>
+	<br clear="all" />
+</div>
 
 <div id="playspace">
 	<div id="tilelayers" class="playlayer">
@@ -50,6 +110,18 @@
 		<div id="features" class="playlayer"></div>
 	</div>
 	<div id="cover" class="playlayer"></div>
+	<div id="buildbox">
+		<div class="closebutton"><a href="#" onclick="closeBuild(); return false;"><img src="/images/close.gif" width="9" height="9" /></a></div>
+		<b>Build</b><br />
+		Choose a building type<br />
+		<br />
+		<a href="#">Residential</a><br />
+		<a href="#">Commerical</a><br />
+		<a href="#">Industrial</a><br />
+		<a href="#">Services</a><br />
+		<a href="#">Transit</a><br />
+		<a href="#">Bleh</a><br />
+	</div>
 </div>
 
 
@@ -131,57 +203,12 @@ window.onload = function(){
 
 	var cover = document.getElementById('cover');
 
-	cover.onmousedown = function(e){
-
-		if (!e) e = window.event;
-
-		var t = document.getElementById('tilelayers');
-
-		map_dragging = true;
-		map_drag_mouse = eventPoint(e);
-		map_drag_start = [map_x, map_y];
-
-		document.onselectstart = function() { return false; };
-
-		//console.log('start', map_drag_mouse, map_drag_start);
-
-		return false;
-	};
-
-	cover.onmousemove = function(e){
-
-		if (map_dragging){
-
-			if (!e) e = window.event;
-
-			var p = eventPoint(e);
-
-			var xdiff = map_drag_mouse[0] - p[0];
-			var ydiff = map_drag_mouse[1] - p[1];
-
-			map_x = map_drag_start[0] - xdiff;
-			map_y = map_drag_start[1] - ydiff;
-
-			var t = document.getElementById('tilelayers');
-
-			t.style.left = map_x + 'px';
-			t.style.top = map_y + 'px';
-		}
-	};
-
-	cover.onmouseup = function(e){
-
-		if (map_dragging){
-			map_dragging = false;
-
-			document.onselectstart = function() { return true; };
-		}
-	}
+	cover.onmousedown = map_mousedown;
 
 	calulate_area(extents);
 
-	for (var x=-4; x<5; x++){
-	for (var y=-4; y<5; y++){
+	for (var x=0-extents.l; x<=extents.r; x++){
+	for (var y=0-extents.t; y<=extents.b; y++){
 	if (has_tile(x, y)){
 		place_tile(x, y, 1);
 	}
@@ -190,9 +217,73 @@ window.onload = function(){
 
 }
 
+function map_mousedown(e){
+
+	if (!e) e = window.event;
+
+	var t = document.getElementById('tilelayers');
+
+	map_dragging = true;
+	map_drag_mouse = eventPoint(e);
+	map_drag_start = [map_x, map_y];
+
+	document.onselectstart = function() { return false; };
+
+	document.addEventListener("mousemove", map_mousemove, false);
+	document.addEventListener("mouseup"  , map_mouseup, false);
+
+	//console.log('start', map_drag_mouse, map_drag_start);
+
+	return false;
+}
+
+function map_mousemove(e){
+
+	if (map_dragging){
+
+		if (!e) e = window.event;
+
+		var p = globalToClient(eventPoint(e), document.getElementById('cover'));
+
+		var xdiff = map_drag_mouse[0] - p[0];
+		var ydiff = map_drag_mouse[1] - p[1];
+
+		map_x = map_drag_start[0] - xdiff;
+		map_y = map_drag_start[1] - ydiff;
+
+		var t = document.getElementById('tilelayers');
+
+		t.style.left = map_x + 'px';
+		t.style.top = map_y + 'px';
+	}
+}
+
+function map_mouseup(e){
+
+	if (map_dragging){
+		map_dragging = false;
+
+		document.onselectstart = function() { return true; };
+	}
+
+	document.removeEventListener("mousemove", map_mousemove, false);
+	document.removeEventListener("mouseup"  , map_mouseup, false);
+
+}
+
 function eventPoint(e){
 
+	if (e.currentTarget == document){
+
+		return  [e.clientX, e.clientY];
+	}
+
 	return [e.clientX-e.currentTarget.offsetLeft, e.clientY-e.currentTarget.offsetTop];
+}
+
+function globalToClient(p, client){
+
+	return [p[0] - client.offsetLeft, p[1] - client.offsetTop];
 }
 
 function place_tile(x, y, i){
@@ -204,8 +295,11 @@ function place_tile(x, y, i){
 	var origin_x = 400 - half_width;
 	var origin_y = 200 - half_height;
 
+	if (x == 1 && y == 1) i = 2;
+
 	var extra_height = 0;
 	if (i == 0) extra_height = 20;
+	if (i == 2) extra_height = 57-29;
 	
 	var px = origin_x - ((x-y) * half_width);
 	var py = origin_y + ((x+y) * half_height);
@@ -218,9 +312,11 @@ function place_tile(x, y, i){
 	elm.style.height = (29 + extra_height)+'px';
 	elm.style.zIndex = x + y;
 
-	if (i == 0) elm.style.backgroundImage = 'url(empty2.gif)';
-	if (i == 1) elm.style.backgroundImage = 'url(map/empty.gif)';
-	if (i == 2) elm.style.backgroundImage = 'url(bus.gif)';
+	//if (i == 0) elm.style.backgroundImage = 'url(empty2.gif)';
+	//if (i == 1) elm.style.backgroundImage = 'url(map/empty.gif)';
+
+	if (i == 1) elm.style.backgroundImage = 'url(images/large/grass.gif)';
+	if (i == 2) elm.style.backgroundImage = 'url(images/large/house1.gif)';
 
 	var parent = (i == 1) ? 'ground' : 'features';
 
@@ -230,6 +326,11 @@ function place_tile(x, y, i){
 	//elm.appendChild(document.createTextNode(x+","+y));
 
 	return elm;
+}
+
+function closeBuild(){
+
+	document.getElementById('buildbox').style.display = 'none';
 }
 
 </script>{/literal}
