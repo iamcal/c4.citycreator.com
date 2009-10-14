@@ -12,6 +12,10 @@
 	height: 400px;
 	position: relative;
 	background-color: pink;
+	background-image: url(/images/stripes.gif);
+	clip: rect(0 800px 400px 0);
+	overflow: hidden;
+	border: 1px solid #999;
 }
 
 .playlayer {
@@ -30,11 +34,21 @@
 	z-index: 2;
 }
 
+#tilelayers {
+	z-index: 1;
+}
+
+#cover {
+	z-index: 2;
+}
+
 </style>{/literal}
 
 <div id="playspace">
-	<div id="ground" class="playlayer"></div>
-	<div id="features" class="playlayer"></div>
+	<div id="tilelayers" class="playlayer">
+		<div id="ground" class="playlayer"></div>
+		<div id="features" class="playlayer"></div>
+	</div>
 	<div id="cover" class="playlayer"></div>
 </div>
 
@@ -107,21 +121,79 @@ function has_tile(x, y){
 	return true;
 }
 
+var map_dragging = false;
+var map_drag_mouse = null;
+var map_drag_start = null;
+var map_x = 0;
+var map_y = 0;
 
 window.onload = function(){
 
-calulate_area(extents);
+	var cover = document.getElementById('cover');
 
-for (var x=-4; x<5; x++){
-for (var y=-4; y<5; y++){
-if (has_tile(x, y)){
-	place_tile(x, y, 1);
-}
-}
-}
+	cover.onmousedown = function(e){
+
+		if (!e) e = window.event;
+
+		var t = document.getElementById('tilelayers');
+
+		map_dragging = true;
+		map_drag_mouse = eventPoint(e);
+		map_drag_start = [map_x, map_y];
+
+		document.onselectstart = function() { return false; };
+
+		//console.log('start', map_drag_mouse, map_drag_start);
+
+		return false;
+	};
+
+	cover.onmousemove = function(e){
+
+		if (map_dragging){
+
+			if (!e) e = window.event;
+
+			var p = eventPoint(e);
+
+			var xdiff = map_drag_mouse[0] - p[0];
+			var ydiff = map_drag_mouse[1] - p[1];
+
+			map_x = map_drag_start[0] - xdiff;
+			map_y = map_drag_start[1] - ydiff;
+
+			var t = document.getElementById('tilelayers');
+
+			t.style.left = map_x + 'px';
+			t.style.top = map_y + 'px';
+		}
+	};
+
+	cover.onmouseup = function(e){
+
+		if (map_dragging){
+			map_dragging = false;
+
+			document.onselectstart = function() { return true; };
+		}
+	}
+
+	calulate_area(extents);
+
+	for (var x=-4; x<5; x++){
+	for (var y=-4; y<5; y++){
+	if (has_tile(x, y)){
+		place_tile(x, y, 1);
+	}
+	}
+	}
 
 }
 
+function eventPoint(e){
+
+	return [e.clientX-e.currentTarget.offsetLeft, e.clientY-e.currentTarget.offsetTop];
+}
 
 function place_tile(x, y, i){
 
