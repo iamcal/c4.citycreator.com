@@ -1,0 +1,146 @@
+<style>
+
+.playlayer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 400px;
+	height: 400px;
+}
+
+#ground {
+	z-index: 1;
+}
+
+#features {
+	z-index: 2;
+}
+
+</style>
+
+<div id="playspace" style="width: 400px; height: 400px; background-color: pink">
+	<div id="ground" class="playlayer"></div>
+	<div id="features" class="playlayer"></div>
+</div>
+
+
+<script>
+
+var extents = {
+	t: 5,
+	r: 5,
+	b: 5,
+	l: 5
+};
+
+// think about area in terms of columns.
+// the middle column is always 'short'
+
+// for every 2 lots of r, add a short and tall col
+// if r is odd, add an extra long col
+
+// for every 2 lots of l, add a short and tall col
+// if l is odd, add an extra long col
+
+// the short column height will be 1
+// plus 1 for every complete pair of t
+// plus 1 for every complete pair of b
+
+// the long column height will be 1
+// plus 1 for every partial pair of t
+// plus 1 for every partial pair of b
+
+
+function calulate_area(extents){
+
+	var talls = 0;
+	var shorts = 1;
+
+	// calculate number of the 2 column types
+	var lc = 0 + Math.ceil(extents.l/2) + Math.ceil(extents.r/2);
+	var sc = 1 + Math.floor(extents.l/2) + Math.floor(extents.r/2);
+
+	// calculate the heights of the cols
+	var lh = 0 + Math.ceil(extents.t/2) + Math.ceil(extents.b/2);
+	var sh = 1 + Math.floor(extents.t/2) + Math.floor(extents.b/2);
+
+	var area = (lc * lh) + (sc * sh);
+
+	console.log('total area: ', area);
+}
+
+
+var buildings = [
+	[0,1,1,1,1],
+	[1,1,0,0,1],
+	[1,1,1,1,1],
+	[1,0,0,1,1],
+	[1,1,1,1,0]
+];
+
+function has_tile(x, y){
+	if (x == 0 && y == 0) return true;
+
+	if (x+y > extents.b) return false;
+	if (x+y < 0-extents.t) return false;
+
+	if (y-x > extents.r) return false;
+	if (y-x < 0-extents.l) return false;
+
+	return true;
+}
+
+
+window.onload = function(){
+
+calulate_area(extents);
+
+for (var x=-4; x<5; x++){
+for (var y=-4; y<5; y++){
+if (has_tile(x, y)){
+	place_tile(x, y, 1);
+}
+}
+}
+
+}
+
+
+function place_tile(x, y, i){
+
+	var half_width = 28;
+	var half_height = 14;
+
+	// this represents the position of the 0,0 tiles
+	var origin_x = 200 - half_width;
+	var origin_y = 200 - half_height;
+
+	var extra_height = 0;
+	if (i == 0) extra_height = 20;
+	
+	var px = origin_x - ((x-y) * half_width);
+	var py = origin_y + ((x+y) * half_height);
+
+	var elm = document.createElement('div');
+	elm.style.position = 'absolute';
+	elm.style.left = px + 'px';
+	elm.style.top = (py - extra_height) + 'px';
+	elm.style.width = '56px';
+	elm.style.height = (29 + extra_height)+'px';
+	elm.style.zIndex = x + y;
+
+	if (i == 0) elm.style.backgroundImage = 'url(empty2.gif)';
+	if (i == 1) elm.style.backgroundImage = 'url(empty.gif)';
+	if (i == 2) elm.style.backgroundImage = 'url(bus.gif)';
+
+	var parent = (i == 1) ? 'ground' : 'features';
+
+	document.getElementById(parent).appendChild(elm);
+
+	elm.style.textAlign = 'center';
+	elm.appendChild(document.createTextNode(x+","+y));
+
+	return elm;
+}
+
+</script>
