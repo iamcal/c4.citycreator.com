@@ -1,5 +1,5 @@
-	<hr />
-	<p>
+	<div id="subnav">
+
 		<a href="/city.php">Overview</a>
 		|
 		<a href="/map.php">Map</a>
@@ -9,5 +9,5 @@
 		<a href="/build.php">Build</a>
 		|
 		<a href="/goods.php">Goods</a>
-	</p>
-	<hr />
+
+	</div>
