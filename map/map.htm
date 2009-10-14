@@ -206,6 +206,9 @@ function draw_arrows(){
 
 	add_arrow(l, b, 'bl');
 	add_arrow(r, b, 'br');
+
+	add_arrow(l-100, t, 'l');
+
 }
 
 function add_arrow(x, y, dir){
@@ -217,6 +220,7 @@ function add_arrow(x, y, dir){
 	elm.style.width = g_tile_width+'px';
 	elm.style.height = (g_tile_height+1)+'px';
 	elm.style.backgroundImage = 'url(arrow_'+dir+'.gif)';
+	elm.style.backgroundColor = 'pink';
 	elm.style.cursor = 'pointer';
 
 	var closure = function(){ var this_dir=dir; return function(){ move_map(this_dir); }; }();
@@ -232,6 +236,8 @@ function move_map(dir){
 
 	if (dir == 'tr'){ g_origin_x++; }
 	if (dir == 'bl'){ g_origin_x--; }
+
+	if (dir == 'l'){ g_origin_y++; g_origin_x--; }
 
 	draw_buildings();
 }
