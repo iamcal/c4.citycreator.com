@@ -99,7 +99,7 @@
 
 <div id="toolbar">
 
-	<div class="toolbarbutton"><a href="#" onclick="alert('build'); return false;">Build</a></div>
+	<div class="toolbarbutton"><a href="#" onclick="doBuild(); return false;">Build</a></div>
 	<div class="toolbarbutton"><a href="#" onclick="alert('blah'); return false;">Something</a></div>
 	<br clear="all" />
 </div>
@@ -326,6 +326,11 @@ function place_tile(x, y, i){
 	//elm.appendChild(document.createTextNode(x+","+y));
 
 	return elm;
+}
+
+function doBuild(){
+
+	document.getElementById('buildbox').style.display = 'block';
 }
 
 function closeBuild(){
