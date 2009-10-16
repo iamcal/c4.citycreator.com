@@ -15,7 +15,7 @@
 	background-image: url(/images/stripes.gif);
 	clip: rect(0 800px 400px 0);
 	overflow: hidden;
-	border: 1px solid #999;
+	xborder: 1px solid #999;
 }
 
 .playlayer {
@@ -38,8 +38,12 @@
 	z-index: 1;
 }
 
-#cover {
+#cursor {
 	z-index: 2;
+}
+
+#cover {
+	z-index: 3;
 }
 
 #buildbox {
@@ -95,6 +99,13 @@
 	background-color: #eeeeee;
 }
 
+#cursor {
+	position: absolute;
+	width: 56px;
+	height: 28px;
+	background-image: url(/images/large/mouse.gif);
+}
+
 </style>{/literal}
 
 <div id="toolbar">
@@ -109,6 +120,7 @@
 		<div id="ground" class="playlayer"></div>
 		<div id="features" class="playlayer"></div>
 	</div>
+	<div id="cursor"></div>
 	<div id="cover" class="playlayer"></div>
 	<div id="buildbox">
 		<div class="closebutton"><a href="#" onclick="closeBuild(); return false;"><img src="/images/close.gif" width="9" height="9" /></a></div>
@@ -124,6 +136,8 @@
 	</div>
 </div>
 
+<div id="position" style="background-color: yellow">hello</div>
+
 
 <script>
 
@@ -135,6 +149,18 @@ var extents = {ldelim}
 {rdelim};
 
 {literal}
+
+// the offset for each row/col
+var full_width = 56;
+var full_height = 28;
+
+var half_width = 28;
+var half_height = 14;
+
+// this represents the position of the 0,0 tiles
+var origin_x = 400 - half_width;
+var origin_y = 200 - half_height;
+
 
 // think about area in terms of columns.
 // the middle column is always 'short'
@@ -204,6 +230,7 @@ window.onload = function(){
 	var cover = document.getElementById('cover');
 
 	cover.onmousedown = map_mousedown;
+	cover.onmousemove = map_mousemove_select;
 
 	calulate_area(extents);
 
@@ -242,14 +269,13 @@ function map_mousemove(e){
 	if (map_dragging){
 
 		if (!e) e = window.event;
-
-		var p = globalToClient(eventPoint(e), document.getElementById('cover'));
+		var p = eventPoint(e, ge('cover'));
 
 		var xdiff = map_drag_mouse[0] - p[0];
 		var ydiff = map_drag_mouse[1] - p[1];
 
-		map_x = map_drag_start[0] - xdiff;
-		map_y = map_drag_start[1] - ydiff;
+		map_x = Math.round(map_drag_start[0] - xdiff);
+		map_y = Math.round(map_drag_start[1] - ydiff);
 
 		var t = document.getElementById('tilelayers');
 
@@ -271,29 +297,55 @@ function map_mouseup(e){
 
 }
 
-function eventPoint(e){
+function map_mousemove_select(e){
 
-	if (e.currentTarget == document){
+	if (!e) e = window.event;
+	var p = eventPoint(e, ge('cover'));
 
-		return  [e.clientX, e.clientY];
-	}
+	var c = ge('cursor');
 
-	return [e.clientX-e.currentTarget.offsetLeft, e.clientY-e.currentTarget.offsetTop];
+	//c.style.left = p[0]+'px';
+	//c.style.top = p[1]+'px';
+
+
+	p[0] -= origin_x + map_x;
+	p[1] -= origin_y + map_y;
+
+	var sq_x = Math.floor(p[0] / full_width);
+	var sq_y = Math.floor(p[1] / full_height);
+
+	var sub_x = Math.abs(p[0]) % full_width;
+	var sub_y = Math.abs(p[1]) % full_height;
+
+	ge('position').innerHTML = 'cursor at: '+sq_x+'.'+sub_x+' , '+sq_y+'.'+sub_y;
+
+	var tx = sq_x * full_width;
+	var ty = sq_y * full_height;
+
+	c.style.left = (tx + origin_x + map_x)+'px';
+	c.style.top = (ty + origin_y + map_y)+'px';
+
+
+	//console.log(p);
 }
 
-function globalToClient(p, client){
 
-	return [p[0] - client.offsetLeft, p[1] - client.offsetTop];
+function eventPoint(e, target){
+
+	var x = e.pageX;
+	var y = e.pageY;
+	var elm = target ? target : e.target;
+
+	do {
+		x -= elm.offsetLeft;
+		y -= elm.offsetTop;
+
+	} while (elm = elm.offsetParent);
+
+	return  [x, y];
 }
 
 function place_tile(x, y, i){
-
-	var half_width = 28;
-	var half_height = 14;
-
-	// this represents the position of the 0,0 tiles
-	var origin_x = 400 - half_width;
-	var origin_y = 200 - half_height;
 
 	if (x == 1 && y == 1) i = 2;
 
@@ -323,9 +375,13 @@ function place_tile(x, y, i){
 	document.getElementById(parent).appendChild(elm);
 
 	elm.style.textAlign = 'center';
-	//elm.appendChild(document.createTextNode(x+","+y));
+	elm.appendChild(document.createTextNode(x+","+y));
 
 	return elm;
+}
+
+function ge(x){
+	return document.getElementById(x);
 }
 
 function doBuild(){
