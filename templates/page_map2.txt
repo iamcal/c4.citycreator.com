@@ -38,10 +38,6 @@
 	z-index: 1;
 }
 
-#cursor {
-	z-index: 2;
-}
-
 #cover {
 	z-index: 3;
 }
@@ -99,14 +95,6 @@
 	background-color: #eeeeee;
 }
 
-#cursor {
-	position: absolute;
-	width: 56px;
-	height: 28px;
-	background-image: url(/images/large/mouse.gif);
-	display: none;
-}
-
 #cursor2 {
 	position: absolute;
 	width: 56px;
@@ -130,7 +118,6 @@
 		<div id="features" class="playlayer"></div>
 		<div id="cursor2"></div>
 	</div>
-	<div id="cursor"></div>
 	<div id="cover" class="playlayer"></div>
 	<div id="buildbox">
 		<div class="closebutton"><a href="#" onclick="closeBuild(); return false;"><img src="/images/close.gif" width="9" height="9" /></a></div>
@@ -145,8 +132,6 @@
 		<a href="#">Bleh</a><br />
 	</div>
 </div>
-
-<div id="position" style="background-color: yellow">hello</div>
 
 
 <script>
@@ -312,11 +297,9 @@ function map_mousemove_select(e){
 	if (!e) e = window.event;
 	var p = eventPoint(e, ge('cover'));
 
-	var c = ge('cursor');
-
-	//c.style.left = p[0]+'px';
-	//c.style.top = p[1]+'px';
-
+	//
+	// find the grid coords of the tile we're over
+	//
 
 	p[0] -= origin_x + map_x;
 	p[1] -= origin_y + map_y;
@@ -330,70 +313,18 @@ function map_mousemove_select(e){
 	if (sub_x < 0) sub_x += full_width;
 	if (sub_y < 0) sub_y += full_height;
 
-	var tpx = 0 + sq_y - sq_x;
-	var tpy = 0 + sq_x + sq_y;
+	var tcx = 0 + sq_y - sq_x;
+	var tcy = 0 + sq_x + sq_y;
+
+	if (sub_y <= 13 && sub_x <= (13-sub_y) * 2) tcy--; // red
+	if (sub_y >= 15 && sub_x <= (sub_y-15) * 2) tcx++; // blue
+	if (sub_y <= 13 && sub_x >= 27 + (2 * sub_y)) tcx--; // green
+	if (sub_y >= 15 && sub_x >= 83 - (2 * sub_y)) tcy++; // yellow
 
 
-	ge('position').innerHTML = 'cursor at: '+sq_x+'.'+sub_x+' , '+sq_y+'.'+sub_y+' -> '+tpx+','+tpy;
-
-	var tx = sq_x * full_width;
-	var ty = sq_y * full_height;
-
-	c.style.left = (tx + origin_x + map_x)+'px';
-	c.style.top = (ty + origin_y + map_y)+'px';
-
-
-
-
-	var tcx = tpx;
-	var tcy = tpy;
-
-
-	// 0,0  -> 26,0		0,y -> (13-y)*2,y
-	// 0,1  -> 24,1
-	// 0,5  -> 16,5
-	// 0,13 -> 0,13
-
-	if (sub_y <= 13 && sub_x <= (13-sub_y) * 2){
-		// red
-		tcy--;
-	}
-
-
-	// 0,15 -> 0,15		0,y -> (y-15)*2,y
-	// 0,16 -> 2,16
-	// 0,17 -> 4,17
-	// 0,27 -> 24,27
-
-	if (sub_y >= 15 && sub_x <= (sub_y-15) * 2){
-		// blue
-		tcx++;
-	}
-
-
-	// 27,0 -> 55,0		27+(2*y),y -> 55,y
-	// 29,1 -> 55,1
-	// 31,2 -> 55,2
-	// 53,13 -> 55,13
-
-	if (sub_y <= 13 && sub_x >= 27 + (2 * sub_y)){
-		// green
-		tcx--;
-	}
-
-
-	// 55,14 -> 55,14	83-(2*y),y -> 55,y
-	// 53,15 -> 55,15
-	// 51,16 -> 55,16
-	// 29,27 -> 55,27
-
-	if (sub_y >= 15 && sub_x >= 83 - (2 * sub_y)){
-		// yellow
-		tcy++;
-	}
-
-
-
+	//
+	// turn that into a pixel position and move the cursor there
+	//
 
 	var px = origin_x - ((tcx-tcy) * half_width);
 	var py = origin_y + ((tcx+tcy) * half_height);
@@ -401,9 +332,6 @@ function map_mousemove_select(e){
 	var c2 = ge('cursor2');
 	c2.style.left = (px)+'px';
 	c2.style.top = (py)+'px';
-
-	//console.log(px, py);
-	//console.log(p);
 }
 
 
@@ -441,9 +369,6 @@ function place_tile(x, y, i){
 	elm.style.height = (29 + extra_height)+'px';
 	elm.style.zIndex = x + y;
 
-	//if (i == 0) elm.style.backgroundImage = 'url(empty2.gif)';
-	//if (i == 1) elm.style.backgroundImage = 'url(map/empty.gif)';
-
 	if (i == 1) elm.style.backgroundImage = 'url(images/large/grass.gif)';
 	if (i == 2) elm.style.backgroundImage = 'url(images/large/house1.gif)';
 
@@ -452,7 +377,7 @@ function place_tile(x, y, i){
 	document.getElementById(parent).appendChild(elm);
 
 	elm.style.textAlign = 'center';
-	elm.appendChild(document.createTextNode(x+","+y));
+	//elm.appendChild(document.createTextNode(x+","+y));
 
 	return elm;
 }
