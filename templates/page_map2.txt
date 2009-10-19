@@ -201,12 +201,18 @@ function calulate_area(extents){
 
 	console.log('total area: ', area);
 
-	boundaries.l = 0 + ((extents.l * half_width) + origin_x);
-	boundaries.r = 0 - ((extents.r * half_width) + origin_x);
-	boundaries.t = 0 + ((extents.t * half_height) + origin_y);
-	boundaries.b = 0 - ((extents.b * half_height) + origin_y);
 
-	console.log(boundaries);
+	//
+	// calculate how far we can drag the map.
+	//
+	// this stops us from 'losing' all the tiles off the edge of
+	// the drag window.
+	//
+
+	boundaries.l = 0 + ((extents.l * half_width ) + origin_x) - 100;
+	boundaries.r = 0 - ((extents.r * half_width ) + origin_x) + 100;
+	boundaries.t = 0 + ((extents.t * half_height) + origin_y) - 100;
+	boundaries.b = 0 - ((extents.b * half_height) + origin_y) + 100;
 }
 
 
@@ -238,7 +244,10 @@ var map_y = 0;
 
 window.onload = function(){
 
-extents.l += 3;
+//extents.r += 6;
+//extents.l += 2;
+//extents.t += 2;
+//extents.b -= 1;
 
 	var cover = ge('cover');
 
@@ -247,17 +256,24 @@ extents.l += 3;
 
 	calulate_area(extents);
 
-	for (var x=0-extents.l; x<=extents.r; x++){
-	for (var y=0-extents.t; y<=extents.b; y++){
+	var min_x = 0 - (Math.ceil(extents.r / 2) + Math.ceil(extents.t / 2));
+	var max_x = 0 + (Math.ceil(extents.l / 2) + Math.ceil(extents.b / 2));
+
+	var min_y = 0 - (Math.ceil(extents.l / 2) + Math.ceil(extents.t / 2));
+	var max_y = 0 + (Math.ceil(extents.r / 2) + Math.ceil(extents.b / 2));
+
+	for (var x=min_x; x<=max_x; x++){
+	for (var y=min_y; y<=max_y; y++){
 	if (has_tile(x, y)){
 
 		place_tile(x, y, 1);
 		if (x == 1 && y == 1) place_tile(x, y, 2);
+		//if (has_tile(x, y)) place_tile(x, y, 2);
 	}
 	}
 	}
 
-console.log(tile_elms);
+//console.log(tile_elms);
 
 }
 
@@ -389,13 +405,13 @@ function set_selection_pos(x, y){
 
 	if (old_selection.x != null){
 
-		if (tile_elms[old_key].features){
+		if (tile_elms[old_key] && tile_elms[old_key].features){
 
 			//tile_elms[old_key].features.style.backgroundColor = '';
 		}
 	}
 
-	if (tile_elms[key].features){
+	if (tile_elms[key] && tile_elms[key].features){
 		//tile_elms[key].features.style.backgroundColor = 'red';
 	}
 }
