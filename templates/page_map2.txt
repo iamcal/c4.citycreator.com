@@ -31,7 +31,16 @@
 }
 
 #features {
+	z-index: 3;
+}
+
+#cursor {
+	position: absolute;
+	width: 56px;
+	height: 28px;
+	background-image: url(/images/large/selected2.gif);
 	z-index: 2;
+	display: none;
 }
 
 #tilelayers {
@@ -52,6 +61,7 @@
 	border: 1px solid #ccc;
 	padding: 8px;
 	z-index: 3;
+	display: none;
 }
 
 .closebutton {
@@ -95,13 +105,6 @@
 	background-color: #eeeeee;
 }
 
-#cursor2 {
-	position: absolute;
-	width: 56px;
-	height: 28px;
-	background-image: url(/images/large/selected.gif);
-	z-index: 3;
-}
 
 </style>{/literal}
 
@@ -116,7 +119,7 @@
 	<div id="tilelayers" class="playlayer">
 		<div id="ground" class="playlayer"></div>
 		<div id="features" class="playlayer"></div>
-		<div id="cursor2"></div>
+		<div id="cursor"></div>
 	</div>
 	<div id="cover" class="playlayer"></div>
 	<div id="buildbox">
@@ -155,6 +158,10 @@ var half_height = 14;
 // this represents the position of the 0,0 tiles
 var origin_x = 400 - half_width;
 var origin_y = 200 - half_height;
+
+var tile_elms		= {};
+var selection		= {};
+var old_selection	= {};
 
 
 // think about area in terms of columns.
@@ -222,7 +229,7 @@ var map_y = 0;
 
 window.onload = function(){
 
-	var cover = document.getElementById('cover');
+	var cover = ge('cover');
 
 	cover.onmousedown = map_mousedown;
 	cover.onmousemove = map_mousemove_select;
@@ -232,10 +239,14 @@ window.onload = function(){
 	for (var x=0-extents.l; x<=extents.r; x++){
 	for (var y=0-extents.t; y<=extents.b; y++){
 	if (has_tile(x, y)){
+
 		place_tile(x, y, 1);
+		if (x == 1 && y == 1) place_tile(x, y, 2);
 	}
 	}
 	}
+
+console.log(tile_elms);
 
 }
 
@@ -243,7 +254,7 @@ function map_mousedown(e){
 
 	if (!e) e = window.event;
 
-	var t = document.getElementById('tilelayers');
+	var t = ge('tilelayers');
 
 	map_dragging = true;
 	map_drag_mouse = eventPoint(e);
@@ -272,7 +283,7 @@ function map_mousemove(e){
 		map_x = Math.round(map_drag_start[0] - xdiff);
 		map_y = Math.round(map_drag_start[1] - ydiff);
 
-		var t = document.getElementById('tilelayers');
+		var t = ge('tilelayers');
 
 		t.style.left = map_x + 'px';
 		t.style.top = map_y + 'px';
@@ -322,16 +333,55 @@ function map_mousemove_select(e){
 	if (sub_y >= 15 && sub_x >= 83 - (2 * sub_y)) tcy++; // yellow
 
 
+	set_selection_pos(tcx, tcy);
+}
+
+function set_selection_pos(x, y){
+
+	//
+	// is this a new selection?
+	//
+
+	if (selection.x == x && selection.y == y) return;
+
+	old_selection.x = selection.x;
+	old_selection.y = selection.y;
+
+	selection.x = x;
+	selection.y = y;
+
+	var key = x+','+y;
+	var old_key = old_selection.x+','+old_selection.y;
+
+
 	//
 	// turn that into a pixel position and move the cursor there
 	//
 
-	var px = origin_x - ((tcx-tcy) * half_width);
-	var py = origin_y + ((tcx+tcy) * half_height);
+	var px = origin_x - ((x-y) * half_width);
+	var py = origin_y + ((x+y) * half_height);
 	
-	var c2 = ge('cursor2');
+	var c2 = ge('cursor');
 	c2.style.left = (px)+'px';
 	c2.style.top = (py)+'px';
+
+
+
+	//
+	// change some building statea
+	//
+
+	if (old_selection.x != null){
+
+		if (tile_elms[old_key].features){
+
+			//tile_elms[old_key].features.style.backgroundColor = '';
+		}
+	}
+
+	if (tile_elms[key].features){
+		//tile_elms[key].features.style.backgroundColor = 'red';
+	}
 }
 
 
@@ -351,8 +401,6 @@ function eventPoint(e, target){
 }
 
 function place_tile(x, y, i){
-
-	if (x == 1 && y == 1) i = 2;
 
 	var extra_height = 0;
 	if (i == 0) extra_height = 20;
@@ -374,7 +422,11 @@ function place_tile(x, y, i){
 
 	var parent = (i == 1) ? 'ground' : 'features';
 
-	document.getElementById(parent).appendChild(elm);
+	var key = x+','+y;
+	if (tile_elms[key] == null) tile_elms[key] = {};
+	tile_elms[key][parent] = elm;
+
+	ge(parent).appendChild(elm);
 
 	elm.style.textAlign = 'center';
 	//elm.appendChild(document.createTextNode(x+","+y));
@@ -388,12 +440,14 @@ function ge(x){
 
 function doBuild(){
 
-	document.getElementById('buildbox').style.display = 'block';
+	ge('buildbox').style.display = 'block';
+	ge('cursor').style.display = 'block';
 }
 
 function closeBuild(){
 
-	document.getElementById('buildbox').style.display = 'none';
+	ge('buildbox').style.display = 'none';
+	ge('cursor').style.display = 'none';
 }
 
 </script>{/literal}
