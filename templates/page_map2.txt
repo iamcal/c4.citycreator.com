@@ -163,6 +163,8 @@ var tile_elms		= {};
 var selection		= {};
 var old_selection	= {};
 
+var boundaries = {};
+
 
 // think about area in terms of columns.
 // the middle column is always 'short'
@@ -198,6 +200,13 @@ function calulate_area(extents){
 	var area = (lc * lh) + (sc * sh);
 
 	console.log('total area: ', area);
+
+	boundaries.l = 0 + ((extents.l * half_width) + origin_x);
+	boundaries.r = 0 - ((extents.r * half_width) + origin_x);
+	boundaries.t = 0 + ((extents.t * half_height) + origin_y);
+	boundaries.b = 0 - ((extents.b * half_height) + origin_y);
+
+	console.log(boundaries);
 }
 
 
@@ -228,6 +237,8 @@ var map_x = 0;
 var map_y = 0;
 
 window.onload = function(){
+
+extents.l += 3;
 
 	var cover = ge('cover');
 
@@ -282,6 +293,11 @@ function map_mousemove(e){
 
 		map_x = Math.round(map_drag_start[0] - xdiff);
 		map_y = Math.round(map_drag_start[1] - ydiff);
+
+		if (map_x < boundaries.r) map_x = boundaries.r;
+		if (map_x > boundaries.l) map_x = boundaries.l;
+		if (map_y > boundaries.t) map_y = boundaries.t;
+		if (map_y < boundaries.b) map_y = boundaries.b;
 
 		var t = ge('tilelayers');
 
@@ -429,7 +445,7 @@ function place_tile(x, y, i){
 	ge(parent).appendChild(elm);
 
 	elm.style.textAlign = 'center';
-	//elm.appendChild(document.createTextNode(x+","+y));
+	elm.appendChild(document.createTextNode(x+","+y));
 
 	return elm;
 }
