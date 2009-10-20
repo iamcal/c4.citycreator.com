@@ -146,6 +146,14 @@ var extents = {ldelim}
 	l: {$extents.l}
 {rdelim};
 
+var terrain = {ldelim}
+{foreach from=$terrain item='row'}
+	'{$row.x},{$row.y}': '{$row.type}',
+	'0' : 0
+{/foreach}
+{rdelim};
+
+
 {literal}
 
 // the offset for each row/col
@@ -214,7 +222,6 @@ function calulate_area(extents){
 	boundaries.t = 0 + ((extents.t * half_height) + origin_y) - 100;
 	boundaries.b = 0 - ((extents.b * half_height) + origin_y) + 100;
 }
-
 
 var buildings = [
 	[0,1,1,1,1],
@@ -434,6 +441,8 @@ function eventPoint(e, target){
 
 function place_tile(x, y, i){
 
+	var key = x+','+y;
+
 	var extra_height = 0;
 	if (i == 0) extra_height = 20;
 	if (i == 2) extra_height = 57-29;
@@ -449,19 +458,27 @@ function place_tile(x, y, i){
 	elm.style.height = (29 + extra_height)+'px';
 	elm.style.zIndex = x + y;
 
-	if (i == 1) elm.style.backgroundImage = 'url(images/large/grass.gif)';
-	if (i == 2) elm.style.backgroundImage = 'url(images/large/house1.gif)';
+	if (i == 1){
+		// ground layer
+		elm.style.backgroundImage = 'url(images/terrain/plain.gif)';
+		if (terrain[key]) elm.style.backgroundImage = 'url(images/terrain/'+terrain[key]+'.gif)';
+	}
+
+	if (i == 2){
+		// buildings layer
+		elm.style.backgroundImage = 'url(images/large/house1.gif)';
+	}
+
 
 	var parent = (i == 1) ? 'ground' : 'features';
 
-	var key = x+','+y;
 	if (tile_elms[key] == null) tile_elms[key] = {};
 	tile_elms[key][parent] = elm;
 
 	ge(parent).appendChild(elm);
 
 	elm.style.textAlign = 'center';
-	elm.appendChild(document.createTextNode(x+","+y));
+	//elm.appendChild(document.createTextNode(x+","+y));
 
 	return elm;
 }

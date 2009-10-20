@@ -21,6 +21,21 @@
 
 
 	#
+	# terrain
+	#
+
+	$terrain = array();
+
+	$terrain[] = array(
+		'x' => 2,
+		'y' => 1,
+		'type' => 'grass',
+	);
+
+	$smarty->assign('terrain', $terrain);
+
+
+	#
 	# output
 	#
 
