@@ -1,0 +1,26 @@
+<?
+	include("../include/init.txt");
+
+	list($user_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_users"));
+	list($city_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_saved"));
+	list($card_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_cards"));
+	list($vote_count) = mysql_fetch_array(mysql_query("SELECT SUM(votes) FROM $cfg[db_prefix]_votes"));
+	list($gall_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_gallery WHERE deleted=0"));
+	list($com1_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=1"));
+	list($com2_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=0"));
+
+	include('head.txt');
+?>
+
+<h1>Statistics</h1>
+
+<p>Number of registered users: <b><?=$user_count?></b></p>
+<p>Number of saved cities: <b><?=$city_count?></b></p>
+<p>Number of ecards sent: <b><?=$card_count?></b></p>
+<p>Number of votes cast: <b><?=$vote_count?></b></p>
+<p>Number of cities in gallery: <b><?=$gall_count?></b></p>
+<p>Number of comments: <b><?=$com1_count?> published, <a href="comments.city"><?=$com2_count?> pending</a></b></p>
+
+<?
+	include('foot.txt');
+?>

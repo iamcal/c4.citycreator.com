@@ -1,0 +1,7 @@
+	<div class="col2">
+		<img src="images/title_howtogallery.gif" width="201" height="11"><br>
+		<br>
+		The designs in the gallery are all created by members of the Create Castleford site. Becoming a member is easy, just click the button above and follow the simple steps.<br>
+		<br>
+		Once you're a member, create your own city, save it and enter it into the Gallery from your own members area. Simple as that!
+	</div>

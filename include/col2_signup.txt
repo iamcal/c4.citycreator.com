@@ -1,0 +1,17 @@
+	<div class="col2">
+		<img src="images/title_whyjoin.gif" width="164" height="11"><br>
+		<br>
+		&bull; You can save your city designs<br>
+		<br>
+		&bull; You can send your city design to friends as an e-card<br>
+		<br>
+		&bull; You can share your city design with other city designers<br>
+		<br>
+		&bull; You can enter your cities in the gallery<br>
+		<br>
+		&bull; You can design many cities at once<br>
+		<br>
+		&bull; You can print the cities you create<br>
+		<br>
+		&bull; You can use your city designs as desktop wallpaper<br>
+	</div>

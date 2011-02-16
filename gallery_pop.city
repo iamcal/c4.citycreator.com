@@ -1,0 +1,52 @@
+<?
+	include("include/init.txt");
+	include("include/login.txt");
+
+	$ok = 0;
+
+	$row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_gallery WHERE id='$id' AND deleted=0",$db));
+
+	if (!$row[id]){
+		header("location: no_card.city");
+		exit;
+	}
+?>
+<html>
+<head>
+<title>City Creator - Gallery</title>
+<style>
+
+body {
+	margin: 14px 24px;
+	background-color: #ffffff;
+	color: #000000;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 13px;
+}
+
+a {
+	color: #000000;
+}
+
+img {
+	border: 2px solid #eeeeee;
+}
+
+</style>
+</head>
+<body>
+
+	<img src="image.city?g=<?=$id?>"><br>
+	<br>
+<? if ($row[your_name]){ ?>
+	By: <b><?=HtmlSpecialChars($row[your_name])?></b><br>
+<? } ?>
+<? if ($row[your_location]){ ?>
+	From: <b><?=HtmlSpecialChars($row[your_location])?></b><br>
+<? } ?>
+	<br>
+	<a href="Javascript:window.close();">close window</a>
+
+</body>
+</html>

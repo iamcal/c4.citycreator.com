@@ -1,0 +1,11 @@
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr><td><a href="build.city"><img src="images/inner_block_create.gif"    width="256" height="194" border="0"></a></td></tr>
+	<tr><td bgcolor="#ffffff"><img src="images/space.gif" width="256" height="1"></td></tr>
+	<tr><td><a href="gallery.city"><img src="images/inner_block_gallery.gif" width="256" height="190" border="0"></a></td></tr>
+<? if ($nav != 'vote'){ ?>
+	<tr><td bgcolor="#ffffff"><img src="images/space.gif" width="256" height="1"></td></tr>
+	<tr><td><a href="vote.city"><img src="images/inner_block_vote.gif"       width="256" height="195" border="0"></a></td></tr>
+<? } ?>
+	<tr><td bgcolor="#ffffff"><img src="images/space.gif" width="256" height="1"></td></tr>
+	<tr><td><a href="comments.city"><img src="images/inner_block_comment.gif" width="256" height="193" border="0"></a></td></tr>
+</table>

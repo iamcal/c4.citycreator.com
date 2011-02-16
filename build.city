@@ -1,0 +1,215 @@
+<?
+	include("include/init.txt");
+	include("include/login.txt");
+
+	$nav = 'build';
+
+	if ($city>3){$city = 3;}
+
+	if ($saved_id){
+		$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
+		$city = $saved_row[city_id];
+	}
+
+	$city_row = get_city($city);
+	$city_id = $city_row[id];
+
+	list($first_tab) = mysql_fetch_array(mysql_query("SELECT id FROM $cfg[db_prefix]_tabs WHERE city_id=$city_id ORDER BY in_order ASC LIMIT 1", $db));
+?>
+<html>
+<head>
+<title>City Creator - Build</title>
+<script language="JavaScript" src="detect.js?revision=2"></script>
+<script language="JavaScript" src="cookies.js"></script>
+<script language="JavaScript" src="build.js?revision=19"></script>
+<script language="JavaScript">
+<!--
+
+var current_tab = -1;
+var currently_dragging = 0;
+var drag_elm = null;
+var drag_offset_x = 0;
+var drag_offset_y = 0;
+var grid_w = 24;
+var grid_h = 12;
+var pieces = new Array();
+var bgs = new Array();
+var bg_id = 0;
+var bg_string = '#ffffff';
+var cookie_prefix_old = 'city_<?=$city_id?>_';
+var cookie_prefix = 'city3_<?=$city_id?>_';
+var cookie_hello = 'hello';
+var cookie_badcheck = 'badcheck';
+var first_tab = <?=$first_tab?>;
+
+function pre_init(){
+
+	if (!is.dom1){
+		if (readCookie(cookie_badcheck) == null){
+			alert("You don't appear to be using a recent browser.\n\nChances are that this site wont work for you. Sorry :(");
+		}
+		saveCookie(cookie_badcheck,'1',365);
+	}
+
+<?
+	$buffer = '';
+	$count = 0;
+
+	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_pieces WHERE city_id='$city_id'",$db);
+	while($row = mysql_fetch_array($result)){
+		if ($row[enabled]){
+			$buffer .= "\tadd_piece($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$row[uid].gif');\n";
+			$count++;
+		}else{
+			$buffer .= "\tadd_piece_holder($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id]);\n";
+		}
+	}
+
+	echo "\tpiece_count = $count;\n";
+	echo $buffer;
+?>
+
+<?
+	$thumbs = array();
+	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_bgs WHERE city_id='$city_id' ORDER BY order_id ASC",$db);
+	while($row = mysql_fetch_array($result)){
+		$thumbs[$row[order_id]] = ($row[thumb])?"bgs/$row[thumb]":"images/space.gif";
+		$bg_image = ($row[bg_image])?"bgs/$row[bg_image]":"";
+		echo "\tadd_bg($row[order_id], '$bg_image', '$row[bg_color]');\n";
+	}
+?>
+
+<? if ($saved_row[id]){ ?>
+	bg_nosave(<?=$saved_row[city_bg_id]?>);
+	unserialize_all('<?=$saved_row[city_pieces]?>');
+	update_pieces();
+<? }else{ ?>
+	bg_nosave(1); // set default background
+	load_pieces();
+<? } ?>
+
+}
+
+// -->
+</script>
+<style>
+
+<? include('include/styles.txt'); ?>
+
+#loading	{ position: relative; left:    0px; top: 0px; width: 720px; height: 422px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
+#canvasinner	{ position: relative; left:    0px; top: 0px; width: 720px; height: 422px; z-index: 1; background: url('images/build_canvas.gif'); display: none; }
+
+#board		{ position: absolute; left:  247px; top:  20px; width: 469px; height: 364px; z-index: 10; }
+#boardback	{ position: absolute; left:  247px; top:  20px; width: 469px; height: 364px; background-color: #ffffff; }
+
+#shadow		{ position: absolute; left:   10px; top:  10px; width: 100px; height: 100px; z-index:  0; visibility: hidden; border: 1px solid #999999; }
+
+#navigation	{ position: absolute; left: 243px; top: 0px; width: 477px; height: 16px; }
+#logo		{ position: absolute; left:  10px; top: 6px; width: 219px; height: 27px; }
+
+div.taboff	{ position: absolute; top: 35px; height: 15px; }
+div.tabon	{ position: absolute; top: 35px; height: 15px; visibility: hidden; }
+div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+
+#instructions	{ position: absolute; left:  357px; top: 60px; width: 258px; background-image: url(images/instructions_bg.gif); z-index: 100; visibility: hidden; text-align: left; background-repeat: repeat-y; }
+.popup		{ padding: 5px 10px; color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10px; }
+
+</style>
+</head>
+<body onLoad="init()">
+
+<? include('include/inner_head.txt'); ?>
+
+<div id="canvasinner">
+
+	<div id="logo"><a href="/"><img src="images/space.gif" width="219" height="27"></a></div>
+
+	<div id="navigation">
+<? include('include/tabs.txt'); ?>
+	</div>
+
+<?
+	$left = 2;
+	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_tabs WHERE city_id=$city_id ORDER BY in_order ASC", $db);
+	while($row = mysql_fetch_array($result)){
+?>
+	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
+	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
+	<div id="palette<?=$row[id]?>" class="palette"></div>
+<?
+		$left += $row[width];
+	}
+?>
+
+	<div id="boardback"></div>
+	<div id="board"><div id="shadow"></div></div>
+
+	<div style="position: absolute; left:   7px; top: 404px; width: 21px; height: 12px; background-color: #ffffff;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1]?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  32px; top: 404px; width: 21px; height: 12px; background-color: #000000;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2]?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  68px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left:  96px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 124px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 152px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 180px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 208px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
+
+
+	<div style="position: absolute; left: 662px; top: 391px; width: 52px; height: 45px; z-index: 5;"><img src="images/skip.gif" width="52" height="45"></div>
+
+	<div style="position: absolute; left: 300px; top: 394px; width: 64px; height: 20px;"><a href="javascript:show_top('instructions');"><img src="images/button_instructions.gif" width="64" height="20" border="0"></a></div>
+	<div style="position: absolute; left: 384px; top: 394px; width: 67px; height: 20px;"><a href="javascript:send_card();"><img src="images/button_savesend.gif" width="67" height="20" border="0"></a></div>
+	<div style="position: absolute; left: 484px; top: 394px; width: 52px; height: 20px;"><a href="javascript:delete_all();"><img src="images/button_deleteall.gif" width="52" height="20" border="0"></a></div>
+
+	<div id="instructions">
+		<img src="images/instructions_top.gif" width="258" height="27"><br>
+		<div class="popup">
+			Drag and drop pieces from the palettes on the left onto the space on the right. Clicking on a piece brings it to the front.<br>
+			<br>
+			Arrange them to make your city. (It might help to start by adding the roads)<br>
+			<br>
+			<img src="images/skip2.gif" width="71" height="48" align="left">If you don't like a piece you can delete it by putting it in the skip in the bottom right corner.<br clear="all">
+			<br>
+			You can delete your whole town by clicking the 'Delete all' button.<br>
+			<br>
+			Click 'Save &amp; send' to send your unique city to your friends.<br>
+			<br>
+			<a href="javascript:hide_elm(get_elm('instructions'));"><img src="images/button_close.gif" width="64" height="16" border="0"></a>
+		</div>
+		<img src="images/instructions_bottom.gif" width="258" height="6"><br>
+	</div>
+
+</div>
+
+<div id="loading">
+	<br>
+	<br>
+	<br>
+	loading, please wait...<br>
+	<br>
+	<br>
+	<div style="text-align: center;">
+		<div style="width: 200px; padding: 2px; border: 2px solid #ffffff; text-align: left;">
+			<div style="width: 0%; background-color: #ffffff" id="loadprogress">&nbsp;</div>
+		</div>
+	</div>
+</div>
+
+<? include('include/inner_foot.txt'); ?>
+
+
+<form action="save.city" method="post" name="sendform">
+<input type="hidden" name="city_id" value="<?=$city_id?>">
+<input type="hidden" name="city_pieces" value="">
+<input type="hidden" name="city_bg" value="">
+</form>
+
+<script language="Javascript">
+<!--
+
+pre_init();
+
+//-->
+</script>
+
+</body>
+</html>

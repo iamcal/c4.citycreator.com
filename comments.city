@@ -1,0 +1,115 @@
+<?
+	include('include/init.txt');
+	include('include/login.txt');
+
+	$title = 'Comments';
+	$nav = 'comments';
+
+	#
+	# submitted a comment?
+	#
+
+	if ($HTTP_POST_VARS[done]){
+
+		$time = time();
+
+		# get number of years
+		$age = date('Y') - $dob_y;
+
+		# adjust for this year
+		$now_day = mktime(0,0,0,date('m'),date('d'),2000);
+		$dob_day = mktime(0,0,0,$dob_m,$dob_d,2000);
+		if ($dob_day > $now_day){ $age--; }
+
+		mysql_query("INSERT INTO c4cc_comments (date_create, comment, author, age, location, email, title) VALUES ('$time', '$comment', '$name', '$age', '$location', '$email', '$name_title')");
+
+		header('location: comments_thanks.city');
+		exit;
+	}
+
+
+	#
+	# paging
+	#
+
+	$perpage = 5;
+
+	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=1"));
+	$page = $page?round($page):1;
+	$pages = ceil($count / $perpage);
+	if ($page < 1){ $page = 1; }
+	if ($page > $pages){ $page = $pages; }
+
+	#
+	# grab results
+	#
+
+	$start = ($page-1)*$perpage;
+	$comments_result = mysql_query("SELECT * FROM $cfg[db_prefix]_comments WHERE published=1 ORDER BY date_create DESC LIMIT $start,$perpage");
+
+	#
+	# generate page markers
+	#
+
+	$markers = array();
+
+	for($i=1; $i<=$pages; $i++){
+		if ($i == $page){
+			$markers[] = "<b>$i</b>";
+		}else{
+			$markers[] = "<a href=\"comments.city?page=$i\">$i</a>";
+		}
+	}
+
+	$markers = implode(' | ', $markers);
+
+
+	include('include/page_top.txt');
+?>
+
+	<img src="images/title_comments.gif" width="112" height="11"><br>
+	<br>
+	What do you think? Send us your comments using the form and make your voice heard! <a href="http://www.channel4.com/terms_and_conditions.html">Click here for our terms and conditions</a>.<br>
+	<br>
+
+	<table cellpadding="0" cellspacing="0" border="0">
+		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
+		<tr><td><img src="images/space.gif" width="23" height="8"></td></tr>
+		<tr><td class="text">Pages: <?=$markers?></td></tr>
+		<tr><td><img src="images/space.gif" width="23" height="8"></td></tr>
+		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
+<?
+	$first = 1;
+	while($row = mysql_fetch_array($comments_result)){
+		$bits = array();
+		$bits[] = $row[author]?HtmlSpecialChars($row[author]):'<i>anon</i>';
+		if ($row[age]){ $bits[] = HtmlSpecialChars($row[age]); }
+		if ($row[location]){ $bits[] = HtmlSpecialChars($row[location]); }
+?>
+<? if (!$first){ ?>
+		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
+<? } ?>
+		<tr><td class="text">
+			<img src="images/space.gif" width="23" height="16"><br>
+			<?=nl2br(chop(htmlspecialchars($row[comment])))?><br>
+			<b style="color: #37591B;"><?=implode(', ', $bits)?></b><br>
+			<img src="images/space.gif" width="23" height="12"><br>
+		</td></tr>
+<?
+		$first = 0;
+	}
+?>
+		<tr><td><img src="images/space.gif" width="23" height="18"></td></tr>
+		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
+		<tr><td><img src="images/space.gif" width="23" height="8"></td></tr>
+		<tr><td class="text">Pages: <?=$markers?></td></tr>
+		<tr><td><img src="images/space.gif" width="23" height="8"></td></tr>
+		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
+
+	</table>
+
+<?
+	include('include/page_mid.txt');
+	include('include/col2_comments.txt');
+	include('include/page_bottom.txt');
+?>

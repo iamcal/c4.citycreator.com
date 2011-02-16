@@ -1,0 +1,12 @@
+		</td>
+		<td background="images/inner_side.gif"><img src="images/space.gif" width="4" height="10"></td>
+	</tr>
+	<tr>
+		<td colspan="4"><img src="images/inner_bottom.gif" width="720" height="4"></td>
+	</tr>
+</table>
+
+<? include('include/inner_foot.txt'); ?>
+
+</body>
+</html>

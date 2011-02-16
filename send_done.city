@@ -1,0 +1,28 @@
+<?
+	include("include/init.txt");
+	include("include/login.txt");
+
+	if (!$cfg[user_ok]){
+		header("location: members.city");
+		exit;
+	}
+
+	$title = "Send Your City";
+
+	include("include/page_top.txt");
+?>
+
+	<img src="images/title_sendcity.gif" width="110" height="11"><br>
+	<br>
+
+	Thanks for filling out the form, your ecard has been sent.<br>
+	<br>
+	<a href="send.city?saved_id=<?=$saved_id?>" class="white">Click here</a> to send the same city to someone else.<br>
+	<br>
+	<a href="members.city" class="white">Click here</a> to return to the members page.<br>
+
+<?
+	include("include/page_mid.txt");
+	include("include/col2_normal.txt");
+	include("include/page_bottom.txt");
+?>
