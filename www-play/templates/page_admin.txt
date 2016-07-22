@@ -1,0 +1,10 @@
+<h1>
+	Admin
+</h1>
+
+<ul>
+	<li><a href="/admin/buildings.php">Buildings</a></li>
+	<li><a href="/admin/industries.php">Industries</a></li>
+	<li><a href="/admin/users.php">Users</a></li>
+	<li><a href="/admin/tileset.php">Tileset Editor</a></li>
+</ul>

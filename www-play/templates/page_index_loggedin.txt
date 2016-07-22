@@ -1,0 +1,28 @@
+{include file="inc_head.txt"}
+
+<!-- $Id: page_index_loggedin.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+
+	<h1>Hello {$cfg.user.name|escape} :)</h1>
+
+	<h2>You are {$cfg.user.title|escape} of {$cfg.user.city_name|escape}</h2>
+
+{assign var='city_id' value=$cfg.user.id}
+{assign var='click_url' value='/city.php'}
+
+	<table>
+		<tr>
+			<td><div style="border: 1px solid #000000;">{include file="inc_mini_viewer.txt"}</div></td>
+			<td>
+				<b>Area:</b> {$city_area} Acres<br />
+				<b>Cash:</b> {$cfg.user.cash|format_cash} Credits<br />
+				<b>Population:</b> {$cfg.user.population} People<br />
+				<b><a href="/city.php">More &raquo;</a></b>
+			</td>
+		</tr>
+	</table>
+
+	<h2>You city has {$neighbour_count} neighbours</h2>
+
+	<p>Blah</p>
+
+{include file="inc_foot.txt"}

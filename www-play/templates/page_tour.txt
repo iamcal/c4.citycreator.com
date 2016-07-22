@@ -1,0 +1,10 @@
+{assign var='page_title' value="What is this?"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_tour.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+
+	<h1>What is this?</h1>
+
+	<p>Todo.</p>
+
+{include file="inc_foot.txt"}

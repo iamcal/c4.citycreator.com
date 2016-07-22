@@ -1,0 +1,21 @@
+{assign var='page_title' value="Your goods"}
+{include file="inc_head.txt"}
+
+<!-- $Id -->
+
+	<h1>{$cfg.user.city_name|escape} - Goods</h1>
+
+{include file='inc_subnav_city.txt'}
+
+<p>You currently have the following goods stockpiled:</p>
+
+<table border="1">
+{foreach from=$goods item='row'}
+	<tr>
+		<td><img src="/images/goods/{$row.c.icon}" width="17" height="14" /></td>
+		<td>{$row.c.name_plural}</td>
+		<td>{$row.amount} {plural count=$row.amount single='unit' plural='units'}</td>
+	</tr>
+{/foreach}
+
+{include file="inc_foot.txt"}

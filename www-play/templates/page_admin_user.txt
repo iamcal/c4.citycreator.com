@@ -1,0 +1,15 @@
+<h1>
+	<a href="/admin/">Admin</a>
+	/
+	<a href="/admin/users.php">Users</a>
+	/
+	User {$user.id}
+</h1>
+
+{$user|@dumper}
+
+<h2>Buildings</h2>
+
+{foreach from=$buildings item='row'}
+{$row|@dumper}
+{/foreach}

@@ -1,0 +1,75 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id$ -->
+
+<h1><a href="explore.php">Explore</a> / Industry: {$o->row.name}</h1>
+
+<!-- ########################################################## -->
+
+<h3>Goods: Input</h3>
+
+<ul>
+{foreach from=$inputs item='obj'}
+	<li><a href="explore_goods.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Goods: Output</h3>
+
+<ul>
+{foreach from=$outputs item='obj'}
+	<li><a href="explore_goods.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<div style="background-color: pink">
+<h3>Buildings which provide this industry</h3>
+
+<ul>
+{foreach from=$buildings item='row'}
+	<li><a href="explore_building.php?id={$row.building_class_id}">{$row.building_class.name_plural}</a> x {$row.multiplier}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+</div>
+
+<!-- ########################################################## -->
+
+<h3>Jobs provided by this industry</h3>
+
+<ul>
+{foreach from=$jobs item='obj'}
+	<li><a href="explore_jobs.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+
+<!-- ########################################################## -->
+
+<div style="background-color: pink">
+<h3>Facilities provided by this industry</h3>
+
+<ul>
+{foreach from=$facilities item="row"}
+	<li><a href="explore_facility.php?id={$row.facility_class_id}">{$row.facility_class.name_single|escape}</a> x {$row.multiplier}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+</div>
+
+<!-- ########################################################## -->
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,28 @@
+{assign var='page_title' value="Building Instance"}
+{include file="inc_head.txt"}
+
+<!-- $Id$ -->
+
+	<h1>Building Instance #{$i->id}</h1>
+
+{include file='inc_subnav_city.txt'}
+
+<ul>
+	<li> Building Instance ID: {$i->row.id} </li>
+	<li> Building Template ID: {$i->row.building_template_id} </li>
+	<li> Position X: {$i->row.pos_x} </li>
+	<li> Position Y: {$i->row.pos_y} </li>
+</ul>
+
+
+<h3>Local props</h3>
+
+{$i->props|@dumper}
+
+
+<h3>Global props</h3>
+
+{assign var='uid' value=$i->row.id}
+{$cfg.global_props.$uid|@dumper}
+
+{include file="inc_foot.txt"}

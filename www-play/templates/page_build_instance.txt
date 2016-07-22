@@ -1,0 +1,71 @@
+{assign var='page_title' value="Purchase"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_build_instance.txt 41 2008-01-05 06:08:44Z iamcal $ -->
+
+	<h1>{$cfg.user.city_name|escape} - Build Instance</h1>
+
+{include file='inc_subnav_city.txt'}
+
+<form action="build_instance.php" method="post">
+<input type="hidden" name="id" value="{$b->row.id}" />
+<input type="hidden" name="done" value="1" />
+
+	<table cellpadding="10">
+		<tr valign="middle">
+			<td>
+<div style="position: relative; width: {$preview_w}px; height: {$preview_h_full}px; background-color: blue">
+<div style="position: absolute; width: {$preview_w}px; height: {$preview_h}px; background-color: pink; top: {$overhead}px;">
+{map_draw_tileset tileset=$i->get_local_prop('tileset')}
+</div>
+</div>
+			</td>
+			<td>
+				<h3>{$b->row.name}</h3>
+
+				<p><b>Current cost:</b> {$i->get_local_prop('cost')|number_format} Credits</p>
+			</td>
+		</tr>
+	</table>
+
+{if $b->options|@count}
+
+{foreach from=$b->options item='opt'}
+{if $opt.type == 'radio'}
+
+	<p>
+		<b>{$opt.label|escape}:</b><br />
+	{foreach from=$opt.values key='k' item='v'}
+{assign var='sel' value=0}
+{if $k==$i->get_local_prop($opt.key)}{assign var='sel' value=1}{/if}
+		<input type="radio" name="radio{$opt.key}" value="{$k}" id="radio{$opt.key}{$k}"{if $sel} checked{/if} />
+		<label for="radio{$opt.key}{$k}">{$v}</label>
+{if $sel}
+		(selected)
+{/if}
+		<br />
+	{/foreach}
+	</p>
+
+{else}
+
+	<p>unknown option type: {$opt.type}</p>
+
+{/if}
+{/foreach}
+
+	<p>
+		<input type="submit" name="reconfig" value="Reconfigure" />
+		or
+		<input type="submit" name="build" value="Build" />
+	</p>
+
+{else}
+
+	<p>Nothing to configure</p>
+
+	<p><input type="submit" name="build" value="Build" /></p>
+
+{/if}
+
+{include file="inc_foot.txt"}

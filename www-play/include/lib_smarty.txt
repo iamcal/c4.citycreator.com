@@ -1,0 +1,71 @@
+<?
+	#
+	# $Id: lib_smarty.txt 48 2008-07-31 00:01:32Z iamcal $
+	#
+
+	require($GLOBALS[cfg][smarty_path]);
+
+	$GLOBALS[smarty] = new Smarty;
+
+	$GLOBALS[smarty]->template_dir = $GLOBALS[cfg][templates_path];
+	$GLOBALS[smarty]->compile_dir = $GLOBALS[cfg][templates_compile_path];
+
+	$GLOBALS[smarty]->use_sub_dirs = false;
+	$GLOBALS[smarty]->debugging = false;
+	$GLOBALS[smarty]->compile_check = true;
+
+	$GLOBALS[smarty]->assign_by_ref('cfg', $GLOBALS[cfg]);
+	$GLOBALS[smarty]->assign_by_ref('error', $GLOBALS[error]);
+
+	$GLOBALS[smarty]->assign_by_ref('http_get', $_GET);
+	$GLOBALS[smarty]->assign_by_ref('http_post', $_POST);
+	$GLOBALS[smarty]->assign_by_ref('http_session', $_SESSION);
+	$GLOBALS[smarty]->assign_by_ref('http_server', $_SERVER);
+
+	####################################################################
+
+	function utf8_header(){
+
+		$mime = 'text/html';
+
+		if (stristr($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml')) {
+			#$mime = 'application/xhtml+xml';
+		}
+
+		if (stristr($_SERVER['HTTP_USER_AGENT'], 'W3C_Validator')) {
+			$mime = 'application/xhtml+xml';
+		}
+
+		header("Content-Type: $mime; charset=utf-8");
+	}
+
+	$GLOBALS[smarty]->register_function("utf8_header", "utf8_header");
+
+	####################################################################
+
+	function smarty_format_cash($data){
+		return number_format($data);
+	}
+
+	$GLOBALS[smarty]->register_modifier('format_cash', 'smarty_format_cash');
+
+	####################################################################
+
+	function smarty_format_time($data){
+
+		return "$data hours";
+	}
+
+	$GLOBALS[smarty]->register_modifier('format_time', 'smarty_format_time');
+
+	####################################################################
+
+	function smarty_plural($args){
+
+		return $args[count] == 1 ? $args[single] : $args[plural];
+	}
+
+	$GLOBALS[smarty]->register_function('plural', 'smarty_plural');
+
+	####################################################################
+?>

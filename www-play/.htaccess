@@ -1,0 +1,10 @@
+# $Id: .htaccess 2 2007-11-21 17:54:11Z iamcal $
+
+AddType application/x-httpd-php .php
+DirectoryIndex index.php
+
+ErrorDocument 404 /404.php
+
+php_value magic_quotes_gpc 0
+php_value register_globals 0
+php_value magic_quotes_runtime 0

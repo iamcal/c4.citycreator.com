@@ -1,0 +1,504 @@
+{assign var='page_title' value="Map Prototype"}
+{include file="inc_head.txt"}
+
+<h1>Map Prototype</h1>
+
+{include file="inc_subnav_city.txt"}
+
+<style>{literal}
+
+#playspace {
+	width: 798px;
+	height: 400px;
+	position: relative;
+	background-color: pink;
+	background-image: url(/images/stripes.gif);
+	clip: rect(0 800px 400px 0);
+	overflow: hidden;
+	xborder: 1px solid #999;
+}
+
+.playlayer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 800px;
+	height: 400px;
+}
+
+#ground {
+	z-index: 1;
+}
+
+#features {
+	z-index: 3;
+}
+
+#cursor {
+	position: absolute;
+	width: 56px;
+	height: 28px;
+	background-image: url(/images/large/selected2.gif);
+	z-index: 2;
+	display: none;
+}
+
+#tilelayers {
+	z-index: 1;
+}
+
+#cover {
+	z-index: 3;
+}
+
+#buildbox {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+	width: 200px;
+	height: 300px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	padding: 8px;
+	z-index: 3;
+	display: none;
+}
+
+.closebutton {
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+
+.closebutton:hover {
+	background-color: red;
+}
+
+.closebutton a {
+	display: block;
+	padding: 2px;
+}
+
+
+#toolbar {
+	padding: 4px 0;
+}
+
+.toolbarbutton {
+	float: left;
+	border: 1px solid #ccc;
+	background-color: #f5f5f5;
+	margin-right: 8px;
+}
+
+.toolbarbutton a {
+	display: block;
+	padding: 4px;
+	color: #000;
+	text-decoration: none;
+}
+
+.toolbarbutton:hover {
+	border: 1px solid #999;
+	background-color: #eeeeee;
+}
+
+
+</style>{/literal}
+
+<div id="toolbar">
+
+	<div class="toolbarbutton"><a href="#" onclick="doBuild(); return false;">Build</a></div>
+	<div class="toolbarbutton"><a href="#" onclick="alert('blah'); return false;">Something</a></div>
+	<br clear="all" />
+</div>
+
+<div id="playspace">
+	<div id="tilelayers" class="playlayer">
+		<div id="ground" class="playlayer"></div>
+		<div id="features" class="playlayer"></div>
+		<div id="cursor"></div>
+	</div>
+	<div id="cover" class="playlayer"></div>
+	<div id="buildbox">
+		<div class="closebutton"><a href="#" onclick="closeBuild(); return false;"><img src="/images/close.gif" width="9" height="9" /></a></div>
+		<b>Build</b><br />
+		Choose a building type<br />
+		<br />
+		<a href="#">Residential</a><br />
+		<a href="#">Commerical</a><br />
+		<a href="#">Industrial</a><br />
+		<a href="#">Services</a><br />
+		<a href="#">Transit</a><br />
+		<a href="#">Bleh</a><br />
+	</div>
+</div>
+
+
+<script>
+
+var extents = {ldelim}
+	t: {$extents.t},
+	r: {$extents.r},
+	b: {$extents.b},
+	l: {$extents.l}
+{rdelim};
+
+var terrain = {ldelim}
+{foreach from=$terrain item='row'}
+	'{$row.x},{$row.y}': '{$row.type}',
+	'0' : 0
+{/foreach}
+{rdelim};
+
+
+{literal}
+
+// the offset for each row/col
+var full_width = 56;
+var full_height = 28;
+
+var half_width = 28;
+var half_height = 14;
+
+// this represents the position of the 0,0 tiles
+var origin_x = 400 - half_width;
+var origin_y = 200 - half_height;
+
+var tile_elms		= {};
+var selection		= {};
+var old_selection	= {};
+
+var boundaries = {};
+
+
+// think about area in terms of columns.
+// the middle column is always 'short'
+
+// for every 2 lots of r, add a short and tall col
+// if r is odd, add an extra long col
+
+// for every 2 lots of l, add a short and tall col
+// if l is odd, add an extra long col
+
+// the short column height will be 1
+// plus 1 for every complete pair of t
+// plus 1 for every complete pair of b
+
+// the long column height will be 1
+// plus 1 for every partial pair of t
+// plus 1 for every partial pair of b
+
+
+function calulate_area(extents){
+
+	var talls = 0;
+	var shorts = 1;
+
+	// calculate number of the 2 column types
+	var lc = 0 + Math.ceil(extents.l/2) + Math.ceil(extents.r/2);
+	var sc = 1 + Math.floor(extents.l/2) + Math.floor(extents.r/2);
+
+	// calculate the heights of the cols
+	var lh = 0 + Math.ceil(extents.t/2) + Math.ceil(extents.b/2);
+	var sh = 1 + Math.floor(extents.t/2) + Math.floor(extents.b/2);
+
+	var area = (lc * lh) + (sc * sh);
+
+	console.log('total area: ', area);
+
+
+	//
+	// calculate how far we can drag the map.
+	//
+	// this stops us from 'losing' all the tiles off the edge of
+	// the drag window.
+	//
+
+	boundaries.l = 0 + ((extents.l * half_width ) + origin_x) - 100;
+	boundaries.r = 0 - ((extents.r * half_width ) + origin_x) + 100;
+	boundaries.t = 0 + ((extents.t * half_height) + origin_y) - 100;
+	boundaries.b = 0 - ((extents.b * half_height) + origin_y) + 100;
+}
+
+var buildings = [
+	[0,1,1,1,1],
+	[1,1,0,0,1],
+	[1,1,1,1,1],
+	[1,0,0,1,1],
+	[1,1,1,1,0]
+];
+
+function has_tile(x, y){
+	if (x == 0 && y == 0) return true;
+
+	if (x+y > extents.b) return false;
+	if (x+y < 0-extents.t) return false;
+
+	if (y-x > extents.r) return false;
+	if (y-x < 0-extents.l) return false;
+
+	return true;
+}
+
+var map_dragging = false;
+var map_drag_mouse = null;
+var map_drag_start = null;
+var map_x = 0;
+var map_y = 0;
+
+window.onload = function(){
+
+//extents.r += 6;
+//extents.l += 2;
+//extents.t += 2;
+//extents.b -= 1;
+
+	var cover = ge('cover');
+
+	cover.onmousedown = map_mousedown;
+	cover.onmousemove = map_mousemove_select;
+
+	calulate_area(extents);
+
+	var min_x = 0 - (Math.ceil(extents.r / 2) + Math.ceil(extents.t / 2));
+	var max_x = 0 + (Math.ceil(extents.l / 2) + Math.ceil(extents.b / 2));
+
+	var min_y = 0 - (Math.ceil(extents.l / 2) + Math.ceil(extents.t / 2));
+	var max_y = 0 + (Math.ceil(extents.r / 2) + Math.ceil(extents.b / 2));
+
+	for (var x=min_x; x<=max_x; x++){
+	for (var y=min_y; y<=max_y; y++){
+	if (has_tile(x, y)){
+
+		place_tile(x, y, 1);
+		if (x == 1 && y == 1) place_tile(x, y, 2);
+		//if (has_tile(x, y)) place_tile(x, y, 2);
+	}
+	}
+	}
+
+//console.log(tile_elms);
+
+}
+
+function map_mousedown(e){
+
+	if (!e) e = window.event;
+
+	var t = ge('tilelayers');
+
+	map_dragging = true;
+	map_drag_mouse = eventPoint(e);
+	map_drag_start = [map_x, map_y];
+
+	document.onselectstart = function() { return false; };
+
+	document.addEventListener("mousemove", map_mousemove, false);
+	document.addEventListener("mouseup"  , map_mouseup, false);
+
+	//console.log('start', map_drag_mouse, map_drag_start);
+
+	return false;
+}
+
+function map_mousemove(e){
+
+	if (map_dragging){
+
+		if (!e) e = window.event;
+		var p = eventPoint(e, ge('cover'));
+
+		var xdiff = map_drag_mouse[0] - p[0];
+		var ydiff = map_drag_mouse[1] - p[1];
+
+		map_x = Math.round(map_drag_start[0] - xdiff);
+		map_y = Math.round(map_drag_start[1] - ydiff);
+
+		if (map_x < boundaries.r) map_x = boundaries.r;
+		if (map_x > boundaries.l) map_x = boundaries.l;
+		if (map_y > boundaries.t) map_y = boundaries.t;
+		if (map_y < boundaries.b) map_y = boundaries.b;
+
+		var t = ge('tilelayers');
+
+		t.style.left = map_x + 'px';
+		t.style.top = map_y + 'px';
+	}
+}
+
+function map_mouseup(e){
+
+	if (map_dragging){
+		map_dragging = false;
+
+		document.onselectstart = function() { return true; };
+	}
+
+	document.removeEventListener("mousemove", map_mousemove, false);
+	document.removeEventListener("mouseup"  , map_mouseup, false);
+
+}
+
+function map_mousemove_select(e){
+
+	if (!e) e = window.event;
+	var p = eventPoint(e, ge('cover'));
+
+	//
+	// find the grid coords of the tile we're over
+	//
+
+	p[0] -= origin_x + map_x;
+	p[1] -= origin_y + map_y;
+
+	var sq_x = Math.floor(p[0] / full_width);
+	var sq_y = Math.floor(p[1] / full_height);
+
+	var sub_x = p[0] % full_width;
+	var sub_y = p[1] % full_height;
+
+	if (sub_x < 0) sub_x += full_width;
+	if (sub_y < 0) sub_y += full_height;
+
+	var tcx = 0 + sq_y - sq_x;
+	var tcy = 0 + sq_x + sq_y;
+
+	if (sub_y <= 13 && sub_x <= (13-sub_y) * 2) tcy--; // red
+	if (sub_y >= 15 && sub_x <= (sub_y-15) * 2) tcx++; // blue
+	if (sub_y <= 13 && sub_x >= 27 + (2 * sub_y)) tcx--; // green
+	if (sub_y >= 15 && sub_x >= 83 - (2 * sub_y)) tcy++; // yellow
+
+
+	set_selection_pos(tcx, tcy);
+}
+
+function set_selection_pos(x, y){
+
+	//
+	// is this a new selection?
+	//
+
+	if (selection.x == x && selection.y == y) return;
+
+	old_selection.x = selection.x;
+	old_selection.y = selection.y;
+
+	selection.x = x;
+	selection.y = y;
+
+	var key = x+','+y;
+	var old_key = old_selection.x+','+old_selection.y;
+
+
+	//
+	// turn that into a pixel position and move the cursor there
+	//
+
+	var px = origin_x - ((x-y) * half_width);
+	var py = origin_y + ((x+y) * half_height);
+	
+	var c2 = ge('cursor');
+	c2.style.left = (px)+'px';
+	c2.style.top = (py)+'px';
+
+
+
+	//
+	// change some building statea
+	//
+
+	if (old_selection.x != null){
+
+		if (tile_elms[old_key] && tile_elms[old_key].features){
+
+			//tile_elms[old_key].features.style.backgroundColor = '';
+		}
+	}
+
+	if (tile_elms[key] && tile_elms[key].features){
+		//tile_elms[key].features.style.backgroundColor = 'red';
+	}
+}
+
+
+function eventPoint(e, target){
+
+	var x = e.pageX;
+	var y = e.pageY;
+	var elm = target ? target : e.target;
+
+	do {
+		x -= elm.offsetLeft;
+		y -= elm.offsetTop;
+
+	} while (elm = elm.offsetParent);
+
+	return  [x, y];
+}
+
+function place_tile(x, y, i){
+
+	var key = x+','+y;
+
+	var extra_height = 0;
+	if (i == 0) extra_height = 20;
+	if (i == 2) extra_height = 57-29;
+	
+	var px = origin_x - ((x-y) * half_width);
+	var py = origin_y + ((x+y) * half_height);
+
+	var elm = document.createElement('div');
+	elm.style.position = 'absolute';
+	elm.style.left = px + 'px';
+	elm.style.top = (py - extra_height) + 'px';
+	elm.style.width = '56px';
+	elm.style.height = (29 + extra_height)+'px';
+	elm.style.zIndex = x + y;
+
+	if (i == 1){
+		// ground layer
+		elm.style.backgroundImage = 'url(images/terrain/plain.gif)';
+		if (terrain[key]) elm.style.backgroundImage = 'url(images/terrain/'+terrain[key]+'.gif)';
+	}
+
+	if (i == 2){
+		// buildings layer
+		elm.style.backgroundImage = 'url(images/large/house1.gif)';
+	}
+
+
+	var parent = (i == 1) ? 'ground' : 'features';
+
+	if (tile_elms[key] == null) tile_elms[key] = {};
+	tile_elms[key][parent] = elm;
+
+	ge(parent).appendChild(elm);
+
+	elm.style.textAlign = 'center';
+	//elm.appendChild(document.createTextNode(x+","+y));
+
+	return elm;
+}
+
+function ge(x){
+	return document.getElementById(x);
+}
+
+function doBuild(){
+
+	ge('buildbox').style.display = 'block';
+	ge('cursor').style.display = 'block';
+}
+
+function closeBuild(){
+
+	ge('buildbox').style.display = 'none';
+	ge('cursor').style.display = 'none';
+}
+
+</script>{/literal}
+
+{include file="inc_foot.txt"}

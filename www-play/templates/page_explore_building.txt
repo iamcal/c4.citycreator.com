@@ -1,0 +1,70 @@
+{assign var='page_title' value="Explore"}
+{include file="inc_head.txt"}
+
+<!-- $Id$ -->
+
+<h1><a href="explore.php">Explore</a> / Building: {$b->row.name}</h1>
+
+<!-- ########################################################## -->
+
+<table>
+	<tr>
+		<td><b>Base build time:</b></td>
+		<td>??? {$class.build_time|format_time}</td>
+	</tr>
+</table>
+
+<p>Build time is affected by technological advancements (which can reduce build time) and worker availability (which can increase build time).</p>
+
+<!-- ########################################################## -->
+
+<h3>Industries within this building</h3>
+
+<ul>
+{foreach from=$industries item='obj'}
+	<li><a href="explore_industry.php?id={$obj->row.id}">{$obj->row.name}</a> x {$obj->number}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+<div style="background-color: pink">
+<h3>Residences within this building</h3>
+
+<ul>
+{foreach from=$residences item='row'}
+	<li><a href="explore_residence.php?id={$row.residence_class_id}">{$row.residence_class.name_single}</a> x {$row.homes_count}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+</div>
+<!-- ########################################################## -->
+
+<h3>Materials needed to build this building</h3>
+
+<ul>
+{foreach from=$build_goods item='obj'}
+	<li><a href="explore_goods.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+<h3>Workers needed to build this building</h3>
+
+<ul>
+{foreach from=$build_people item='obj'}
+	<li><a href="explore_job.php?id={$obj->row.id}">{$obj->row.name_plural}</a> x {$obj->number}</li>
+{foreachelse}
+	<li><i>none</i></li>
+{/foreach}
+</ul>
+
+<!-- ########################################################## -->
+
+
+{include file="inc_foot.txt"}

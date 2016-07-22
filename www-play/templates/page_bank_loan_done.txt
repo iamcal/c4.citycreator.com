@@ -1,0 +1,26 @@
+{assign var='page_title' value="Your Finances"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_bank_loan_done.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+
+	<h1>{$cfg.user.city_name|escape} - Your Finances</h1>
+
+{include file='inc_subnav_city.txt'}
+
+	<h2>Loan complete</h2>
+
+	<table border="1">
+		<tr>
+			<td>New total loan:</td>
+			<td>{$loan_total|format_cash} Credits</td>
+		</tr>
+		<tr>
+			<td>New bank balance:</td>
+			<td>{$cash|format_cash} Credits</td>
+		</tr>
+	</table>
+
+	<p><a href="/bank.php">Return to your financial summary</a></p>
+
+
+{include file="inc_foot.txt"}

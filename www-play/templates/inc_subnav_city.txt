@@ -1,0 +1,13 @@
+	<div id="subnav">
+
+		<a href="/city.php">Overview</a>
+		|
+		<a href="/map.php">Map</a>
+		|
+		<a href="/bank.php">Finances</a>
+		|
+		<a href="/build.php">Build</a>
+		|
+		<a href="/goods.php">Goods</a>
+
+	</div>

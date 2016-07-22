@@ -1,0 +1,150 @@
+<?
+	#
+	# $Id$
+	#
+
+
+	############################################################################
+
+	#
+	# this function turns a tile x,y position into a pixel position
+	#
+
+	function map_tile_position($x, $y){
+
+		$pos_x = ($x * 28) + ($y * 28);
+		$pos_y = ($x * 14) - ($y * 14);
+
+		return array($pos_x, $pos_y);
+	}
+
+	############################################################################
+
+	#
+	# this function obtains a bounding box for a given tile grid
+	#
+	# this is used for offsetting tiles when displaying them
+	#
+
+	function map_bounding_box($x_min, $y_min, $x_max, $y_max){
+
+		# get corner positions
+
+		$bl = map_tile_position($x_min, $y_min);
+		$tl = map_tile_position($x_min, $y_max);
+		$br = map_tile_position($x_max, $y_min);
+		$tr = map_tile_position($x_max, $y_max);
+
+		return array($bl[0], $tl[1], $tr[0] + 56, $br[1] + 29);
+	}
+
+	############################################################################
+
+	function map_draw_tileset($args){
+
+		$out = '';
+
+		foreach ($args[tileset] as $bit){
+
+			$style = "position: absolute;";
+			$style .= " left: {$bit[0]}px;";
+			$style .= " top: {$bit[1]}px;";
+			$style .= "  width: {$bit[2]}px;";
+			$style .= "  height: {$bit[3]}px;";
+			$style .= "  background-image: url('/images/{$bit[6]}');";
+			$style .= "  background-position: -{$bit[4]}px -{$bit[5]}px;";
+
+			$out .= "<div style=\"$style\"></div>\n";
+		}
+
+		return $out;
+	}
+
+	$GLOBALS[smarty]->register_function('map_draw_tileset', 'map_draw_tileset');
+
+	############################################################################
+
+	function map_tile_box($pos_x, $pos_y, $w, $h, $bounds){
+
+		$box = map_bounding_box($pos_x, $pos_y, $pos_x+($w-1), $pos_y+($h-1));
+
+		return array(
+			'x'	=> $box[0] - $bounds[0],
+			'y'	=> $box[1] - $bounds[1],
+			'w'	=> $box[2] - $box[0],
+			'h'	=> $box[3] - $box[1],
+		);
+	}
+
+	############################################################################
+
+	function &map_init($lo_x, $lo_y, $hi_x, $hi_y, &$buildings){
+
+		$map = array();
+
+
+		#
+		# find map bounds
+		#
+
+		$map[bounds] = map_bounding_box($lo_x, $lo_y, $hi_x, $hi_y);
+		$map[w] = $map[bounds][2] - $map[bounds][0];
+		$map[h] = $map[bounds][3] - $map[bounds][1];
+
+
+		#
+		# find the position of each building
+		#
+
+		foreach ($buildings as $k => $v){
+
+			$size_x = $buildings[$k][i]->get_local_prop('size_x');
+			$size_y = $buildings[$k][i]->get_local_prop('size_y');
+
+			$buildings[$k][box] = map_tile_box($buildings[$k][pos_x], $buildings[$k][pos_y], $size_x, $size_y, $map[bounds]);
+		}
+
+
+		#
+		# sort buildings so we can draw the back ones first
+		#
+
+		usort($buildings, 'map_sort_back_first');
+
+		$map[buildings] =& $buildings;
+
+
+		#
+		# create blank tiles
+		#
+
+		$map[base_tiles] = array();
+
+		for ($x=$lo_x; $x<=$hi_x; $x++){
+			for ($y=$lo_y; $y<=$hi_y; $y++){
+
+				$p = map_tile_position($x, $y);
+
+				$p[0] -= $map[bounds][0];
+				$p[1] -= $map[bounds][1];
+
+				$map[base_tiles][] = array(
+					'x' => $x,
+					'y' => $y,
+					'p' => $p,
+				);
+			}
+		}
+
+		return $map;
+	}
+
+	############################################################################
+
+	function map_sort_back_first($a, $b){
+
+		return ($a[pos_y] == $b[pos_y]) ? 0 : (($a[pos_y] > $b[pos_y]) ? 1 : -1);
+	}
+
+	############################################################################
+?>

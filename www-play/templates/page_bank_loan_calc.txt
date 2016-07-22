@@ -1,0 +1,56 @@
+{assign var='page_title' value="Your Finances"}
+{include file="inc_head.txt"}
+
+<!-- $Id: page_bank_loan_calc.txt 2 2007-11-21 17:54:11Z iamcal $ -->
+
+	<h1>{$cfg.user.city_name|escape} - Your Finances</h1>
+
+{include file='inc_subnav_city.txt'}
+
+	<h2>Take out a loan</h2>
+
+	<table border="1">
+		<tr>
+			<td>Current loan:</td>
+			<td>{$cfg.user.loan|format_cash} Credits</td>
+		</tr>
+		<tr>
+			<td>Additional loan:</td>
+			<td>{$loan_new|format_cash} Credits</td>
+		</tr>
+		<tr>
+			<td>New total loan:</td>
+			<td>{$loan_total|format_cash} Credits</td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Current balance:</td>
+			<td>{$cfg.user.cash|format_cash} Credits</td>
+		</tr>
+		<tr>
+			<td>New balance:</td>
+			<td>{$cash|format_cash} Credits</td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Previous loan interest:</td>
+			<td>{$loan_old_interest|format_cash} Credits per day</td>
+		</tr>
+		<tr>
+			<td>new loan interest:</td>
+			<td>{$loan_new_interest|format_cash} Credits per day</td>
+		</tr>
+	</table>
+
+	<form action="/bank_loan.php" method="post">
+	<input type="hidden" name="done" value="1">
+	<input type="hidden" name="amount" value="{$loan_new}">
+	<input type="submit" value="Take Out Loan">
+	</form>
+
+
+{include file="inc_foot.txt"}
