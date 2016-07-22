@@ -1,0 +1,28 @@
+<html>
+<head>
+	<title>Admin System</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<center>
+
+<a name="top"></a>
+
+<div class="HelpNavi">
+	<table width="100%">
+		<tr>
+			<td>
+				<b>
+					<a href="./">statistics</a>
+					|
+					<a href="comments.city">comments</a>
+					|
+					<a href="gallery.city">gallery</a>
+				</b>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="Helpful">

@@ -1,0 +1,19 @@
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td><img src="images/space.gif" width="6" height="16"></td>
+		<td><a href="./"><img src="images/tab_home_<?=($nav=='home')?'on':'off'?>.gif" width="32" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="3" height="16"></td>
+		<td><a href="members.city"><img src="images/tab_members_<?=($nav=='members')?'on':'off'?>.gif" width="48" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="2" height="16"></td>
+		<td><a href="faq.city"><img src="images/tab_faq_<?=($nav=='faq')?'on':'off'?>.gif" width="26" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="3" height="16"></td>
+		<td><a href="comments.city"><img src="images/tab_comments_<?=($nav=='comments')?'on':'off'?>.gif" width="51" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="3" height="16"></td>
+		<td><a href="gallery.city"><img src="images/tab_gallery_<?=($nav=='gallery')?'on':'off'?>.gif" width="40" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="3" height="16"></td>
+		<td><a href="vote.city"><img src="images/tab_vote_<?=($nav=='vote')?'on':'off'?>.gif" width="31" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="135" height="16"></td>
+		<td><a href="build.city"><img src="images/tab_build_<?=($nav=='build')?'on':'off'?>.gif" width="88" height="16" border="0"></a></td>
+		<td><img src="images/space.gif" width="6" height="16"></td>
+	</tr>
+</table>

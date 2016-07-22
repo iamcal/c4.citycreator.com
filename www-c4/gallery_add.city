@@ -1,0 +1,65 @@
+<?
+	include("include/init.txt");
+	include("include/login.txt");
+
+	$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}' AND gallery_date=0",$db));
+
+	if (!$saved_row){
+		header("location: members.city");
+		exit;
+	}
+
+	if ($done){
+
+		$city_id	= AddSlashes($saved_row[city_id]);
+		$city_pieces	= AddSlashes($saved_row[city_pieces]);
+		$city_bg	= AddSlashes($saved_row[city_bg_id]);
+		$time = time();
+
+		mysql_query("INSERT INTO $cfg[db_prefix]_gallery (city_id, pieces, bg_id, your_name, your_location, date_create) VALUES ('$city_id', '$city_pieces', '$city_bg', '$your_name', '$your_location', '$time')",$db);
+
+		$new_id = mysql_insert_id();
+
+		mysql_query("UPDATE $cfg[db_prefix]_saved SET gallery_id=$new_id, gallery_date='$time' WHERE id='$saved_id'");
+
+		header("location: members.city");
+		exit;
+	}
+
+	if (!$your_name){$your_name = $cfg[user][username];}
+
+	$title = "Add your city to the gallery";
+
+	include("include/page_top.txt");
+?>
+
+	<form action="gallery_add.city" method="post">
+	<input type="hidden" name="done" value="1">
+	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
+
+	<img src="images/title_addgallery.gif" width="221" height="12"><br>
+	<br>
+
+	<img src="image.city?s=<?=$saved_id?>&thumb=1"><br>
+	<br>
+
+	See your Castleford up in lights. Just add your name and location (both optional) and add your city.<br>
+	<br>
+
+	Your name: (optional)<br>
+	<input type="text" name="your_name" value="<?=htmlentities($your_name)?>" class="edit"><br>
+
+	Location: (optional)<br>
+	<input type="text" name="your_location" value="<?=htmlentities($your_location)?>" class="edit"><br>
+
+	<br>
+	<input type="image" src="images/button_addgallery.gif" width="74" height="16" border="0"><br>
+
+
+	</form>
+
+<?
+	include("include/page_mid.txt");
+	include("include/col2_normal.txt");
+	include("include/page_bottom.txt");
+?>

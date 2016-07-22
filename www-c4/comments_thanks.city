@@ -1,0 +1,20 @@
+<?
+	include('include/init.txt');
+
+	$title = 'Comments';
+	$nav = 'comments';
+
+	include('include/page_top.txt');
+?>
+
+	<img src="images/title_comments.gif" width="112" height="11"><br>
+	<br>
+	Thanks for adding your comment, check back soon to see it featured on the site.<br>
+	<br>
+	<a href="comments.city">return to comments</a.
+
+<?
+	include('include/page_mid.txt');
+	include('include/col2_normal.txt');
+	include('include/page_bottom.txt');
+?>

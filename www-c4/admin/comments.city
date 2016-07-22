@@ -1,0 +1,74 @@
+<?
+	include("../include/init.txt");
+
+	if ($HTTP_POST_VARS[ids]){
+		$ids = explode(',', $HTTP_POST_VARS[ids]);
+		foreach($ids as $id){
+			$value = $HTTP_POST_VARS['approve'.$id]?1:2;
+			mysql_query("UPDATE $cfg[db_prefix]_comments SET published=$value WHERE id='$id'");
+		}
+
+		header('location: comments.city');
+		exit;
+	}
+
+
+	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=0"));
+
+	$rows = array();
+	$ids = array();
+
+	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_comments WHERE published=0 ORDER BY date_create ASC LIMIT 2");
+	while ($row = mysql_fetch_array($result)){
+		$rows[] = $row;
+		$ids[] = $row[id];
+	}
+
+	include('head.txt');
+?>
+
+<h1>Pending Comments <span class="small">(<a href="comments2.city">Published Comments</a>)</span></h1>
+
+<? if ($count){ ?>
+
+<p>There are <?=$count?> pending comments...</p>
+
+<form action="comments.city" method="post">
+<input type="hidden" name="ids" value="<?=implode(',', $ids)?>">
+
+<table border="1">
+	<tr valign="top">
+		<th>Comment</th>
+		<th>Name</th>
+		<th>Age</th>
+		<th>Location</th>
+		<th>&nbsp;</th>
+	</tr>
+<? foreach ($rows as $row){ ?>
+	<tr valign="top">
+		<td><?=HtmlSpecialChars($row[comment])?></td>
+		<td><?=HtmlSpecialChars($row[author])?></td>
+		<td><?=HtmlSpecialChars($row[age])?></td>
+		<td><?=HtmlSpecialChars($row[location])?></td>
+		<td>
+			<input type="radio" name="approve<?=$row[id]?>" id="approve<?=$row[id]?>1" value="1" checked>&nbsp;<label for="approve<?=$row[id]?>1">Approve</label><br />
+			<input type="radio" name="approve<?=$row[id]?>" id="approve<?=$row[id]?>0" value="0">&nbsp;<label for="approve<?=$row[id]?>0">Discard</label><br />
+		</td>
+	</tr>
+<? } ?>
+</table>
+
+<p><input type="submit" class="Button" value="Approve / Discard" /></p>
+
+</form>
+
+<? }else{ ?>
+
+<p>There are no pending comments.</p>
+
+<? } ?>
+
+
+<?
+	include('foot.txt');
+?>

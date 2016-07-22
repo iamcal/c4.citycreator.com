@@ -1,0 +1,152 @@
+<?
+	include("include/init.txt");
+
+	list($id,$check) = explode('.',$c,2);
+
+	if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_cards WHERE id='$id' AND `check`='$check'",$db))){
+			$city_row = get_city($card_row[city_id]);
+			$city_id = $city_row[id];
+	}else{
+		header("location: no_card.city");
+		exit;
+	}
+
+	$bg_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_bgs WHERE order_id='$card_row[bg_id]' AND city_id='$city_id'",$db));
+	if ($bg_row[bg_image]){
+		$bg = "url(bgs/$bg_row[bg_image])";
+	}else{
+		$bg = $bg_row[bg_color];
+	}
+
+	$pieces_index_1 = array();
+	$pieces_index_2 = array();
+	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_pieces WHERE city_id='$city_id'",$db);
+	while($row = mysql_fetch_array($result)){
+		$pieces_index_1[$row[uid]] = $row;
+		$pieces_index_2["$row[palette]_$row[id]"] = $row;
+	}
+?>
+<html>
+<head>
+<title>City Creator - Pickup Card</title>
+<style>
+
+<? include('include/styles.txt'); ?>
+
+#board		{ position: relative; width: 469px; height: 364px; z-index: 10; clip: rect(0px 469px 364px 0px); }
+
+</style>
+<script language="Javascript">
+<!--
+
+function print_city(id){
+	var newwin = window.open("print.city?c="+id+"&auto=1", "pickup_print_city", 'toolbar=1,scrollbars=yes,location=0,statusbar=0,menubar=1,resizable=0,width=520,height=380,left=312,top=184');
+	newwin.focus();
+}
+
+// -->
+</script>
+</head>
+<body>
+
+<? include('include/inner_head.txt'); ?>
+
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr valign="top">
+		<td width="239">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td><img src="images/home_col1_top_left.gif"  width="10"  height="6"></td>
+					<td><img src="images/home_col1_top.gif"       width="219" height="6"></td>
+					<td><img src="images/home_col1_top_right.gif" width="10"  height="6"></td>
+				</tr>
+				<tr>
+					<td><img src="images/home_col1_left.gif"  width="10"  height="29"></td>
+					<td><img src="images/home_logo.gif"       width="219" height="27"><br><img src="images/space.gif" width="219" height="2"></td>
+					<td><img src="images/home_col1_right.gif" width="10"  height="29"></td>
+				</tr>
+				<tr>
+					<td colspan="3"><img src="images/home_col1_mid.gif" width="239" height="4"></td>
+				</tr>
+				<tr bgcolor="#C3E1AA" valign="top">
+					<td><img src="images/home_col1_left.gif"  width="10"  height="379"></td>
+					<td><div class="text" style="padding: 8px;">
+
+<? if ($card_row[message]){ ?>
+						<?=htmlentities($card_row[your_name])?> (<?=htmlentities($card_row[your_email])?>) made you a city and sent you this message:<br>
+						<br>
+						<i><?=nl2br(htmlentities(chop($card_row[message])))?></i><br>
+<? }else{ ?>
+						<?=htmlentities($card_row[your_name])?> (<?=htmlentities($card_row[your_email])?>) made you a city!<br>
+<? } ?>
+						<br>
+						If you'd like to print this card out, <a href="Javascript:print_city('<?=$c?>');">click here</a>.<br>
+						<br>
+						<br>
+						You can create your very own city, and send it to your friends, by clicking the button below.<br>
+						<br>
+						<a href="./"><img src="images/button_makecity.gif" width="97" height="16" border="0"></a>
+
+					</div></td>
+					<td><img src="images/home_col1_right.gif" width="10"  height="379"></td>
+				</tr>
+				<tr>
+					<td colspan="3"><img src="images/home_col1_bottom.gif" width="239" height="4"></td>
+				</tr>
+			</table>
+		</td>
+		<td width="4"><img src="images/space.gif" width="4" height="422"></td>
+		<td width="477">
+<? include('include/tabs.txt'); ?>
+
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="3"><img src="images/pickup_top.gif" width="477" height="4"></td>
+				</tr>
+				<tr bgcolor="#E5F2D9" valign="top">
+					<td><img src="images/pickup_left.gif" width="4" height="364"></td>
+					<td>
+			<div id="board" style="background: <?=$bg?>;">
+<?
+	foreach(explode(',',$card_row[pieces]) as $piece){
+		$bits = explode('|',$piece);
+		if (count($bits) == 5){
+			$piece = $pieces_index_2[$bits[0].'_'.$bits[1]];
+			$x = $bits[2];
+			$y = $bits[3];
+			$z = $bits[4];
+		}else{
+			$piece = $pieces_index_1[$bits[0]];
+			$x = $bits[1];
+			$y = $bits[2];
+			$z = $bits[3];
+		}
+		echo "\t\t\t\t<div style=\"position: absolute; left: ${x}px; top: ${y}px; width: $piece[w]px; height: $piece[h]px; z-index: ${z};\"><img src=\"blocks/$piece[uid].gif\" width=\"$piece[w]\" height=\"$piece[h]\"></div>\n";
+	}
+?>
+			</div>
+					</td>
+					<td><img src="images/pickup_right.gif" width="4" height="364"></td>
+				</tr>
+				<tr>
+					<td colspan="3"><img src="images/pickup_mid.gif" width="477" height="4"></td>
+				</tr>
+				<tr bgcolor="#E5F2D9" valign="middle">
+					<td><img src="images/pickup_left.gif" width="4" height="30"></td>
+					<td class="text" align="center">
+						<a href="http://www.citycreator.com/">www.citycreator.com</a>
+					</td>
+					<td><img src="images/pickup_right.gif" width="4" height="30"></td>
+				</tr>
+				<tr>
+					<td colspan="3"><img src="images/pickup_bottom.gif" width="477" height="4"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<? include('include/inner_foot.txt'); ?>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+AuthType basic
+AuthName "castleford admin system"
+AuthUserFile /var/www/cal/castleford.citycreator.com/admin/.htpasswd
+require valid-user

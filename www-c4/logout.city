@@ -1,0 +1,11 @@
+<?
+	include('include/init.txt');
+
+	$cookie_username = '';
+	$cookie_password = '';
+
+	include('include/login.txt');
+
+	header("location: members.city");
+	exit;
+?>

@@ -1,0 +1,19 @@
+</div>
+
+<div class="HelpFooter">
+	<table width="100%">
+		<tr>
+			<td width="60%">
+				<b>a <a href="http://www.kaius.com/">kaius</a> product for channel4</b>
+			</td>
+			<td align="right">
+				<a href="#top">Top of the page</a>
+			</td>		
+		</tr>
+	</table>
+</div>
+
+</center>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+body {	
+	margin: 0px;
+	padding: 0px;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+h1 {
+	font-family: arial, sans-serif;
+	font-size: 28px;
+	color: #000000;	
+}
+
+h2 {
+	font-family: arial, sans-serif;
+	font-size: 24px;
+	color: #000000;	
+}
+
+h3 {
+	font-family: arial, sans-serif;
+	font-size: 18px;
+	color: #000000;	
+	font-weight: bold;
+}
+
+h4 {
+	font-family: arial, sans-serif;
+	font-size: 16px;
+	color: #000000;	
+	font-weight: normal;
+}
+
+p {
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	color: #000000;	
+}
+
+li {
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	color: #000000;	
+}
+
+td {
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	padding: 3px;
+	color: #000000;
+}
+
+form {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+}
+
+select {
+	font-family: arial, sans-serif;
+	font-size: 12px;
+}
+
+input {
+	font-family: arial, sans-serif;
+	font-size: 12px;
+}
+
+.Button {
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #fff;
+	background: #000;	
+}
+
+.SmButton {
+	font-family: arial, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #fff;
+	background: #000;	
+}
+
+input.danger {
+	background-color: #cc0000;
+	color: #ffffff;
+	font-weight: bold;
+	font-family: arial, sans-serif;
+	font-size: 14px;
+}
+
+input.reset {
+	background-color: #ff6600;
+	color: #ffffff;
+	font-weight: bold;
+	font-family: arial, sans-serif;
+	font-size: 14px;
+}
+
+.ConfirmButt {
+	background-color: #093;
+	color: #ffffff;
+	font-weight: bold;
+	font-family: arial, sans-serif;
+	font-size: 14px;
+}
+
+
+input.edit {
+	width: 400px;
+}
+
+textarea.edit {
+	width: 600px;
+	height: 200px;
+}
+
+textarea.small {
+	width: 400px;
+	height: 150px;
+}
+
+.mail {
+	font-size: 12px;
+	font-family: Courier New;
+}
+
+.title {
+	font-size: 20px;
+	font-weight: normal;
+}
+
+.disabled {
+	color: #cccccc;
+}
+
+
+div.deletebox {
+	width: 600px;
+	background-color: #ffcccc;
+	border: 1px solid #cc0000;
+	padding: 10px;
+}
+
+.HelpNavi {
+	width: 750px;
+	background: #f5f5f5;
+	border-bottom: 3px solid #000;
+	margin-bottom: 15px;
+}
+
+.HelpNavi td {
+	padding: 5px;
+	font-size: 15px;
+	font-family: Arial, Helvetica;
+	font-weight: bold;
+}
+
+.Helpful {
+	width: 750px;
+	padding: 5px;
+	text-align: left;
+	border: 1px;
+}
+
+.Helpful table {
+	border-bottom: 1px solid #ddd;
+}
+
+.Helpful th {
+	border-bottom: 2px solid #ddd;
+	padding: 5px;
+	font-size: 11px;
+	font-family: Arial, Helvetica;
+	font-weight: bold;
+	text-align: left;
+}
+
+.Helpful td {
+	border-top: 1px solid #ddd;
+	padding: 5px;
+}
+
+.HelpFooter {
+	width: 750px;
+	padding: 5px;
+	background: #f5f5f5;
+	border-top: 3px solid #000;
+	text-align: left;
+	font-size: 14px;
+	font-family: Arial, Helvetica;
+	margin-top: 15px;
+	margin-bottom: 15px; 
+}
+
+.HelpFooter table {
+	border: none;
+}
+
+.HelpFooter td {
+	border: none;
+}
+
+.SuitCase {
+	width: 95%; 
+	padding-left: 10px; 
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-left: 4px solid #ddd;
+	margin-bottom: 15px;
+}
+
+.Suitcase h2 {
+	margin-top: 0px;
+}
+
+.Suitcase h3 {
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+.UserData {
+	border-bottom: none;
+}
+
+.UserData td {
+	font-size: 11px;
+	font-family: Arial, Helvetica;
+}
+
+.Confirm {
+	font: bold 14px Arial, Helvetica, sans-serif;
+	padding-left: 25px;
+	padding-bottom: 10px;
+	background: url(/images/icon_confirm.jpg) no-repeat left top;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	color: #000000;
+}
+
+.Problem {
+	font: bold 14px Arial, Helvetica, sans-serif;
+	padding-left: 25px;
+	padding-bottom: 10px;
+	background: url(/images/icon_error.jpg) no-repeat left top;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	color: #000000;
+}
+
+.CaseNote {
+	width: 95%; 
+	padding-left: 10px; 
+	padding-top: 1px;
+	padding-bottom: 1px;
+	border-left: 4px solid #ddd;
+	margin-bottom: 15px;
+}
+
+.CaseNote p {
+	margin: 2px;
+}
+
+
+.CaseNote table {
+	border: none;
+}
+
+.CaseNote td {
+	border: none;
+	padding: 0px;
+}
+
+.Pee {
+	background: #fc0; 
+	padding: 2px; 
+	font-weight: bold; 
+	font-style: normal; 
+	color: #fff;
+}
+
+.Pending {
+	background: #f9f9f9;
+	color: #666;
+	font-style: italic;
+}
+
+.GIFTLine {
+	background: #ff0084; 
+	padding: 2px; 
+	font-weight: bold; 
+	font-size: 10px; 
+	font-face; Verdana;
+	font-style: normal; 
+	color: #fff;
+}
+
+.PENDINGLine {
+	background: #ffcc00; 
+	padding: 2px; 
+	font-weight: bold; 
+	font-size: 10px; 
+	font-face; Verdana;
+	font-style: normal; 
+	color: #fff;
+}
+
+.small {
+	font-size: 11px;
+}

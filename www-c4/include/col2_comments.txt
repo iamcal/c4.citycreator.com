@@ -1,0 +1,35 @@
+	<div class="col2">
+		<img src="images/title_leavecomment.gif" width="124" height="12"><br>
+		<br>
+
+		<form action="/comments.city" method="post">
+		<input type="hidden" name="done" value="1">
+
+		Your name<br>
+		<input type="text" name="name" value="<?=HtmlSpecialChars($cfg[user][username])?>" style="width: 220px;"><br>
+		<img src="images/space.gif" width="100" height="4"><br>
+
+		Your title<br>
+		<select name="name_title"><option>Miss</option><option>Mrs</option><option>Ms</option><option>Mr</option></select><br>
+		<img src="images/space.gif" width="100" height="4"><br>
+
+		Your email address<br>
+		<input type="text" name="email" value="<?=HtmlSpecialChars($cfg[user][email])?>" style="width: 220px;"><br>
+		<img src="images/space.gif" width="100" height="4"><br>
+
+		DOB<br>
+		<? insert_date_drop('dob'); ?><br>
+		<img src="images/space.gif" width="100" height="4"><br>
+
+		Hometown<br>
+		<input type="text" name="location" value="" style="width: 220px;"><br>
+		<img src="images/space.gif" width="100" height="4"><br>
+
+		Your comment<br>
+		<textarea name="comment" wrap="virtual" style="width: 220px; height: 90px;"></textarea><br>
+		<img src="images/space.gif" width="100" height="10"><br>
+
+		<input type="image" src="images/button_send_green.gif" width="35" height="20">
+
+		</form>
+	</div>

@@ -1,0 +1,140 @@
+<?
+	$db = mysql_connect("localhost", "cal", "B0B");
+	mysql_select_db("citycreator_c4", $db);
+
+	$cfg = array();
+	$cfg[pickup_url] = 'http://castleford.citycreator.com/pickup.city';
+	$cfg[login_url]  = 'http://castleford.citycreator.com/login.city';
+	$cfg[share_url]  = 'http://castleford.citycreator.com/members.city';
+	$cfg[cp_path] = '/var/www/cal/castleford.citycreator.com/cp';
+	$cfg[db_prefix] = 'c4cc';
+
+	$cfg[time] = time();
+
+	function gen_check(){
+		$length = 10;
+		$out = '';
+		for($i=0; $i<$length; $i++){
+			$out .= chr(rand(ord('a'),ord('z')));
+		}
+		return $out;
+	}
+
+	function send_card($id){
+		global $db, $cfg;
+
+		$card_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_cards WHERE id=$id",$db));
+
+		$msg = '';
+		$msg .= "Someone has made you a special e-card at citycreator.com\n";
+		$msg .= "\n";
+		$msg .= "Click here to see it:\n";
+		$msg .= "$cfg[pickup_url]?c=$card_row[id].$card_row[check]\n";
+		$msg .= "\n";
+		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
+		$msg .= " your browser)\n";
+		$msg .= "\n";
+		$msg .= "----------------------------------------------------------------------\n";
+		$msg .= "This mail was sent to you by citycreator.com\n";
+		$msg .= "\n";
+
+		mail($card_row[friend_email], "You've got an ecard!", $msg, "From: City Creator <cards@citycreator.com>\nReply-to: \"$card_row[your_name]\" <$card_row[your_email]>");
+	}
+
+	function send_password($email, $username, $password){
+		global $cfg;
+
+		$msg = '';
+		$msg .= "You asked to be reminded of your citycreator.com login details:\n";
+		$msg .= "\n";
+		$msg .= "Username: $username\n";
+		$msg .= "Password: $password\n";
+		$msg .= "\n";
+		$msg .= "Click here to log in:\n";
+		$msg .= "$cfg[login_url]\n";
+		$msg .= "\n";
+		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
+		$msg .= " your browser)\n";
+		$msg .= "\n";
+		$msg .= "----------------------------------------------------------------------\n";
+		$msg .= "This mail was sent to you by citycreator.com\n";
+		$msg .= "\n";
+
+		mail($email, "City Creator login reminder", $msg, "From: City Creator <admin@citycreator.com>");
+	}
+
+	function send_share($friend_email, $your_name, $your_email, $share_id, $message){
+		global $db, $cfg;
+
+		$msg = '';
+		$msg .= "A citycreator.com member has designed a city and would like\n";
+		$msg .= "to share it with you.\n";
+		$msg .= "\n";
+		$msg .= "Citycreator.com is a free website which lets you design\n";
+		$msg .= "cities and share them with your friends. It's easy to use\n";
+		$msg .= "and fun too!\n";
+		$msg .= "\n";
+		$msg .= "When you click on the link below, you will be asked to signup\n";
+		$msg .= "if you haven't already. This is free, and the process is very\n";
+		$msg .= "simple - just choose a username and password.\n";
+		$msg .= "\n";
+		$msg .= "Click on this link to start:\n";
+		$msg .= "$cfg[share_url]?share_id=$share_id\n";
+		$msg .= "\n";
+		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
+		$msg .= " your browser)\n";
+		$msg .= "\n";
+		$msg .= "This city design was sent to you by $your_name ($your_email)\n";
+		$msg .= "\n";
+
+		if ($message){
+			$msg .= "They also attached a message for you:\n";
+			$msg .= "$message\n";
+			$msg .= "\n";
+		}
+		$msg .= "----------------------------------------------------------------------\n";
+		$msg .= "This mail was sent to you by citycreator.com\n";
+		$msg .= "\n";
+
+		mail($friend_email, "You've been sent a city design!", $msg, "From: City Creator <cities@citycreator.com>\nReply-to: \"$your_name\" <$your_email>");
+
+	}
+
+
+	function get_city($city){
+		global $db, $cfg;
+		
+		if ($city){
+			$city_id = $city + 0;
+			if ($city_id == 0) $city_id = 1;
+		}else{
+			$city_id = 1;
+		}
+
+		return mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_cities WHERE id='$city_id'",$db));
+	}
+
+	function insert_date_drop($name){
+
+		echo "<select name=\"{$name}_d\">\n";
+		for($i=1; $i<=31; $i++){
+			$label = date('jS', mktime(0,0,0,1,$i,2000));
+			echo "<option value=\"$i\">$label</option>\n";
+		}
+		echo "</select>\n";
+
+		echo "<select name=\"{$name}_m\">\n";
+		for($i=1; $i<=12; $i++){
+			$label = date('M', mktime(0,0,0,$i,1,2000));
+			echo "<option value=\"$i\">$label</option>\n";
+		}
+		echo "</select>\n";
+
+		echo "<select name=\"{$name}_y\">\n";
+		for($i=2000; $i>=1900; $i--){
+			echo "<option value=\"$i\">$i</option>\n";
+		}
+		echo "</select>\n";
+
+	}
+?>

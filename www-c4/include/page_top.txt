@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>City Creator<? if ($title){ echo " - $title"; } ?></title>
+<style>
+
+<? include('include/styles.txt'); ?>
+
+</style>
+</head>
+<body>
+
+<? include('include/inner_head.txt'); ?>
+
+<map name="topbarmap" id="topbarmap">
+	<area shape="rect" coords="10,6,229,33" href="./">
+</map>
+
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr valign="top">
+		<td><img src="images/inner_logo.gif" width="243" height="45" usemap="#topbarmap"></td>
+		<td>
+<? include('include/tabs.txt'); ?>
+			<img src="images/inner_navbottom.gif" width="477" height="29"></td>
+	</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr valign="top">
+		<td background="images/inner_side.gif"><img src="images/space.gif" width="4" height="10"></td>
+		<td bgcolor="#ffffff"><img src="images/space.gif" width="456" height="1"><br />
+			<div class="col1">

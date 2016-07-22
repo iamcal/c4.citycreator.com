@@ -1,0 +1,114 @@
+<?
+	include('include/init.txt');
+
+	$title = 'Vote';
+	$nav = 'vote';
+
+	if ($vote){
+		mysql_query("UPDATE $cfg[db_prefix]_votes SET votes=votes+1 WHERE id='$vote'");
+		setcookie('voted', 1);
+		header("location: vote.city?voted=1");
+		exit;
+	}
+
+	list($total) = mysql_fetch_array(mysql_query("SELECT SUM(votes) FROM $cfg[db_prefix]_votes WHERE enabled=1"));
+
+	include('include/page_top.txt');
+?>
+
+<? if ($voted){ ?>
+	<img src="images/title_vote_thanks.gif" width="138" height="11"><br>
+	<br>
+	Thanks for your vote, check back next week to see which buildings made it through and vote for the next one! The results of this week's vote so far can be seen below.<br>
+	<br>
+<? }else{ ?>
+	<img src="images/title_vote.gif" width="173" height="12"><br>
+	<br>
+	Here's your chance to create the Castleford of your dreams on screen. Which one of the wierd/inpsiring buildings below do you want to be able to include in your Castleford? Cast your votes!<br>
+	<br>
+<? } ?>
+
+	<table cellpadding="0" cellspacing="0" border="0">
+		<tr>
+<? insert_vote_cell(1); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(2); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(3); ?>
+		</tr>
+		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
+		<tr>
+<? insert_vote_cell(4); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(5); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(6); ?>
+		</tr>
+		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
+		<tr>
+<? insert_vote_cell(7); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(8); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(9); ?>
+		</tr>
+		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
+		<tr>
+<? insert_vote_cell(10); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(11); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(12); ?>
+		</tr>
+		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
+		<tr>
+<? insert_vote_cell(13); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(14); ?>
+			<td><img src="images/space.gif" width="28" height="93"></td>
+<? insert_vote_cell(15); ?>
+		</tr>
+	</table>
+
+<?
+	function insert_vote_cell($id){
+		global $cfg, $voted, $total;
+		$row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_votes WHERE id='$id'"));
+		$percent = round(100 * $row[votes] / $total);
+		$width = round(85 * $row[votes] / $total);
+?>
+<? if ($row[enabled]){ ?>
+<? if ($voted){ ?>
+			<td align="left">
+				<img src="vote/pair_<?=$id?>.gif" width="117" height="68"><br>
+				<img src="images/space.gif" width="117" height="6"><br>
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td bgcolor="#C3E1AA"><img src="images/space.gif" width="<?=$width?>" height="10"></td>
+						<td><img src="images/space.gif" width="4" height="10"></td>
+						<td class="result"><?=$percent?>%</td>
+					</tr>
+				</table>
+				<img src="images/space.gif" width="117" height="9"><br>
+			</td>
+<? }else{ ?>
+			<td align="right">
+				<img src="vote/pair_<?=$id?>.gif" width="117" height="68"><br>
+				<img src="images/space.gif" width="117" height="5"><br>
+				<a href="vote.city?vote=<?=$row[id]?>"><img src="images/vote_button.gif" width="24" height="20"></a><br>
+			</td>
+<? } ?>
+<? }else{ ?>
+			<td align="right">
+				<img src="vote/grey_<?=$id?>.gif" width="117" height="68"><br>
+				<img src="images/space.gif" width="117" height="5"><br>
+				<img src="images/vote_in.gif" width="117" height="20"><br>
+			</td>
+<? } ?>
+<? } ?>
+
+<?
+	include('include/page_mid.txt');
+	include('include/col2_normal.txt');
+	include('include/page_bottom.txt');
+?>
