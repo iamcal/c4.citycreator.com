@@ -1,0 +1,15 @@
+<?
+	include("init.txt");
+	include('login.txt');
+
+	mysql_query("INSERT INTO citycreator_saved (date_create, city_id, city_pieces, city_bg_id) VALUES ($cfg[time], '$city_id', '$city_pieces', '$city_bg')",$db);
+	$saved_id = mysql_insert_id();
+
+	if ($cfg[user_ok]){
+		mysql_query("UPDATE citycreator_saved SET user_id='{$cfg[user][id]}' WHERE id=$saved_id",$db);
+		header("location: members.city");
+	}else{
+		header("location: members.city?saved_id=$saved_id");		
+	}
+
+?>

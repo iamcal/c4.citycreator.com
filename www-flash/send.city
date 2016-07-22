@@ -1,0 +1,75 @@
+<?
+	include("init.txt");
+	include("login.txt");
+
+	if (!$cfg[user_ok]){
+		header("location: members.city");
+		exit;
+	}
+
+	$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
+
+	if (!$your_name){$your_name = $cfg[user][username];}
+	if (!$your_email){$your_email = $cfg[user][email];}
+
+	$ok = $done;
+	if ($ok && !$your_name) $ok = 0;
+	if ($ok && !$your_email) $ok = 0;
+	if ($ok && !$friend_email) $ok = 0;
+
+	if ($ok){
+		$check = gen_check();
+
+		$city_id	= AddSlashes($saved_row[city_id]);
+		$city_pieces	= AddSlashes($saved_row[city_pieces]);
+		$city_bg	= AddSlashes($saved_row[city_bg_id]);
+		$your_name	= AddSlashes($your_name);
+		$your_email	= AddSlashes($your_email);
+		$friend_email	= AddSlashes($friend_email);
+		$message	= AddSlashes($message);
+		$time = time();
+
+		mysql_query("INSERT INTO citycreator_cards (city_id, check, pieces, bg_id, your_name, your_email, friend_email, message, date_create) VALUES ('$city_id', '$check', '$city_pieces', '$city_bg', '$your_name', '$your_email', '$friend_email', '$message', '$time')",$db);
+		send_card(mysql_insert_id());
+		header("location: send_done.city?saved_id=$saved_id");
+		exit;
+	}
+
+	$title = 'Send City';
+	$long = 1;
+
+	include("inc_head.txt");
+?>
+	<form action="send.city" method="post">
+	<input type="hidden" name="done" value="1">
+	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
+
+	<b class="heading">Send Your City</b><br>
+	<br>
+
+	Sending your city design an e-card is simple! Just fill out the form below (we've already filled in your name and email address) and click "Send as ecard". Your friend will recieve an email containing a special web address. They can use this web address to view the city you designed, along with the (optional) message you sent them. They can also print out your city design to keep forever.<br>
+	<br>
+
+	Your name:<br>
+	<input type="text" name="your_name" value="<?=htmlentities($your_name)?>" class="edit"><br>
+
+	Your email address:<br>
+	<input type="text" name="your_email" value="<?=htmlentities($your_email)?>" class="edit"><br>
+
+	Friend's email address:<br>
+	<input type="text" name="friend_email" value="<?=htmlentities($friend_email)?>" class="edit"><br>
+
+	Message:<br>
+	<textarea name="message" wrap="virtual" class="edit"><?=htmlentities($message)?></textarea><br>
+
+	<br>
+	<input type="image" src="images/btn_send.gif" width="71" height="16" border="0"><br>
+
+	<br>
+	<small><a href="faq.city#faq16">What do we do with information you provide?</a></small>
+
+	</form>
+
+<?
+	include("inc_foot.txt");
+?>

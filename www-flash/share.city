@@ -1,0 +1,71 @@
+<?
+	include("init.txt");
+	include("login.txt");
+
+	$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
+
+	if (!$saved_row){
+		header("location: members.city");
+		exit;
+	}
+
+	$ok = $done;
+	if ($ok && !$your_name) $ok = 0;
+	if ($ok && !$your_email) $ok = 0;
+	if ($ok && !$friend_email) $ok = 0;
+
+	if ($ok){
+		$check = gen_check();
+		mysql_query("INSERT INTO citycreator_saved (date_create, user_id, city_id, city_pieces, city_bg_id, share_check) VALUES ($saved_row[date_create], 0, $saved_row[city_id], '$saved_row[city_pieces]', '$saved_row[city_bg_id]', '$check')",$db);
+		$new_id = mysql_insert_id();
+
+		send_share($friend_email, $your_name, $your_email, "$new_id.$check", $message);
+		header("location: share_done.city?saved_id=$saved_id");
+		exit;
+	}
+
+	if (!$your_name){$your_name = $cfg[user][username];}
+	if (!$your_email){$your_email = $cfg[user][email];}
+
+
+	$title = "Share Your City";
+	$long = 1;
+
+	include("inc_head.txt");
+?>
+
+	<form action="share.city" method="post">
+	<input type="hidden" name="done" value="1">
+	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
+
+	<b class="heading">Share Your City</b><br>
+	<br>
+
+	<!-- <img src="image.city?s=<?=$saved_id?>&thumb=1" align="left"> -->
+
+	By sharing your city with friends, you can allow other people to continue building it. Don't worry, your copy of the city will remain unchanged. If the person wants to share their modifications back with you, then they'll be added to your members account as a new city design - you wont lose your own designs!<br clear="all">
+	<br>
+
+	Your name:<br>
+	<input type="text" name="your_name" value="<?=htmlentities($your_name)?>" class="edit"><br>
+
+	Your email address:<br>
+	<input type="text" name="your_email" value="<?=htmlentities($your_email)?>" class="edit"><br>
+
+	Friend's email address:<br>
+	<input type="text" name="friend_email" value="<?=htmlentities($friend_email)?>" class="edit"><br>
+
+	Message:<br>
+	<textarea name="message" wrap="virtual" class="edit"><?=htmlentities($message)?></textarea><br>
+
+	<br>
+	<input type="image" src="images/btn_share.gif" width="53" height="16" border="0"><br>
+
+	<br>
+	<small><a href="faq.city#faq16">What do we do with information you provide?</a></small>
+
+	</form>
+
+<?
+	include("inc_foot.txt");
+?>
