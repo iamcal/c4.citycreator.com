@@ -44,8 +44,9 @@ textarea.edit	{ width: 300px; height: 100px; }
 				<div style="position: absolute; left: 338px; top: 8px; width: 24px; height: 17px;"><a href="faq.city"    ><img src="images/frame/tab_faq_<?=($nav=='faq')?'on':'off'?>.gif"     width="24" height="17" border="0"></a></div>
 <?
 	$left = 726;
-	$result = mysql_query("SELECT * FROM citycreator_cities ORDER BY id DESC", $db);
-	while($row = mysql_fetch_array($result)){
+
+	$ret = db_fetch("SELECT * FROM citycreator_cities ORDER BY id DESC");
+	foreach ($ret['rows'] as $row){
 		$left -= 3 + $row[tab_width];
 ?>
 				<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row[tab_width]?>px; height: 17px;"><a href="build.city?city=<?=$row[id]?>"><img src="images/frame/tab_city_<?=$row[id]?>_off.gif" width="<?=$row[tab_width]?>" height="17" border="0"></a></div>
