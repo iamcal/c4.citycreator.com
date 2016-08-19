@@ -3,7 +3,7 @@
 <title>City Creator<?if($title){echo " - $title";}?></title>
 <style>
 
-body		{ background-color: #777777; }
+body		{ background-color: #777777; margin-top: 19px; }
 img		{ border: 0px; }
 form		{ border: 0px; margin: 0px; padding: 0px; }
 

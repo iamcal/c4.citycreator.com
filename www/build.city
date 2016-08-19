@@ -1,7 +1,8 @@
 <?
-	include("init.txt");
-	include("login.txt");
+	include("../include/init.php");
+	include("../include/login.php");
 
+	$city = $_GET['city'];
 	if ($city>3){$city = 3;}
 
 	if ($saved_id){
@@ -12,7 +13,9 @@
 	$city_row = get_city($city);
 	$city_id = $city_row[id];
 
-	list($first_tab) = mysql_fetch_array(mysql_query("SELECT id FROM citycreator_tabs WHERE city_id=$city_id ORDER BY in_order ASC LIMIT 1", $db));
+	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
+		'city_id' => $city_id,
+	)));
 ?>
 <html>
 <head>
@@ -50,17 +53,24 @@ function pre_init(){
 	}
 
 <?
-	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
-	echo "\tpiece_count = ".mysql_num_rows($result).";\n";
-	while($row = mysql_fetch_array($result)){
+	$ret = db_fetch("SELECT * FROM citycreator_pieces WHERE city_id=:city_id", array(
+		'city_id' => $city_id,
+	));
+
+	echo "\tpiece_count = ".count($ret['rows']).";\n";
+	foreach ($ret['rows'] as $row){
 		echo "\tadd_piece($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
 	}
 ?>
 
 <?
 	$thumbs = array();
-	$result = mysql_query("SELECT * FROM citycreator_bgs WHERE city_id='$city_id' ORDER BY order_id ASC",$db);
-	while($row = mysql_fetch_array($result)){
+
+	$ret = db_fetch("SELECT * FROM citycreator_bgs WHERE city_id=:city_id ORDER BY order_id ASC", array(
+		'city_id' => $city_id,
+	));
+
+	foreach ($ret['rows'] as $row){
 		$thumbs[$row[order_id]] = ($row[thumb])?"bgs/$city_id/$row[thumb]":"images/space.gif";
 		$bg_image = ($row[bg_image])?"bgs/$city_id/$row[bg_image]":"";
 		echo "\tadd_bg($row[order_id], '$bg_image', '$row[bg_color]');\n";
@@ -143,8 +153,11 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 
 <?
 	$left = 13;
-	$result = mysql_query("SELECT * FROM citycreator_tabs WHERE city_id=$city_id ORDER BY in_order ASC", $db);
-	while($row = mysql_fetch_array($result)){
+
+	$ret = db_fetch("SELECT * FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC", array(
+		'city_id' => $city_id,
+	));
+	foreach ($ret['rows'] as $row){
 ?>
 	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/frame/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
 	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/frame/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
@@ -159,8 +172,8 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 	<div style="position: absolute; left: 338px; top: 8px; width: 24px; height: 17px;"><a href="faq.city"    ><img src="images/frame/tab_faq_off.gif"     width="24" height="17" border="0"></a></div>
 <?
 	$left = 726;
-	$result = mysql_query("SELECT * FROM citycreator_cities ORDER BY id DESC", $db);
-	while($row = mysql_fetch_array($result)){
+	$ret = db_fetch("SELECT * FROM citycreator_cities ORDER BY id DESC");
+	foreach ($ret['rows'] as $row){
 		$left -= 3 + $row[tab_width];
 		if ($row[id] == $city_id){
 ?>

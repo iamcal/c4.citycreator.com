@@ -106,15 +106,8 @@
 
 
 	function get_city($city){
-		global $db;
-		
-		if ($city){
-			$city_id = $city + 0;
-			if ($city_id == 0) $city_id = 1;
-		}else{
-			$city_id = 1;
-		}
 
-		return mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cities WHERE id='$city_id'",$db));
+		return db_single(db_fetch("SELECT * FROM citycreator_cities WHERE id=:id",array(
+			'id' => $city ? $city : 1,
+		)));
 	}
-?>
