@@ -194,25 +194,6 @@ We use cookies so you can continue building your city at a later date.<br>
 	<b>Is this site free?</b><br>
 	<br>
 	Yes! We don't charge anything for people to use the site. We will never have advertising on the site. We pay for it out of our own pockets, because we love you. We really do.<br>
-<br>
-If you would like to donate money to the cause, then you can make a paypal donation:<br>
-<br>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-<input type="hidden" name="cmd" value="_xclick">
-<input type="hidden" name="business" value="cal@iamcal.com">
-<input type="hidden" name="item_name" value="City Creator donation">
-<input type="hidden" name="item_number" value="#citycreator.com">
-<input type="image" src="https://www.paypal.com/images/x-click-but04.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-</form>
-<br>
-Remember: Every dollar you donate helps to buy us food, and thus allows us to create new cities for you to build!<br>
-	<br>
-	<img src="images/white_line.gif" width="368" height="5"><br>
-	<br>
-	<a name="faq12"></a>
-	<b>I want to give you loads of money!</b><br>
-	<br>
-	Err, ok. Don't let us stand in your way. A wise decision indeed. Click the "paypal donate" button above.<br>
 
 <?
 	include("../templates/inc_foot.txt");
