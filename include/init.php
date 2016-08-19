@@ -1,11 +1,17 @@
 <?
-	include("/var/www/cal/includes/network.txt");
-
 	$cfg = array();
+
+	$cfg['db_host']			= 'localhost';
+	$cfg['db_name']			= 'citycreator';
+	$cfg['db_user']			= 'citycreator';
+	$cfg['db_pass']			= trim(file_get_contents(__DIR__.'/../secrets/mysql_password'));
+
+	include('lib_db.php');
+
 	$cfg[pickup_url] = 'http://www.citycreator.com/pickup.city';
 	$cfg[login_url]  = 'http://www.citycreator.com/login.city';
 	$cfg[share_url]  = 'http://www.citycreator.com/members.city';
-	$cfg[cp_path] = '/var/www/cal/www.citycreator.com/cp';
+	$cfg[cp_path] = '/var/www/html/citycreator.com/www/cp';
 
 	$cfg[time] = time() + (5 * 60 * 60); # GMT baybee
 
