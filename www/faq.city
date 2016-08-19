@@ -1,38 +1,219 @@
 <?
-	include('init.txt');
+        include('../include/init.php');
 
 	$title = 'Frequently Asked Questions';
 	$long = 1;
 	$nav = 'faq';
 
-	include("inc_head.txt");
+	include("../templates/inc_head.txt");
 ?>
 
 	<b>Frequently Asked Questions</b><br>
 	<br>
-<?
-	$result = mysql_query("SELECT * FROM citycreator_faq ORDER BY in_order ASC",$db);
-	while($row = mysql_fetch_array($result)){
-?>
-	<a href="#faq<?=$row[id]?>" class="white"><?=$row[question]?></a><br>
-<?
-	}
-?>
-<?
-	$result = mysql_query("SELECT * FROM citycreator_faq ORDER BY in_order ASC",$db);
-	while($row = mysql_fetch_array($result)){
-?>
+	<a href="#faq1" class="white">Who made this site?</a><br>
+	<a href="#faq8" class="white">Why do I need to register to send an ecard?</a><br>
+	<a href="#faq9" class="white">Why do you ask for my email address?</a><br>
+	<a href="#faq16" class="white">Are you going to sell my personal details?</a><br>
+	<a href="#faq10" class="white">What's the City Creator mailing list for?</a><br>
+	<a href="#faq15" class="white">Can I leave the mailing list?</a><br>
+	<a href="#faq6" class="white">Can you add a building for me?</a><br>
+	<a href="#faq19" class="white">Can you make the pieces "rotatable"?</a><br>
+	<a href="#faq7" class="white">Can I link to your site?</a><br>
+	<a href="#faq13" class="white">Can I use a city I created as my desktop wallpaper?</a><br>
+	<a href="#faq20" class="white">Can I use a city I created on my website?</a><br>
+	<a href="#faq2" class="white">Why do the pieces disappear when I drag them?</a><br>
+	<a href="#faq3" class="white">Why doesn't this site work on my browser?</a><br>
+	<a href="#faq18" class="white">Why don't any/all the pieces appear in the palettes on the left?</a><br>
+	<a href="#faq4" class="white">How does this site work?</a><br>
+	<a href="#faq14" class="white">Hey! I went away and came back, but my city is still there!</a><br>
+	<a href="#faq5" class="white">Can I feature this site in my newspaper / magazine / book / radio show / tv programme?</a><br>
+	<a href="#faq11" class="white">Is this site free?</a><br>
+	<a href="#faq12" class="white">I want to give you loads of money!</a><br>
 	<br>
 	<img src="images/white_line.gif" width="368" height="5"><br>
 	<br>
-	<a name="faq<?=$row[id]?>"></a>
-	<b><?=$row[question]?></b><br>
+	<a name="faq1"></a>
+	<b>Who made this site?</b><br>
 	<br>
-	<?=$row[answer]?><br>
-<?
-	}
-?>
+	City Creator is a joint project by <a href="mailto:denise@citycreator.com">Denise Wilton</a> (also known as Pep) and <a href="mailto:cal@citycreator.com">Cal Henderson</a>. Denise came up with the original idea and design, and Cal helped the idea along and made it all come to life by programming it.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq8"></a>
+	<b>Why do I need to register to send an ecard?</b><br>
+	<br>
+	We require you to register for a few reasons. Firstly, it cuts down abuse of the system. Secondly, it means we can let you save older cities and work on them later. Thirdly, it means we can let you share cities, so you can collaborate with your friends.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq9"></a>
+	<b>Why do you ask for my email address?</b><br>
+	<br>
+	We ask you for your email address so that we can email you your password, should you forget it. We also use it to address any ecards you send.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq16"></a>
+	<b>Are you going to sell my personal details?</b><br>
+	<br>
+	No. This site complies with the Data Protection Act (1998). To see any details we have stored about you, simply send an email to <a href="mailto:cal@citycreator.com" class="white">cal@citycreator.com</a>. If you would like your account to be removed from our systems, just ask.<br>
+<br>
+We will not sell any information about any users. We couldn't find anyone who would pay us enough anyway.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq10"></a>
+	<b>What's the City Creator mailing list for?</b><br>
+	<br>
+	We send an email to the mailing list when we make an update to the site. This might include adding a new city to build, or a new feature to play with. There shouldn't ever be more than one email per month.<br>
+<br>
+If you didn't join the mailing list when you signed up for the site, you can send a blank email <a href="mailto:citycreator-subscribe@yahoogroups.com" class="white">here</a> to subscribe.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq15"></a>
+	<b>Can I leave the mailing list?</b><br>
+	<br>
+	Of course. Just send a blank email to <a href="mailto:citycreator-unsubscribe@yahoogroups.com" class="white">citycreator-unsubscribe@yahoogroups.com</a>. We'll be sorry to see you go though :(<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq6"></a>
+	<b>Can you add a building for me?</b><br>
+	<br>
+	These are the first of many cities planned by the City Creator Corporation. We'll soon be building more cities all over the world - and that's where you come in!<br>
+<br>
+If you have an idea for a city, a building, an object or would just like to get in touch, then drop us an email: <a href="mailto:cal@citycreator.com">cal@citycreator.com</a><br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq19"></a>
+	<b>Can you make the pieces "rotatable"?</b><br>
+	<br>
+	To "rotate" the pieces would mean to design 2 to 4 versions of each piece,
+so that you could select an orientation. Since each piece takes so long to 
+design, and we only have limited time and space, we only offer some pieces
+with more than one orientation. We try to make enough road, wall and path 
+pieces to make any layout you want - with buildings it's a little more 
+difficult, and we try to give as many alternatives of each as we can whilst
+still having a good selection of different buildings.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq7"></a>
+	<b>Can I link to your site?</b><br>
+	<br>
+	Of course! If you'd like to link to us, please feel free to use one of the banners below.<br>
+<br>
+<table cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td><img src="images/link_1.gif" width="90" height="26"></td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td class="text">&lt;a href="http://www.citycreator.com"&gt;&lt;img src="link_1.gif" width="90" height="26"&gt;&lt;/a&gt;</td>
+	</tr>
+	<tr>
+		<td><img src="images/link_2.gif" width="100" height="33"></td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td class="text">&lt;a href="http://www.citycreator.com"&gt;&lt;img src="link_2.gif" width="100" height="33"&gt;&lt;/a&gt;</td>
+	</tr>
+</table><br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq13"></a>
+	<b>Can I use a city I created as my desktop wallpaper?</b><br>
+	<br>
+	Yes! Once you have saved your city (by clicking on "Save &amp; send"), go to the <a href="members.city" class="white">members page</a> and click on the thumbnail of it. In the window that pops up, right-click on the image of your city and choose "Set as Background/Wallpaper".<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq20"></a>
+	<b>Can I use a city I created on my website?</b><br>
+	<br>
+	We allow use of the cities on 
+non-commercial sites and weblogs. If you'd like to use our graphics on 
+a commercial site or for an ad campaign, please get in touch and we can 
+quote for custom built sites or illustrations.<br>
+<br>
+To use a city on your personal site, follow the instructions for using it as wallpaper above. If you use a city creator city on your site, we'd appriciate a link back to citycreator.com. And you can <a href="mailto:cal@citycreator.com">mail us</a> to say you've used a city!<br>
+<br>
+If you want to use a city you created in a print publication or on television, then please include a credit and send us a copy!<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq2"></a>
+	<b>Why do the pieces disappear when I drag them?</b><br>
+	<br>
+	You're using IE6 on a PC, right? It's because the people who made IE6 were on crack. Choose "Tools" -&gt; "Internet Options..." from the menu. Click on the "Settings..." button, and change "Check for newer versions of stored pages:" from "Every visit to the page" to "Automatically". Click the "OK" button to close the window, then "OK" again to close the other window.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq3"></a>
+	<b>Why doesn't this site work on my browser?</b><br>
+	<br>
+	Because your browser doesn't support the relevant standards. Try a recent version of Internet Explorer, Mozilla or Netscape.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq18"></a>
+	<b>Why don't any/all the pieces appear in the palettes on the left?</b><br>
+	<br>
+	This looks like a bug with IE6's cacheing.
+
+Make sure thae page has finished loading before you click anywhere in the 
+window. If the little animation in the top right corner is still moving, 
+or the progress bar in the status bar at the bottom of the window is still 
+moving then the page hasn't fully loaded.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq4"></a>
+	<b>How does this site work?</b><br>
+	<br>
+	The pages use HTML and CSS with GIF graphics. The drag-and-drop interface was built using ECMAScript (Javascript) and the DOM (Document Object Model). The back end uses PHP and MySQL. The thumbnails are generated using GD and PNG's.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq14"></a>
+	<b>Hey! I went away and came back, but my city is still there!</b><br>
+	<br>
+	Yes. That's not really a question, is it now...<br>
+<br>
+We use cookies so you can continue building your city at a later date.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq5"></a>
+	<b>Can I feature this site in my newspaper / magazine / book / radio show / tv programme?</b><br>
+	<br>
+	Yes! We'd love you to, but we'd also love you to tell us. Please contact us by sending us email: <a href="mailto:cal@citycreator.com">cal@citycreator.com</a>. If you feature us in your publication, we'd love to have a copy we can show our grandchildren.<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq11"></a>
+	<b>Is this site free?</b><br>
+	<br>
+	Yes! We don't charge anything for people to use the site. We will never have advertising on the site. We pay for it out of our own pockets, because we love you. We really do.<br>
+<br>
+If you would like to donate money to the cause, then you can make a paypal donation:<br>
+<br>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="cal@iamcal.com">
+<input type="hidden" name="item_name" value="City Creator donation">
+<input type="hidden" name="item_number" value="#citycreator.com">
+<input type="image" src="https://www.paypal.com/images/x-click-but04.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+</form>
+<br>
+Remember: Every dollar you donate helps to buy us food, and thus allows us to create new cities for you to build!<br>
+	<br>
+	<img src="images/white_line.gif" width="368" height="5"><br>
+	<br>
+	<a name="faq12"></a>
+	<b>I want to give you loads of money!</b><br>
+	<br>
+	Err, ok. Don't let us stand in your way. A wise decision indeed. Click the "paypal donate" button above.<br>
 
 <?
-	include("inc_foot.txt");
+	include("../templates/inc_foot.txt");
 ?>
