@@ -13,8 +13,6 @@
 	$cfg[share_url]  = 'http://www.citycreator.com/members.city';
 	$cfg[cp_path] = '/var/www/html/citycreator.com/www/cp';
 
-	$cfg[time] = time() + (5 * 60 * 60); # GMT baybee
-
 	function gen_check(){
 		$length = 10;
 		$out = '';
