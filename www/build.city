@@ -20,9 +20,9 @@
 <html>
 <head>
 <title>City Creator - Build</title>
-<script language="JavaScript" src="detect.js?revision=2"></script>
-<script language="JavaScript" src="cookies.js"></script>
-<script language="JavaScript" src="build.js?revision=12"></script>
+<script language="JavaScript" src="js/detect.js?revision=2"></script>
+<script language="JavaScript" src="js/cookies.js"></script>
+<script language="JavaScript" src="js/build.js?revision=12"></script>
 <script language="JavaScript">
 <!--
 
