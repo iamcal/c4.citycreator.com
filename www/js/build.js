@@ -146,14 +146,7 @@ function move_piece(e, palette, id, elm){
 	drag_offset_x = x - elm.pos_x;
 	drag_offset_y = y - elm.pos_y;
 
-	// reorder elements
-	var this_z = elm.style.zIndex;
-	for(var i=0; i<pieces.length; i++){
-		if (pieces[i].style.zIndex > this_z){
-			pieces[i].style.zIndex = pieces[i].style.zIndex - 1;
-		}
-	}
-	elm.style.zIndex = get_max_z() + 1;
+	move_to_last(elm);
 
 	currently_dragging = 1;
 	drag_elm = elm;
@@ -205,8 +198,9 @@ function mouse_up(){
 function get_max_z(){
 	var max_z = 0;
 	for(var i=0; i<pieces.length; i++){
-		if (pieces[i].style.zIndex > max_z){
-			max_z = pieces[i].style.zIndex;
+		var p = pasreInt(pieces[i].style.zIndex);
+		if (p > max_z){
+			max_z = p;
 		}
 	}
 	return max_z;
@@ -440,4 +434,31 @@ function PieceLoaded(){
 	var percent = Math.floor((loaded_count / piece_count) * 100);
 	var elm = get_elm("loadprogress");
 	elm.style.width = percent+'%';
+}
+
+function move_to_last(elm){
+
+	// make an array of the indexes into $pieces
+	var indexes = [];
+	for (var i=0; i<pieces.length; i++) indexes.push(i);
+
+	// make a map of the parsed zIndexes
+	var map = [];
+	var elm_idx = -1;
+	for (var i=0; i<pieces.length; i++){
+		map[i] = parseInt(pieces[i].style.zIndex);
+		if (elm == pieces[i]) elm_idx = i;
+	}
+
+	// sort into z-order
+	indexes.sort(function(a, b){
+		if (a == elm_idx) return 1;
+		if (b == elm_idx) return -1;
+		return map[a] - map[b];
+	});
+
+	// assign new zIndexes
+	for (var i=0; i<indexes.length; i++){
+		pieces[indexes[i]].style.zIndex = i;
+	}
 }
