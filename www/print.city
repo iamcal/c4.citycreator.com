@@ -1,18 +1,28 @@
 <?
-	include("init.txt");
-	include("login.txt");
+	include("../include/init.php");
+	include("../include/login.php");
 
 	$ok = 0;
 
-	list($id,$check) = explode('.',$c,2);
-	if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id='$id' AND check='$check'",$db))){
-		$ok = 1;
-		$url = "image.city?c=$c";
+	if ($_GET['c']){
+		list($id, $check) = explode('.', $_GET['c'], 2);
+		if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id='$id' AND check='$check'",$db))){
+			$ok = 1;
+			$url = "image.city?c=$c";
+		}
 	}
 
-	if ($saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db))){
-		$ok = 1;
-		$url = "image.city?s=$saved_id";
+	if ($_GET['saved_id']){
+
+		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:saved_id AND user_id=:user_id", array(
+			'saved_id'	=> $_GET['saved_id'],
+			'user_id'	=> $cfg['user']['id'],
+		)));
+
+		if ($saved_row['id']){
+			$ok = 1;
+			$url = "image.city?s={$saved_row['id']}";
+		}
 	}
 
 	if (!$ok){
@@ -36,7 +46,7 @@ img {
 
 </style>
 </head>
-<? if ($auto){ ?>
+<? if ($_GET['auto']){ ?>
 <body onload="window.print();">
 <? }else{ ?>
 <body>
