@@ -109,3 +109,14 @@
 			'id' => $city ? $city : 1,
 		)));
 	}
+
+	function dumper($foo){
+		echo "<pre style=\"text-align: left;\">";
+		if (is_resource($foo)){
+			var_dump($foo);
+		}else{
+			echo HtmlSpecialChars(var_export($foo, 1));
+		}
+		echo "</pre>\n";
+	}
+

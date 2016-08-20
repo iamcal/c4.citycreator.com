@@ -1,6 +1,6 @@
 <?
-	include('init.txt');
-	include('login.txt');
+	include('../include/init.php');
+	include('../include/login.php');
 
 	if ($delete){
 		mysql_query("DELETE FROM citycreator_saved WHERE id='$delete' AND user_id='{$cfg[user][id]}'",$db);
@@ -12,14 +12,14 @@
 	}
 
 	$extra = '';
-	if ($saved_id){ $extra = "?saved_id=$saved_id"; }
-	if ($share_id){ $extra = "?share_id=$share_id"; }
+	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if ($_REQUEST['share_id']){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
 
 	$title = 'Members Area';
 	$long = 1;
 	$nav = 'members';
 
-	include('inc_head.txt');
+	include('../templates/inc_head.txt');
 ?>
 
 <script language="Javascript">
@@ -41,20 +41,25 @@ function delete_city(id){
 
 	<b class="heading">Members Area</b><br>
 	<br>
-<? if ($cfg[user_ok]){ ?>
+<? if ($cfg['user']['id']){ ?>
 	You are logged in as <span class="username"><?=$cfg[user][username]?></span><br>
 	(<a href="logout.city">click here</a> to logout)<br>
 	<br>
 	As a member, you have your own personal "members page" which contains any city designs that you have created or been sent. To get back to this page at any time, simply click on the "members" tab at the bottom of the page. From this page you can send your cities as e-cards, share your city designs with other designers, continuing working on previously saved cities, print your city designs, and delete cities you don't want to keep any longer.<br>
 	<br>
 <?
-	$result = mysql_query("SELECT * FROM citycreator_saved WHERE user_id='{$cfg[user][id]}' ORDER BY date_create DESC",$db);
-	if (mysql_num_rows($result)){
+	$ret = db_fetch("SELECT * FROM citycreator_saved WHERE user_id=:user_id ORDER BY date_create DESC", array(
+		'user_id' => $cfg['user']['id'],
+	));
+
+	if (count($ret['rows'])){
+
 ?>
 	You have saved the following cities:<br>
 	<table cellpadding="4" cellspacing="0" border="0">
 <?
-	while($row = mysql_fetch_array($result)){
+
+	foreach ($ret['rows'] as $row){
 ?>
 		<tr valign="middle">
 			<td><a href="javascript:print_city(<?=$row[id]?>,0);"><img src="image.city?s=<?=$row[id]?>&thumb=1" width="93" height="72"></a></td>
@@ -118,5 +123,5 @@ function delete_city(id){
 <? } ?>
 
 <?
-	include('inc_foot.txt');
+	include('../templates/inc_foot.txt');
 ?>

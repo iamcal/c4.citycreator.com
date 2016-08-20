@@ -1,13 +1,20 @@
-<?
-	include('init.txt');
-	include('login.txt');
+<?php
+	include('../include/init.php');
+	include('../include/login.php');
 
-	if ($cfg[user_ok]){
-		if ($saved_id){
-			mysql_query("UPDATE citycreator_saved SET user_id='{$cfg[user][id]}' WHERE id='$saved_id' AND user_id=0",$db);
+	if ($cfg['user']['id']){
+
+		if ($_POST['saved_id']){
+
+			db_update('citycreator_saved', array(
+				'user_id' => $cfg['user']['id'],
+			), "id=:saved_id AND user_id=0", array(
+				'saved_id' => $_POST['saved_id'],
+			));
 		}
-		if ($share_id){
-			header("location: members.city?share_id=$share_id");
+
+		if ($_REQUEST['share_id']){
+			header("location: members.city?share_id=".urlencode($_REQUEST['share_id']));
 			exit;
 		}
 		header("location: members.city");
@@ -15,26 +22,27 @@
 	}
 
 	$extra = '';
-	if ($saved_id){ $extra = "?saved_id=$saved_id"; }
-	if ($share_id){ $extra = "?share_id=$share_id"; }
+	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if ($_REQUEST['share_id']){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
 
 
 	$title = 'Members Area';
 	$long = 1;
 	$nav = 'members';
-	if ($login_username || $login_password){
+
+	if ($_POST['username'] || $_POST['password']){
 		$loadalert = 'Your username and password were not correct!';
 	}
 
-	include('inc_head.txt');
+	include('../templates/inc_head.txt');
 ?>
 
 	<b class="heading">Members Area - Log In</b><br>
 	<br>
 
 	<form action="login.city" method="post">
-	<input type="hidden" name="saved_id" value="<?=$saved_id?>">
-	<input type="hidden" name="share_id" value="<?=$share_id?>">
+	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'])?>">
+	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'])?>">
 
 	Please type in your login details.<br>
 	If you're not yet a member, <a href="signup.city<?=$extra?>">click here</a><br>
@@ -42,16 +50,16 @@
 
 	<br>
 	Username:<br>
-	<input type="text" name="login_username"><br>
+	<input type="text" name="username"><br>
 
 	<br>
 	Password:<br>
-	<input type="password" name="login_password"><br>
+	<input type="password" name="password"><br>
 
 	<br>
 	<input type="image" src="images/btn_login.gif" width="33" height="16">
 
 	</form>
 <?
-	include('inc_foot.txt');
+	include('../templates/inc_foot.txt');
 ?>

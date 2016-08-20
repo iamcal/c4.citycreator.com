@@ -1,71 +1,133 @@
-<?
-	include('init.txt');
+<?php
+	include('../include/init.php');
+	include('../include/login.php');
 
 	$error = '';
 
-	if ($done && (strlen($signup_username)<3)){
-		$done = 0;
-		$error = "Please choose a username at least three letters long";
+	if ($_POST['done']){
+		$error = local_process();
 	}
 
-	if ($done && (strlen($signup_password)<3)){
-		$done = 0;
-		$error = "Please choose a password at least three letters long";
-	}
+	function local_process(){
 
-	if ($done && !$signup_email){
-		$done = 0;
-		$error = "Please enter your email address";
-	}
+		$username	= trim($_POST['signup_username']);
+		$password	= trim($_POST['signup_password']);
+		$email		= trim(StrToLower($_POST['signup_email']));
 
-	if ($done){
-		if ($row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_users WHERE username LIKE '$signup_username'",$db))){
-			$done = 0;
-			$error = "The username you entered is already taken";
-		}
-	}
+		if (strlen($username) < 3){
 
-	if ($done){
-		if ($row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_users WHERE email LIKE '$signup_email'",$db))){
-			$done = 0;
-			$error = "The email address you entered has already been registered\\nClick on the forgotten password link so we can email you your password";
-		}
-	}
-
-	if ($done){
-		$time = time();
-		mysql_query("INSERT INTO citycreator_users (username, password, email, date_create) VALUES ('$signup_username', '$signup_password', '$signup_email', $time)",$db);
-		$login_username = $signup_username;
-		$login_password = $signup_password;
-	}
-
-	include('login.txt');
-
-	if ($cfg[user_ok]){
-		if ($maillist){
-			mail("citycreator-subscribe@yahoogroups.com","-","-","From: $signup_email\r\n");
+			return "Please choose a username at least three letters long";
 		}
 
-		if ($saved_id){
-			mysql_query("UPDATE citycreator_saved SET user_id='{$cfg[user][id]}' WHERE id='$saved_id' AND user_id=0",$db);
+		if (strlen($password) < 3){
+
+			return "Please choose a password at least three letters long";
 		}
-		if ($share_id){
-			header("location: members.city?share_id=$share_id");
+
+		if (strlen($email) < 1){
+
+			return "Please enter your email address";
+		}
+
+
+		#
+		# is the username taken?
+		#
+
+		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE username=:username", array(
+			'username' => $username,
+		)));
+
+		if ($row['id']){
+			return "The username you entered is already taken";
+		}
+
+
+		#
+		# is the email taken?
+		#
+
+		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE email=:email", array(
+			'email' => $email,
+		)));
+
+		if ($row['id']){
+
+			return "The email address you entered has already been registered\\nClick on the forgotten password link so we can email you your password";
+		}
+
+
+		#
+		# create user
+		#
+
+		$hash = password_hash($password, PASSWORD_DEFAULT, array(
+			"cost" => 13,
+		));
+
+		$ret = db_insert('citycreator_users', array(
+			'username'	=> $username,
+			'password'	=> $hash,
+			'date_create'	=> time(),
+			'email'		=> $email,
+		));
+
+
+		#
+		# set login cookies
+		#
+
+		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE id=:id", array(
+			'id' => $ret['insert_id'],
+		)));
+
+		login_set_user($row);
+
+
+		#
+		# sub to mailing list?
+		#
+
+		if ($_POST['maillist']){
+			mail("citycreator-subscribe@yahoogroups.com","-","-","From: $email\r\n");
+		}
+
+
+		#
+		# take ownership of a saved city?
+		#
+
+		if ($_POST['saved_id']){
+			db_update('citycreator_saved', array(
+				'user_id' => $row['id'],
+			), "id=:saved_id AND user_id=0", array(
+				'saved_id' => $_POST['saved_id'],
+			));
+		}
+
+
+		#
+		# redirect
+		#
+
+		if ($_POST['share_id']){
+			header("location: members.city?share_id=".urlencode($_REQUEST['share_id']));
 		}else{
 			header("location: members.city");
 		}
 		exit;
 	}
 
+
 	$extra = '';
-	if ($saved_id){ $extra = "?saved_id=$saved_id"; }
-	if ($share_id){ $extra = "?share_id=$share_id"; }
+	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if ($_REQUEST['share_id']){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
 
 	$title = "Members Area";
 	$long = 1;
 	$loadalert = $error;
 
-	include("inc_head.txt");
+	include("../templates/inc_head.txt");
 ?>
 
 <script language="Javascript">
@@ -82,8 +144,8 @@ function why(){
 	<br>
 	<form action="signup.city" method="post">
 	<input type="hidden" name="done" value="1">
-	<input type="hidden" name="saved_id" value="<?=$saved_id?>">
-	<input type="hidden" name="share_id" value="<?=$share_id?>">
+	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'])?>">
+	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'])?>">
 
 	If you're already a member, <a href="login.city<?=$extra?>">click here</a><br>
 	<br>
@@ -91,19 +153,21 @@ function why(){
 
 	<br>
 	Choose a username:<br>
-	<input type="text" class="edit" name="signup_username" value="<?=htmlentities(StripSlashes($signup_username))?>"><br>
+	<input type="text" class="edit" name="signup_username" value="<?=HtmlSpecialChars($_POST['signup_username'])?>"><br>
 
 	<br>
 	Choose a password:<br>
-	<input type="password" class="edit" name="signup_password" value="<?=htmlentities(StripSlashes($signup_password))?>"><br>
+	<input type="password" class="edit" name="signup_password" value="<?=HtmlSpecialChars($_POST['signup_password'])?>"><br>
 
 	<br>
 	Enter your email address:<br>
-	<input type="text" class="edit" name="signup_email" value="<?=htmlentities(StripSlashes($signup_email))?>"> <a href="javascript:why();" font-size: 10px;">Why do we ask this?</a><br>
+	<input type="text" class="edit" name="signup_email" value="<?=HtmlSpecialChars($_POST['signup_email'])?>">
+	<a href="javascript:why();" font-size: 10px;">Why do we ask this?</a><br>
 
 	<br>
 	<input type="checkbox" name="maillist" checked> Add me to the mailing list<br>
-	We send an email to the mailing list when we make an update to the site. This might include adding a new city to build, or a new feature to play with. There shouldn't ever be more than one email per month.<br>
+	We send an email to the mailing list when we make an update to the site. This might include adding a new city to build, or a new feature to play with.
+	There shouldn't ever be more than one email per month.<br>
 
 	<br>
 	<input type="image" src="images/btn_signup.gif" width="40" height="16"><br>
@@ -114,5 +178,5 @@ function why(){
 	</form>
 
 <?
-	include("inc_foot.txt");
+	include("../templates/inc_foot.txt");
 ?>

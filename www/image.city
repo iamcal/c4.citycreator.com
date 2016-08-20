@@ -1,6 +1,6 @@
 <?
-	include("init.txt");
-	include("login.txt");
+	include("../include/init.php");
+	include("../include/login.php");
 
 	$canvas_w = 469;
 	$canvas_h = 364;
@@ -8,8 +8,9 @@
 
 	#######################################################################
 
-	if ($c){
-		list($id,$check) = explode('.',$c,2);
+	if ($_GET['c']){
+		list($id,$check) = explode('.',$_GET['c'],2);
+
 		if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id='$id' AND check='$check'",$db))){
 			$city_row = get_city($card_row[city_id]);
 			$city_id = $city_row[id];
@@ -21,27 +22,39 @@
 		}
 	}
 
-	if ($s){
-		if ($saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$s' AND user_id='{$cfg[user][id]}'",$db))){
-			$city_row = get_city($saved_row[city_id]);
-			$city_id = $city_row[id];
-			$piece_data = $saved_row[city_pieces];
-			$bg_id = $saved_row[city_bg_id];
-		}else{
+	if ($_GET['s']){
+
+		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:save_id AND user_id=:user_id", array(
+			'save_id'	=> $_GET['s'],
+			'user_id'	=> $cfg['user']['id'],
+		)));
+
+		if (!$saved_row['id']){
 			header("location: no_card.city");
 			exit;
 		}
+
+		$city_row = get_city($saved_row['city_id']);
+		$city_id = $city_row['id'];
+		$piece_data = $saved_row['city_pieces'];
+		$bg_id = $saved_row['city_bg_id'];
 	}
 
-	$bg_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_bgs WHERE order_id='$bg_id' AND city_id='$city_id'",$db));
+	$bg_row = db_single(db_fetch("SELECT * FROM citycreator_bgs WHERE order_id=:bg_id AND city_id=:city_id", array(
+		'bg_id' => $bg_id,
+		'city_id' => $city_id,
+	)));
 
 	#######################################################################
 
 	$pieces_index_1 = array();
 	$pieces_index_2 = array();
 
-	$result = mysql_query("SELECT * FROM citycreator_pieces WHERE city_id='$city_id'",$db);
-	while($row = mysql_fetch_array($result)){
+	$ret = db_fetch("SELECT * FROM citycreator_pieces WHERE city_id=:city_id", array(
+		'city_id' => $city_id,
+	));
+
+	foreach ($ret['rows'] as $row){
 		$pieces_index_1["$row[uid]"] = $row;
 		$pieces_index_2["$row[palette]_$row[id]"] = $row;
 	}
@@ -148,6 +161,11 @@
 
 	$png = 1;
 
+	if ($_GET['debug']){
+		echo "OK!";
+		exit;
+	}
+
 	if ($png){
 		Header("Content-type: image/png");
 		ImagePng($img);
@@ -157,4 +175,3 @@
 	}
 
 	ImageDestroy($img);
-?>
