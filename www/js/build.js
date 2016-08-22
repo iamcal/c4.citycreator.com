@@ -198,7 +198,7 @@ function mouse_up(){
 function get_max_z(){
 	var max_z = 0;
 	for(var i=0; i<pieces.length; i++){
-		var p = pasreInt(pieces[i].style.zIndex);
+		var p = parseInt(pieces[i].style.zIndex);
 		if (p > max_z){
 			max_z = p;
 		}
@@ -255,67 +255,70 @@ function delete_elm(elm){
 	elm.onmousedown = function(){};
 }
 
-function update_pieces(){
-	// cut up the big cookie so we don't break the browser ;)
-	var piece_data = serialize_all();
-	var cookie_count = 0;
-	while(piece_data.length > 0){
-		cookie_count++;
-		saveCookie(cookie_prefix+'pieces_'+cookie_count, piece_data.substr(0,max_cookie_len), 365);
-		piece_data = piece_data.substr(max_cookie_len);
-	}
-	saveCookie(cookie_prefix+'piece_count', cookie_count, 365);
-	saveCookie(cookie_prefix+'bg_id', bg_id, 365);
 
-	// hack to clear any left-over cookies
-	while(cookie_count <= 5){
-		cookie_count++;
-		saveCookie(cookie_prefix+'pieces_'+cookie_count, "", 365);
-	}
+function update_pieces(){
+
+	var piece_data = serialize_all();
+
+	localStorage[cookie_prefix+'bg'] = bg_id;
+	localStorage[cookie_prefix+'pieces'] = piece_data;
 }
 
 function load_pieces(){
-	if (readCookie(cookie_prefix_old+'bg_id') > 0){
 
-		//alert("old format cookies detected - removing and converting");
-		load_pieces_guts(cookie_prefix_old);
+	//
+	// check for old-style cookies
+	//
+
+	var test = load_and_clear_cookies(cookie_prefix_old);
+	if (test.bg != null){
+		bg_nosave(test.bg);
+		unserialize_all(test.pieces);
 		update_pieces();
-
-		// kill old cookies
-		var count = readCookie(cookie_prefix_old+'piece_count');
-		if (count != null){
-			for(i=1; i<=count; i++){
-				saveCookie(cookie_prefix_old+'pieces_'+i, 0, 0);
-			}
-		}
-		saveCookie(cookie_prefix_old+'bg_id', 0, 0);
-		saveCookie(cookie_prefix_old+'piece_count', 0, 0);
-		
-	}else{
-		load_pieces_guts(cookie_prefix);
+		return;
 	}
+
+	test = load_and_clear_cookies(cookie_prefix);
+	if (test.bg != null){
+		bg_nosave(test.bg);
+		unserialize_all(test.pieces);
+		update_pieces();
+		return;
+	}
+
+
+	//
+	// no cookies - load from localStorage
+	//
+
+	bg_nosave(localStorage[cookie_prefix+'bg']);
+	unserialize_all(localStorage[cookie_prefix+'pieces']);
 }
 
-function load_pieces_guts(prefix){
+function load_and_clear_cookies(prefix){
 
-	var temp = readCookie(prefix+'bg_id');
-	if (temp != null){
-		bg_nosave(temp);
-	}
+	var data ={
+		'pieces' : '',
+		'bg' : null,
+	};
 
-	var count = readCookie(prefix+'piece_count');
+	if (readCookie(prefix+'bg_id') > 0){
 
-	var temp = null;
-	if (count != null){
-		temp = '';
-		for(i=1; i<=count; i++){
-			temp += readCookie(prefix+'pieces_'+i);
+		data.bg = readCookie(prefix+'bg_id');
+
+		var count = readCookie(prefix+'piece_count');
+		if (count != null){
+			for(var i=1; i<=count; i++){
+				data.pieces += readCookie(prefix+'pieces_'+i);
+				saveCookie(prefix+'pieces_'+i, 0, 0);
+			}
 		}
+
+		saveCookie(prefix+'bg_id', 0, 0);
+		saveCookie(prefix+'piece_count', 0, 0);
 	}
 
-	if ((temp != null) && (temp != '')){
-		unserialize_all(temp);
-	}
+	return data;
 }
 
 function unserialize_all(data){
