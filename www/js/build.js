@@ -322,10 +322,11 @@ function load_and_clear_cookies(prefix){
 }
 
 function unserialize_all(data){
-	//alert('unserialize_all:'+data);
+	if (data == null) return;
 	var bits = data.split(',');
 	for(var i=0; i<bits.length; i++){
-		unserialize_elm(bits[i]);
+		if (bits[i].length)
+			unserialize_elm(bits[i]);
 	}
 }
 
