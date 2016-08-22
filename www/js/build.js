@@ -11,8 +11,6 @@ var trash_height = 49;
 var piece_count = 0;
 var loaded_count = 0;
 
-var max_cookie_len = 4000; //we're allowed 4k (4096) but that includes the cookie name
-
 var top_count = 0;
 var piece_index = new Array();
 var preloads = new Array();
@@ -31,10 +29,12 @@ function init(){
 	show_elm(get_elm("canvasinner"));
 	show_elm(get_elm("copyright"));
 
-	if ((readCookie(cookie_hello) == null)){
+	if (!storageAvailable('localStorage')) alert('Your browser is pretty old - saving cities may not work');
+
+	if (!localStorage[cookie_hello]){
 		show_elm(get_elm('instructions'));
+		localStorage[cookie_hello] = 'hello';
 	}
-	saveCookie(cookie_hello, 'hello', 365);
 }
 
 
@@ -463,5 +463,18 @@ function move_to_last(elm){
 	// assign new zIndexes
 	for (var i=0; i<indexes.length; i++){
 		pieces[indexes[i]].style.zIndex = i;
+	}
+}
+
+function storageAvailable(type){
+	try{
+		var storage = window[type];
+		var x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
+	}
+	catch(e){
+		return false;
 	}
 }
