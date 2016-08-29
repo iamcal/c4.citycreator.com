@@ -1,6 +1,6 @@
 <?
 	include("../include/init.php");
-	include('../incldue/login.php');
+	include('../include/login.php');
 
 
 	#
