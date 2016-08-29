@@ -67,7 +67,7 @@
 
 	# set background to white, incase main background fails
 
-	$white = imagecolorallocate($img, 255, 0, 0);
+	$white = imagecolorallocate($img, 255, 255, 255);
 	imagefilledrectangle($img, 0, 0, $canvas_w, $canvas_h, $white);
 
 	# set background image
