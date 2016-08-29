@@ -29,6 +29,11 @@
 			return "Please enter your email address";
 		}
 
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+
+			return "Please enter a valid email address";
+		}
+
 
 		#
 		# is the username taken?
