@@ -1,24 +1,28 @@
 <?
-	include('init.txt');
+	include('../include/init.php');
 ?>
 
-<form>search: <input type="text" name="s"> <input type="submit" value="Go"></form>
+<form method="get" action="dp.php">
+	search: <input type="text" name="s">
+	<input type="submit" value="Go">
+</form>
 
 <?
-	if ($s){
-		$result = mysql_query("SELECT * FROM citycreator_users WHERE username LIKE '%$s%' OR email  LIKE '%$s%'", $db);
-		while($row = mysql_fetch_array($result)){
+	if ($_GET['s']){
+		$ret = db_fetch("SELECT * FROM citycreator_users WHERE username=:s OR email=:s", array(
+			's' => $_GET['s'],
+		));
+		foreach ($ret['rows'] as $row){
 ?>
 
 <hr>
 
 The data we are storing relating to you is as follows:<br>
 <br>
-user_id : <?=$row[id]?><br>
-username : <?=$row[username]?><br>
-password : <?=$row[password]?><br>
-email address : <?=$row[email]?><br>
-date_joined : <?=date('H:i jS F Y',$row[date_create])?><br>
+user_id : <?=HtmlSpecialChars($row['id'])?><br>
+username : <?=HtmlSpecialChars($row['username'])?><br>
+email address : <?=HtmlSpecialChars($row['email'])?><br>
+date_joined : <?=date('H:i jS F Y',$row['date_create'])?><br>
 
 
 <?
