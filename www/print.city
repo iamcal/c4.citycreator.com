@@ -6,9 +6,15 @@
 
 	if ($_GET['c']){
 		list($id, $check) = explode('.', $_GET['c'], 2);
-		if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id='$id' AND check='$check'",$db))){
+
+		$card_row = db_single(db_fetch("SELECT * FROM citycreator_cards WHERE id=:id AND `check`=:check", array(
+			'id'	=> $id,
+			'check'	=> $check,
+		)));
+
+		if ($card_row['id']){
 			$ok = 1;
-			$url = "image.city?c=$c";
+			$url = "image.city?c=".urlencode($_GET['c']);
 		}
 	}
 

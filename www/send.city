@@ -6,7 +6,6 @@
 		header("location: members.city");
 		exit;
 	}
-if ($cfg['user']['id'] != 1) die("in development, sorry!");
 
 
 	#

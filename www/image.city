@@ -9,17 +9,23 @@
 	#######################################################################
 
 	if ($_GET['c']){
-		list($id,$check) = explode('.',$_GET['c'],2);
 
-		if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id='$id' AND check='$check'",$db))){
-			$city_row = get_city($card_row[city_id]);
-			$city_id = $city_row[id];
-			$piece_data = $card_row[pieces];
-			$bg_id = $card_row[bg_id];
-		}else{
+		list($id, $check) = explode('.', $_GET['c'], 2);
+
+		$card_row = db_single(db_fetch("SELECT * FROM citycreator_cards WHERE id=:id AND `check`=:check", array(
+			'id'    => $id,
+			'check' => $check,
+		)));
+
+		if (!$card_row['id']){
 			header("location: no_card.city");
 			exit;
 		}
+
+		$city_row	= get_city($card_row['city_id']);
+		$city_id	= $city_row['id'];
+		$piece_data	= $card_row['pieces'];
+		$bg_id		= $card_row['bg_id'];
 	}
 
 	if ($_GET['s']){
@@ -34,10 +40,10 @@
 			exit;
 		}
 
-		$city_row = get_city($saved_row['city_id']);
-		$city_id = $city_row['id'];
-		$piece_data = $saved_row['city_pieces'];
-		$bg_id = $saved_row['city_bg_id'];
+		$city_row	= get_city($saved_row['city_id']);
+		$city_id	= $city_row['id'];
+		$piece_data	= $saved_row['city_pieces'];
+		$bg_id		= $saved_row['city_bg_id'];
 	}
 
 	$bg_row = db_single(db_fetch("SELECT * FROM citycreator_bgs WHERE order_id=:bg_id AND city_id=:city_id", array(
