@@ -67,7 +67,6 @@
 	}
 
 	function send_share($friend_email, $your_name, $your_email, $share_id, $message){
-		global $db, $cfg;
 
 		$msg = '';
 		$msg .= "A citycreator.com member has designed a city and would like\n";
@@ -82,25 +81,24 @@
 		$msg .= "simple - just choose a username and password.\n";
 		$msg .= "\n";
 		$msg .= "Click on this link to start:\n";
-		$msg .= "$cfg[share_url]?share_id=$share_id\n";
+		$msg .= "{$GLOBALS['cfg']['share_url']}?share_id={$share_id}\n";
 		$msg .= "\n";
 		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
 		$msg .= " your browser)\n";
 		$msg .= "\n";
-		$msg .= "This city design was sent to you by $your_name ($your_email)\n";
+		$msg .= "This city design was sent to you by {$your_name} ({$your_email})\n";
 		$msg .= "\n";
 
 		if ($message){
 			$msg .= "They also attached a message for you:\n";
-			$msg .= "$message\n";
+			$msg .= "{$message}\n";
 			$msg .= "\n";
 		}
 		$msg .= "----------------------------------------------------------------------\n";
 		$msg .= "This mail was sent to you by citycreator.com\n";
 		$msg .= "\n";
 
-		mail($friend_email, "You've been sent a city design!", $msg, "From: City Creator <cities@citycreator.com>\nReply-to: \"$your_name\" <$your_email>");
-
+		mail($friend_email, "You've been sent a city design!", $msg, "From: City Creator <cities@citycreator.com>\nReply-to: \"{$your_name}\" <{$your_email}>");
 	}
 
 

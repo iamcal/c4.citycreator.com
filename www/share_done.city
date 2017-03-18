@@ -1,8 +1,8 @@
 <?
-	include("init.txt");
-	include("login.txt");
+	include("../include/init.php");
+	include("../include/login.php");
 
-	if (!$cfg[user][id]){
+	if (!$cfg['user']['id']){
 		header("location: members.city");
 		exit;
 	}
@@ -10,7 +10,7 @@
 	$title = "Share Your City";
 	$long = 1;
 
-	include("inc_head.txt");
+	include("../templates/inc_head.txt");
 ?>
 
 	<b>Share Your City</b><br>
@@ -18,10 +18,10 @@
 
 	Your city has been shared.<br>
 	<br>
-	<a href="share.city?saved_id=<?=$saved_id?>" class="white">Click here</a> to share the same city with someone else.<br>
+	<a href="share.city?saved_id=<?=htmlspecialchars($_GET['saved_id'])?>" class="white">Click here</a> to share the same city with someone else.<br>
 	<br>
 	<a href="members.city" class="white">Click here</a> to return to the members page.<br>
 
 <?
-	include("inc_foot.txt");
+	include("../templates/inc_foot.txt");
 ?>
