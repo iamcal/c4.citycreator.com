@@ -6,61 +6,117 @@
 		header("location: members.city");
 		exit;
 	}
+if ($cfg['user']['id'] != 1) die("in development, sorry!");
 
-	$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
 
-	if (!$your_name){$your_name = $cfg[user][username];}
-	if (!$your_email){$your_email = $cfg[user][email];}
+	#
+	# fetch city
+	#
 
-	$ok = $done;
-	if ($ok && !$your_name) $ok = 0;
-	if ($ok && !$your_email) $ok = 0;
-	if ($ok && !$friend_email) $ok = 0;
+	$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND user_id=:user_id", array(
+		'id'		=> $_REQUEST['saved_id'],
+		'user_id'	=> $cfg['user']['id'],
+	)));
 
-	if ($ok){
-		$check = gen_check();
-
-		$city_id	= AddSlashes($saved_row[city_id]);
-		$city_pieces	= AddSlashes($saved_row[city_pieces]);
-		$city_bg	= AddSlashes($saved_row[city_bg_id]);
-		$your_name	= AddSlashes($your_name);
-		$your_email	= AddSlashes($your_email);
-		$friend_email	= AddSlashes($friend_email);
-		$message	= AddSlashes($message);
-		$time = time();
-
-		mysql_query("INSERT INTO citycreator_cards (city_id, check, pieces, bg_id, your_name, your_email, friend_email, message, date_create) VALUES ('$city_id', '$check', '$city_pieces', '$city_bg', '$your_name', '$your_email', '$friend_email', '$message', '$time')",$db);
-		send_card(mysql_insert_id());
-		header("location: send_done.city?saved_id=$saved_id");
+	if (!$saved_row['id']){
+		echo "city not found";
 		exit;
 	}
+
+
+	#
+	# send a card?
+	#
+
+	$error = '';
+
+	if ($_POST['done']){
+		$error = local_send_card();
+	}
+
+	function local_send_card(){
+
+		global $saved_row;
+
+		$name	= trim($_POST['your_name']);
+		$from	= trim($_POST['your_email']);
+		$to	= trim($_POST['friend_email']);
+
+		if (!strlen($name)) return 'missing_fields';
+		if (!strlen($to)) return 'missing_fields';
+		if (!strlen($from)) return 'missing_fields';
+
+		if (filter_var($to, FILTER_VALIDATE_EMAIL) === false) return 'bad_email';
+		if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) return 'bad_email';
+
+
+		$check = gen_check();
+
+		$ret = db_insert('citycreator_cards', array(
+			'city_id'	=> $saved_row['city_id'],
+			'check'		=> $check,
+			'pieces'	=> $saved_row['city_pieces'],
+			'bg_id'		=> $saved_row['city_bg_id'],
+			'your_name'	=> $name,
+			'your_email'	=> $from,
+			'friend_email'	=> $to,
+			'message'	=> trim($_POST['message']),
+			'date_create'	=> time(),
+		));
+
+		$id = $ret['insert_id'];
+
+		send_card($id);
+
+		echo "OK";
+		exit;
+
+		header("location: send_done.city?saved_id={$saved_row['id']}");
+		exit;
+	}
+
+
 
 	$title = 'Send City';
 	$long = 1;
 
-	include("inc_head.txt");
+	include("../templates/inc_head.txt");
 ?>
 	<form action="send.city" method="post">
 	<input type="hidden" name="done" value="1">
-	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
+	<input type="hidden" name="saved_id" value="<?=$saved_row['id']?>">
 
 	<b class="heading">Send Your City</b><br>
 	<br>
 
-	Sending your city design an e-card is simple! Just fill out the form below (we've already filled in your name and email address) and click "Send as ecard". Your friend will recieve an email containing a special web address. They can use this web address to view the city you designed, along with the (optional) message you sent them. They can also print out your city design to keep forever.<br>
+	Sending your city design an e-card is simple! Just fill out the form below (we've already filled in your name and email address)
+	and click "Send as ecard". Your friend will recieve an email containing a special web address. They can use this web address to 
+	view the city you designed, along with the (optional) message you sent them. They can also print out your city design to keep 
+	forever.<br>
 	<br>
 
+<? if ($error == 'missing_fields'){ ?>
+	<div style="color:red; margin-bottom: 1em">
+		Please fill out all the fields.
+	</div>
+<? } ?>
+<? if ($error == 'bad_email'){ ?>
+	<div style="color:red; margin-bottom: 1em">
+		Make sure you've entered a real email address.
+	</div>
+<? } ?>
+
 	Your name:<br>
-	<input type="text" name="your_name" value="<?=htmlentities($your_name)?>" class="edit"><br>
+	<input type="text" name="your_name" value="<?=htmlspecialchars($_POST['your_name'] ? $_POST['your_name'] : $cfg['user']['username'])?>" class="edit"><br>
 
 	Your email address:<br>
-	<input type="text" name="your_email" value="<?=htmlentities($your_email)?>" class="edit"><br>
+	<input type="text" name="your_email" value="<?=htmlspecialchars($_POST['your_email'] ? $_POST['your_email'] : $cfg['user']['email'])?>" class="edit"><br>
 
 	Friend's email address:<br>
-	<input type="text" name="friend_email" value="<?=htmlentities($friend_email)?>" class="edit"><br>
+	<input type="text" name="friend_email" value="<?=htmlspecialchars($_POST['friend_email'])?>" class="edit"><br>
 
 	Message:<br>
-	<textarea name="message" wrap="virtual" class="edit"><?=htmlentities($message)?></textarea><br>
+	<textarea name="message" wrap="virtual" class="edit"><?=htmlspecialchars($_POST['message'])?></textarea><br>
 
 	<br>
 	<input type="image" src="images/btn_send.gif" width="71" height="16" border="0"><br>
@@ -71,5 +127,5 @@
 	</form>
 
 <?
-	include("inc_foot.txt");
+	include("../templates/inc_foot.txt");
 ?>
