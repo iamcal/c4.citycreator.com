@@ -1,8 +1,8 @@
 <?
-	include("init.txt");
-	include("login.txt");
+	include("../include/init.php");
+	include("../include/login.php");
 
-	if (!$cfg[user_ok]){
+	if (!$cfg['user']['id']){
 		header("location: members.city");
 		exit;
 	}

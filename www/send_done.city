@@ -2,7 +2,7 @@
 	include("init.txt");
 	include("login.txt");
 
-	if (!$cfg[user_ok]){
+	if (!$cfg[user][id]){
 		header("location: members.city");
 		exit;
 	}

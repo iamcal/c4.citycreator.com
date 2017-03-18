@@ -6,7 +6,7 @@
 		mysql_query("DELETE FROM citycreator_saved WHERE id='$delete' AND user_id='{$cfg[user][id]}'",$db);
 	}
 
-	if ($share_id && $cfg[user_ok]){
+	if ($share_id && $cfg[user][id]){
 		header("location: share_take.city?share_id=$share_id");
 		exit;
 	}
