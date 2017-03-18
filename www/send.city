@@ -68,9 +68,6 @@ if ($cfg['user']['id'] != 1) die("in development, sorry!");
 
 		send_card($id);
 
-		echo "OK";
-		exit;
-
 		header("location: send_done.city?saved_id={$saved_row['id']}");
 		exit;
 	}
