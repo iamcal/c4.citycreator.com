@@ -1,9 +1,9 @@
 <?
-	include('init.txt');
+	include('../include/init.php');
 
 	if (!$page) $page = 1;
 
-	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM citycreator_suggestions"));
+	list($count) = db_list(db_fetch("SELECT COUNT(*) FROM citycreator_suggestions"));
 
 	$per_page = 100;
 	$limit_per_page = $per_page;
@@ -26,12 +26,8 @@
 		}
 	}
 
-	$rows = array();
-	$result = mysql_query("SELECT * FROM citycreator_suggestions LIMIT $start,$limit_per_page", $db);
-	while($row = mysql_fetch_array($result)){	
-		$rows[] = $row;
-	}
-	$rows = array_reverse($rows);
+	$ret = db_fetch("SELECT * FROM citycreator_suggestions LIMIT $start,$limit_per_page");
+	$rows = array_reverse($ret['rows']);
 ?>
 
 Pages: <? insert_pages(); ?><br>
@@ -42,11 +38,11 @@ Pages: <? insert_pages(); ?><br>
 	foreach($rows as $row){
 ?>
 	<tr>
-		<td><?=$row[id]?></td>
-		<td><?=date('h:i d/m/Y', $row[date_create])?></td>
-		<td><?=$row[from_name]?></td>
-		<td><?=$row[from_email]?></td>
-		<td><?=$row[suggestion]?></td>
+		<td><?=$row['id']?></td>
+		<td><?=date('h:i d/m/Y', $row['date_create'])?></td>
+		<td><?=htmlspecialchars($row['from_name'])?></td>
+		<td><?=htmlspecialchars($row['from_email'])?></td>
+		<td><?=nl2br(trim(htmlspecialchars($row['suggestion'])))?></td>
 	</tr>
 <?
 	}

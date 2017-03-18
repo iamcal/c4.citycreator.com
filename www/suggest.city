@@ -1,27 +1,46 @@
 <?
-	include("init.txt");
-	include("login.txt");
+	include("../include/init.php");
+	include("../include/login.php");
 
-	if (!$your_name){$your_name = $cfg[user][username];}
-	if (!$your_email){$your_email = $cfg[user][email];}
 
-	if ($done){
-		#mail("cal@citycreator.com", "citycreator.com suggestion", "NAME: $your_name\nEMAIL: $your_email\nCOMMENT:\n$comment", "From: $your_email");
+	#
+	# save suggestion and maybe email
+	#
 
-		mysql_query("INSERT INTO citycreator_suggestions (date_create, from_name, from_email, suggestion) VALUES ('$time', '$your_name', '$your_email', '$comment')", $db);
+	if ($_POST['done']){
 
-		if ($your_email){
-			mail($your_email, "Re: citycreator.com suggestion", "Thanks for your suggestion - we've noted it down and might use it in the future!\n\n--cal & denise, citycreator.com\n", "From: cal@citycreator.com");
+		db_insert('citycreator_suggestions', array(
+			'date_create'	=> time(),
+			'from_name'	=> $_POST['your_name'],
+			'from_email'	=> $_POST['your_email'],
+			'suggestion'	=> $_POST['comment'],
+		));
+
+
+		#
+		# only send email to valid-looking email addresses
+		#
+
+		if (filter_var($_POST['your_email'], FILTER_VALIDATE_EMAIL) !== false){
+
+			$msg = "Thanks for your suggestion - we've noted it down and might use it in the future!\n\n";
+			$msg .= "--cal & denise, citycreator.com\n";
+
+			$subject = "Re: citycreator.com suggestion";
+
+			mail($_POST['your_email'], $subject, $msg, "From: cal@citycreator.com");
 		}
 
 		header("location: suggest_done.city");
 		exit;
 	}
 
+
+
 	$title = 'Suggest City';
 	$long = 1;
 
-	include("inc_head.txt");
+	include("../templates/inc_head.txt");
 ?>
 	<form action="suggest.city" method="post">
 	<input type="hidden" name="done" value="1">
@@ -35,13 +54,13 @@
 	<br>
 
 	Your name:<br>
-	<input type="text" name="your_name" value="<?=htmlentities($your_name)?>" class="edit"><br>
+	<input type="text" name="your_name" value="<?=htmlspecialchars($cfg['user']['username'])?>" class="edit"><br>
 
 	Your email address:<br>
-	<input type="text" name="your_email" value="<?=htmlentities($your_email)?>" class="edit"><br>
+	<input type="text" name="your_email" value="<?=htmlspecialchars($cfg['user']['email'])?>" class="edit"><br>
 
 	Your City Idea:<br>
-	<textarea name="comment" wrap="virtual" class="edit"><?=htmlentities($message)?></textarea><br>
+	<textarea name="comment" wrap="virtual" class="edit"></textarea><br>
 
 	<br>
 	<input type="image" src="images/btn_suggest.gif" width="79" height="16" border="0"><br>
@@ -52,5 +71,5 @@
 	</form>
 
 <?
-	include("inc_foot.txt");
+	include("../templates/inc_foot.txt");
 ?>
