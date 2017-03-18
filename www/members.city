@@ -2,9 +2,26 @@
 	include('../include/init.php');
 	include('../include/login.php');
 
-	if ($delete){
-		mysql_query("DELETE FROM citycreator_saved WHERE id='$delete' AND user_id='{$cfg[user][id]}'",$db);
+
+	#
+	# delete a city?
+	#
+
+	if ($_GET['delete']){
+
+		db_update('citycreator_saved', array(
+			'is_deleted'	=> 1,
+		), "id=:id AND user_id=:user_id", array(
+			'id'		=> $_GET['delete'],
+			'user_id'	=> $cfg['user']['id'],
+		));
+
+
+		header("location: members.city?deleted=".urlencode($_GET['delete']));
+		exit;
 	}
+
+
 
 	if ($share_id && $cfg[user][id]){
 		header("location: share_take.city?share_id=$share_id");
@@ -48,7 +65,7 @@ function delete_city(id){
 	As a member, you have your own personal "members page" which contains any city designs that you have created or been sent. To get back to this page at any time, simply click on the "members" tab at the bottom of the page. From this page you can send your cities as e-cards, share your city designs with other designers, continuing working on previously saved cities, print your city designs, and delete cities you don't want to keep any longer.<br>
 	<br>
 <?
-	$ret = db_fetch("SELECT * FROM citycreator_saved WHERE user_id=:user_id ORDER BY date_create DESC", array(
+	$ret = db_fetch("SELECT * FROM citycreator_saved WHERE user_id=:user_id AND is_deleted=0 ORDER BY date_create DESC", array(
 		'user_id' => $cfg['user']['id'],
 	));
 
