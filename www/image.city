@@ -154,7 +154,7 @@
 
 	#######################################################################
 
-	if ($thumb){
+	if ($_GET['thumb']){
 		$w = floor($canvas_w * $fraction);
 		$h = floor($canvas_h * $fraction);
 		$new_img = ImageCreateTrueColor($w, $h);
