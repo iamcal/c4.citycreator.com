@@ -22,11 +22,15 @@
 	}
 
 
+	#
+	# accecpt a share?
+	#
 
-	if ($share_id && $cfg[user][id]){
-		header("location: share_take.city?share_id=$share_id");
+	if ($_GET['share_id'] && $cfg['user']['id']){
+		header("location: share_take.city?share_id=".urlencode($_GET['share_id']));
 		exit;
 	}
+
 
 	$extra = '';
 	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }

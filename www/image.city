@@ -46,6 +46,26 @@
 		$bg_id		= $saved_row['city_bg_id'];
 	}
 
+	if ($_GET['sh']){
+
+		list($id, $check) = explode('.', $_GET['sh'], 2);
+
+		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND share_check=:check AND user_id=0", array(
+			'id'	=> $id,
+			'check'	=> $check,
+		)));
+
+		if (!$saved_row['id']){
+			header("location: no_card.city");
+			exit;
+		}
+
+		$city_row	= get_city($saved_row['city_id']);
+		$city_id	= $city_row['id'];
+		$piece_data	= $saved_row['city_pieces'];
+		$bg_id		= $saved_row['city_bg_id'];
+	}
+
 	$bg_row = db_single(db_fetch("SELECT * FROM citycreator_bgs WHERE order_id=:bg_id AND city_id=:city_id", array(
 		'bg_id' => $bg_id,
 		'city_id' => $city_id,
