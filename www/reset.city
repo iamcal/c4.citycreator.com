@@ -1,0 +1,93 @@
+<?
+	include('../include/init.php');
+
+	include('../include/login.php');
+
+
+	#
+	# get user to reset
+	#
+
+	$user = verify_password_reset_code($_REQUEST['c']);
+
+	if (!$user['id']){
+		echo "Bad URL - please try copying the entire link from your email";
+		exit;
+	}
+
+
+	$error = '';
+
+	if ($_POST['done']){
+		$error = local_reset_password($user);
+	}
+
+	function local_reset_password($user){
+
+		#
+		# verify
+		#
+
+		$password = trim($_POST['password']);
+
+		if (strlen($password) < 3){
+			return "Please choose a password at least three letters long";
+		}
+
+
+		#
+		# update user
+		#
+
+		$hash = password_hash($password, PASSWORD_DEFAULT, array(
+			"cost" => 13,
+		));
+
+		db_update('citycreator_users', array(
+			'password' => $hash,
+		), "id=:id", array(
+			'id' => $user['id'],
+		));
+
+
+		#
+		# log them in
+		#
+
+		$user['password'] = $hash;
+
+		login_set_user($user);
+
+
+		#
+		# send to members page
+		#
+
+		header("location: members.city");
+		exit;
+	}
+
+
+	$loadalert = $error;
+	$title = "Password Reset";
+	$long = 1;
+
+	include("../templates/inc_head.txt");
+?>
+
+	<b class="heading">Password Reset</b><br>
+	<br>
+
+	<form action="reset.city" method="post">
+	<input type="hidden" name="c" value="<?=htmlspecialchars($_REQUEST['c'])?>">
+	<input type="hidden" name="done" value="1">
+
+	Choose a new password:<br>
+	<input type="text" class="edit" name="password" value="<?=htmlspecialchars($_POST['password'])?>"><br>
+	<br>
+	<input type="image" src="images/btn_login.gif" width="33" height="16">
+	</form>
+
+<?
+	include("../templates/inc_foot.txt");
+?>

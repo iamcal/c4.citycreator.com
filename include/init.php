@@ -8,10 +8,10 @@
 
 	include('lib_db.php');
 
-	$cfg[pickup_url] = 'http://www.citycreator.com/pickup.city';
-	$cfg[login_url]  = 'http://www.citycreator.com/login.city';
-	$cfg[share_url]  = 'http://www.citycreator.com/members.city';
-	$cfg[cp_path] = '/var/www/html/citycreator.com/www/cp';
+	$cfg['pickup_url'] = 'http://www.citycreator.com/pickup.city';
+	$cfg['login_url']  = 'http://www.citycreator.com/login.city';
+	$cfg['share_url']  = 'http://www.citycreator.com/members.city';
+	$cfg['reset_url']  = 'http://www.citycreator.com/reset.city';
 
 	function gen_check(){
 		$length = 10;
@@ -44,26 +44,55 @@
 		mail($card_row['friend_email'], "You've got an ecard!", $msg, "From: City Creator <cards@citycreator.com>\nReply-to: \"{$card_row['your_name']}\" <{$card_row['your_email']}>");
 	}
 
-	function send_password($email, $username, $password){
-		global $cfg;
+	function get_password_reset_code($user){
+
+		$ts = time();
+		$hmac = hash_hmac("sha256", $user['id'].$ts, $user['password']);
+		$hmac = substr($hmac, 0, 20);
+
+		return "{$user['id']}.{$ts}.{$hmac}";
+	}
+
+	function verify_password_reset_code($code){
+
+		list($id, $ts, $hmac) = explode('.', $code, 3);
+
+		$user = db_single(db_fetch("SELECT * FROM citycreator_users WHERE id=:id", array(
+			'id' => $id,
+		)));
+
+		if (!$user['id']) return null;
+
+		$test_hmac = hash_hmac("sha256", $user['id'].$ts, $user['password']);
+		$test_hmac = substr($test_hmac, 0, 20);
+
+		if ($test_hmac != $hmac) return null;
+
+		return $user;
+	}
+
+	function send_password_reset($user){
+
+		$code = get_password_reset_code($user);
 
 		$msg = '';
-		$msg .= "You asked to be reminded of your citycreator.com login details:\n";
+		$msg .= "You asked to reset your citycreator.com password:\n";
 		$msg .= "\n";
-		$msg .= "Username: $username\n";
-		$msg .= "Password: $password\n";
+		$msg .= "Username: {$user['username']}\n";
 		$msg .= "\n";
-		$msg .= "Click here to log in:\n";
-		$msg .= "$cfg[login_url]\n";
+		$msg .= "Click here to reset your password:\n";
+		$msg .= "{$GLOBALS['cfg']['reset_url']}?c={$code}\n";
 		$msg .= "\n";
 		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
 		$msg .= " your browser)\n";
+		$msg .= "\n";
+		$msg .= "If you did not request this reset, please ignore this email.\n";
 		$msg .= "\n";
 		$msg .= "----------------------------------------------------------------------\n";
 		$msg .= "This mail was sent to you by citycreator.com\n";
 		$msg .= "\n";
 
-		mail($email, "City Creator login reminder", $msg, "From: City Creator <admin@citycreator.com>");
+		mail($user['email'], "City Creator password reset", $msg, "From: City Creator <admin@citycreator.com>");
 	}
 
 	function send_share($friend_email, $your_name, $your_email, $share_id, $message){
