@@ -1,5 +1,5 @@
 <?
-	include("init.txt");
+	include("../include/init.php");
 ?>
 <html>
 <head>
@@ -23,14 +23,20 @@ td {
 <h1>The citycreator.com activity tracker</h1>
 
 <?
-	$days = ceil((time() - mktime(0,0,0,8,20,2002))/(60*60*24));
+	#$days = ceil((time() - mktime(0,0,0,8,20,2002))/(60*60*24));
+	$days = ceil((time() - mktime(0,0,0,3,17,2017))/(60*60*24));
 	$start = mktime(0,0,0,date('m'),date('d'),date('Y'));
 	$max = 0;
 	$data = array();
 
 	for($i = 1; $i <= $days; $i++){
 		$end = $start + (24 * 60 * 60);
-		list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM citycreator_cards WHERE date_create>=$start AND date_create<=$end",$db));
+
+		list($count) = db_list(db_fetch("SELECT COUNT(*) FROM citycreator_cards WHERE date_create>=:start AND date_create<=:end", array(
+			'start'	=> $start,
+			'end'	=> $end,
+		)));
+
 		if ($count > $max){ $max = $count; }
 		$data[] = array('time' => $start, 'count' => $count);
 		$start -= (24 * 60 * 60);
@@ -46,7 +52,7 @@ td {
 	}
 ?>
 
-<h1>100 Recent Cities</h1>
+<h1>Recent Cities</h1>
 
 <table cellpadding="4" cellspacing="2" border="0">
 	<tr bgcolor="#cccccc">
@@ -56,8 +62,8 @@ td {
 	$max_id = 0;
 	$max_count = 0;
 
-	$result = mysql_query("SELECT * FROM citycreator_cards ORDER BY date_create DESC LIMIT 100",$db);
-	while($row = mysql_fetch_array($result)){
+	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC LIMIT 50");
+	foreach ($ret['rows'] as $row){
 		$piece_count = count(explode(',',$row[pieces]));
 		$date = date('H:i d/m/Y',$row[date_create]);
 ?>
@@ -70,19 +76,20 @@ td {
 	}
 ?>
 	<tr bgcolor="#cccccc">
-		<td colspan="3">Top City</td>
+		<td colspan="3">Biggest City</td>
 	</tr>
 <?
-	$result = mysql_query("SELECT * FROM citycreator_cards ORDER BY date_create DESC",$db);
-	while($row = mysql_fetch_array($result)){
+	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC");
+	foreach ($ret['rows'] as $row){
 		$piece_count = count(explode(',',$row[pieces]));
 		if ($piece_count > $max_count){
 			$max_count = $piece_count;
-			$max_id = $row[id];
+			$max_id = $row['id'];
+			$max_row = $row;
 		}
 	}
 
-	$row = mysql_fetch_array(mysql_query("SELECT * FROM citycreator_cards WHERE id=$max_id",$db));
+	$row = $max_row;
 	$piece_count = count(explode(',',$row[pieces]));
 	$date = date('H:i d/m/Y',$row[date_create]);
 ?>
