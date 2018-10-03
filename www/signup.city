@@ -24,14 +24,11 @@
 			return "Please choose a password at least three letters long";
 		}
 
-		if (strlen($email) < 1){
+		if (strlen($email)){
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
 
-			return "Please enter your email address";
-		}
-
-		if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
-
-			return "Please enter a valid email address";
+				return "Please enter a valid email address (or leave it blank)";
+			}
 		}
 
 
@@ -52,13 +49,16 @@
 		# is the email taken?
 		#
 
-		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE email=:email", array(
-			'email' => $email,
-		)));
+		if (strlen($email)){
 
-		if ($row['id']){
+			$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE email=:email", array(
+				'email' => $email,
+			)));
 
-			return "The email address you entered has already been registered\\nClick on the forgotten password link so we can email you your password";
+			if ($row['id']){
+
+				return "The email address you entered has already been registered\\nClick on the forgotten password link so we can email you your password";
+			}
 		}
 
 
@@ -93,8 +93,10 @@
 		# sub to mailing list?
 		#
 
-		if ($_POST['maillist']){
-			mail("citycreator-subscribe@yahoogroups.com","-","-","From: $email\r\n");
+		if (strlen($email)){
+			if ($_POST['maillist']){
+				mail("citycreator-subscribe@yahoogroups.com","-","-","From: $email\r\n");
+			}
 		}
 
 
@@ -130,20 +132,9 @@
 
 	$title = "Members Area";
 	$long = 1;
-	$loadalert = $error;
 
 	include("../templates/inc_head.txt");
 ?>
-
-<script language="Javascript">
-<!--
-
-function why(){
-	alert("We ask you for your email address so that we can email you your password, should you forget it.\n\nWe also use it to address any ecards you send.");
-}
-
-//-->
-</script>
 
 	<b class="heading">Members Area - Sign Up</b><br>
 	<br>
@@ -152,9 +143,13 @@ function why(){
 	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'])?>">
 	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'])?>">
 
-	If you're already a member, <a href="login.city<?=$extra?>">click here</a><br>
-	<br>
-	We require you to register for a few reasons. Firstly, it cuts down abuse of the system. Secondly, it means we can let you save older cities and work on them later. Thirdly, it means we can let you share cities, so you can collaborate with your friends.<br>
+	<p>If you're already a member, <a href="login.city<?=$extra?>">click here</a></p>
+
+	<p>We require you to register for a few reasons. Firstly, it cuts down abuse of the system. Secondly, it means we can let you save older cities and work on them later. Thirdly, it means we can let you share cities, so you can collaborate with your friends.<br></p>
+
+<? if ($error){ ?>
+	<div class="error"><?=HtmlspecialChars($error)?></div>
+<? } ?>
 
 	<br>
 	Choose a username:<br>
@@ -166,8 +161,9 @@ function why(){
 
 	<br>
 	Enter your email address:<br>
-	<input type="text" class="edit" name="signup_email" value="<?=HtmlSpecialChars($_POST['signup_email'])?>">
-	<a href="javascript:why();" font-size: 10px;">Why do we ask this?</a><br>
+	<input type="text" class="edit" name="signup_email" value="<?=HtmlSpecialChars($_POST['signup_email'])?>"> (Optional)<br>
+	We ask you for your email address so that we can<br>
+	email you your password, should you forget it.<br>
 
 	<br>
 	<input type="checkbox" name="maillist" checked> Add me to the mailing list<br>
