@@ -156,9 +156,9 @@
 	email you your password, should you forget it.<br>
 
 	<br>
-	<input type="checkbox" name="maillist" checked> Add me to the mailing list<br>
-	We send an email to the mailing list when we make an update to the site. This might include adding a new city to build, or a new feature to play with.
-	There shouldn't ever be more than one email per month.<br>
+	<input type="checkbox" name="maillist" checked> Email me updates<br>
+	We send an email to our members list when we make an update to the site. This might include adding a new city to build, or a new feature to play with.
+	There shouldn't ever be more than one email per year.<br>
 
 	<br>
 	<input type="image" src="images/btn_signup.gif" width="40" height="16"><br>
