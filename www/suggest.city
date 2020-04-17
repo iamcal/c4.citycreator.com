@@ -28,7 +28,8 @@
 
 			$subject = "Re: citycreator.com suggestion";
 
-			mail($_POST['your_email'], $subject, $msg, "From: cal@citycreator.com");
+			# getting lots of spam here - skip it for now
+			#mail($_POST['your_email'], $subject, $msg, "From: cal@citycreator.com");
 		}
 
 		header("location: suggest_done.city");
