@@ -75,6 +75,7 @@
 			'password'	=> $hash,
 			'date_create'	=> time(),
 			'email'		=> $email,
+			'can_email'	=> strlen($email) && $_POST['maillist'] ? 1 : 0,
 		));
 
 
@@ -87,17 +88,6 @@
 		)));
 
 		login_set_user($row);
-
-
-		#
-		# sub to mailing list?
-		#
-
-		if (strlen($email)){
-			if ($_POST['maillist']){
-				mail("citycreator-subscribe@yahoogroups.com","-","-","From: $email\r\n");
-			}
-		}
 
 
 		#
