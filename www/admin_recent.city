@@ -1,0 +1,21 @@
+<?php
+	include('../include/init.php');
+
+	date_default_timezone_set('America/Los_Angeles');
+
+
+	echo "<table border=\"1\">\n";
+
+	$ret = db_fetch("SELECT * FROM citycreator_users ORDER BY date_create DESC LIMIT 100");
+	foreach ($ret['rows'] as $row){
+
+		echo "<tr>\n";
+		echo "<td>{$row['id']}</td>\n";
+		echo "<td>".date('Y-m-d H:i:s', $row['date_create'])."</td>\n";
+		echo "<td>".HtmlSpecialChars($row['username'])."</td>\n";
+		echo "<td>".HtmlSpecialChars($row['email'])."</td>\n";
+		echo "</tr>\n";
+
+	}
+
+	echo "</table>\n";
