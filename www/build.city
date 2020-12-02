@@ -16,7 +16,7 @@
 	}
 
 	$city_row = get_city($city);
-	$city_id = $city_row[id];
+	$city_id = $city_row['id'];
 
 	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
 		'city_id' => $city_id,
@@ -76,15 +76,15 @@ function pre_init(){
 	));
 
 	foreach ($ret['rows'] as $row){
-		$thumbs[$row[order_id]] = ($row[thumb])?"bgs/$city_id/$row[thumb]":"images/space.gif";
-		$bg_image = ($row[bg_image])?"bgs/$city_id/$row[bg_image]":"";
-		echo "\tadd_bg($row[order_id], '$bg_image', '$row[bg_color]');\n";
+		$thumbs[$row['order_id']] = ($row['thumb'])?"bgs/$city_id/{$row['thumb']}":"images/space.gif";
+		$bg_image = ($row['bg_image'])?"bgs/$city_id/{$row['bg_image']}":"";
+		echo "\tadd_bg({$row['order_id']}, '$bg_image', '{$row['bg_color']}');\n";
 	}
 ?>
 
-<? if ($saved_row[id]){ ?>
-	bg_nosave(<?=$saved_row[city_bg_id]?>);
-	unserialize_all('<?=$saved_row[city_pieces]?>');
+<? if ($saved_row['id']){ ?>
+	bg_nosave(<?=$saved_row['city_bg_id']?>);
+	unserialize_all('<?=$saved_row['city_pieces']?>');
 	update_pieces();
 <? }else{ ?>
 	bg_nosave(1); // set default background
@@ -104,7 +104,7 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 #outer		{ position: absolute; left:    50%; top:  20px; }
 #canvas		{ position: absolute; left: -370px; top:   0px; width: 740px; height: 439px; z-index: 1; }
 #loading	{ position: absolute; left:    0px; top: 200px; width: 740px; height:  20px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
-#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: <?=$city_row[bgcolor]?>; }
+#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: <?=$city_row['bgcolor']?>; }
 #copyright	{ position: absolute; left: -370px; top: 442px; width: 740px; height:  20px; z-index: 1; visibility: hidden; }
 
 #bordertop	{ position: absolute; left:    0px; top:   0px; width: 740px; height:   8px; }
@@ -164,11 +164,11 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 	));
 	foreach ($ret['rows'] as $row){
 ?>
-	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/frame/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
-	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/frame/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
-	<div id="palette<?=$row[id]?>" class="palette"></div>
+	<div id="tab<?=$row['id']?>off" class="taboff" style="width: <?=$row['width']?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row['id']?>);"><img src="images/frame/tab_<?=$row['id']?>_off.gif" width="<?=$row['width']?>" height="15"></a></div>
+	<div id="tab<?=$row['id']?>on"  class="tabon"  style="width: <?=$row['width']?>px; left: <?=$left?>px;"><img src="images/frame/tab_<?=$row['id']?>_on.gif" width="<?=$row['width']?>" height="15"></div>
+	<div id="palette<?=$row['id']?>" class="palette"></div>
 <?
-		$left += $row[width];
+		$left += $row['width'];
 	}
 ?>
 
@@ -179,14 +179,14 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 	$left = 726;
 	$ret = db_fetch("SELECT * FROM citycreator_cities ORDER BY id DESC");
 	foreach ($ret['rows'] as $row){
-		$left -= 3 + $row[tab_width];
-		if ($row[id] == $city_id){
+		$left -= 3 + $row['tab_width'];
+		if ($row['id'] == $city_id){
 ?>
-	<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row[tab_width]?>px; height: 17px;"><img src="images/frame/tab_city_<?=$row[id]?>_on.gif" width="<?=$row[tab_width]?>" height="17" border="0"></div>
+	<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row['tab_width']?>px; height: 17px;"><img src="images/frame/tab_city_<?=$row['id']?>_on.gif" width="<?=$row['tab_width']?>" height="17" border="0"></div>
 <?
 		}else{
 ?>
-	<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row[tab_width]?>px; height: 17px;"><a href="build.city?city=<?=$row[id]?>"><img src="images/frame/tab_city_<?=$row[id]?>_off.gif" width="<?=$row[tab_width]?>" height="17" border="0"></a></div>
+	<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row['tab_width']?>px; height: 17px;"><a href="build.city?city=<?=$row['id']?>"><img src="images/frame/tab_city_<?=$row['id']?>_off.gif" width="<?=$row['tab_width']?>" height="17" border="0"></a></div>
 <?
 		}
 	}
