@@ -98,9 +98,9 @@
 
 	# set background image
 
-	if ($bg_row[bg_image]){
-		$bg_row[bg_image] = str_replace(".gif", ".png", $bg_row[bg_image]);
-		$bg_img = imagecreatefrompng("bgs/{$city_id}_png/$bg_row[bg_image]");
+	if ($bg_row['bg_image']){
+		$bg_row['bg_image'] = str_replace(".gif", ".png", $bg_row['bg_image']);
+		$bg_img = imagecreatefrompng("bgs/{$city_id}_png/{$bg_row['bg_image']}");
 		$bg_w = imagesx($bg_img);
 		$bg_h = imagesy($bg_img);
 
@@ -116,10 +116,10 @@
 
 	# or background color
 
-	if ($bg_row[bg_color]){
-		$r = hexdec(substr($bg_row[bg_color],1,2));
-		$g = hexdec(substr($bg_row[bg_color],3,2));
-		$b = hexdec(substr($bg_row[bg_color],5,2));
+	if ($bg_row['bg_color']){
+		$r = hexdec(substr($bg_row['bg_color'],1,2));
+		$g = hexdec(substr($bg_row['bg_color'],3,2));
+		$b = hexdec(substr($bg_row['bg_color'],5,2));
 
 		$bg_col = imagecolorallocate($img, $r, $g, $b);
 		imagefilledrectangle($img, 0, 0, $canvas_w, $canvas_h, $bg_col);
@@ -156,8 +156,8 @@
 
 	# sort by z order
 	function z_cmp($a, $b){
-		if ($a[z] == $b[z]) return 0;
-		return ($a[z] < $b[z]) ? -1 : 1;
+		if ($a['z'] == $b['z']) return 0;
+		return ($a['z'] < $b['z']) ? -1 : 1;
 	}
 	usort ($card_pieces, "z_cmp");
 
@@ -165,10 +165,10 @@
 
 	foreach($card_pieces as $card_piece){
 		$piece = $card_piece['piece'];
-		$piece[image] = str_replace(".gif", ".png", $piece[image]);
-		if ($piece[image]){
-			$sub_img = imagecreatefrompng("blocks/{$city_id}_png/$piece[image]");
-			imagecopy($img, $sub_img, $card_piece[x], $card_piece[y] ,0 ,0, $piece[w], $piece[h]);
+		$piece['image'] = str_replace(".gif", ".png", $piece['image']);
+		if ($piece['image']){
+			$sub_img = imagecreatefrompng("blocks/{$city_id}_png/{$piece['image']}");
+			imagecopy($img, $sub_img, $card_piece['x'], $card_piece['y'] ,0 ,0, $piece['w'], $piece['h']);
 		}
 	}
 

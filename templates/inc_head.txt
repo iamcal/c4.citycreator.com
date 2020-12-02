@@ -49,9 +49,9 @@ div.error	{ background-color: #ffcccc; border: 2px solid #900; padding: 1em; }
 
 	$ret = db_fetch("SELECT * FROM citycreator_cities ORDER BY id DESC");
 	foreach ($ret['rows'] as $row){
-		$left -= 3 + $row[tab_width];
+		$left -= 3 + $row['tab_width'];
 ?>
-				<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row[tab_width]?>px; height: 17px;"><a href="build.city?city=<?=$row[id]?>"><img src="images/frame/tab_city_<?=$row[id]?>_off.gif" width="<?=$row[tab_width]?>" height="17" border="0"></a></div>
+				<div style="position: absolute; left: <?=$left?>px; top: 8px; width: <?=$row['tab_width']?>px; height: 17px;"><a href="build.city?city=<?=$row['id']?>"><img src="images/frame/tab_city_<?=$row['id']?>_off.gif" width="<?=$row['tab_width']?>" height="17" border="0"></a></div>
 <?
 	}
 ?>
