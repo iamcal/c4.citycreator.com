@@ -1,7 +1,3 @@
-AddType application/x-httpd-php .php
 AddType application/x-httpd-php .city
-DirectoryIndex index.city index.php
+DirectoryIndex index.htm
 
-php_value magic_quotes_gpc 1
-php_value register_globals 1
-php_value magic_quotes_runtime 0
