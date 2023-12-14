@@ -24,6 +24,10 @@
 			);
 		}
 
+		if (isset($_GET['debug'])){
+			echo '<div style="border: 1px solid #000; padding: 4px; background-color: #f99;">DB Query: '.HtmlSpecialChars($sql)."</div>\n";
+		}
+
 		foreach ($bind as $k => $v){
 			$stmt->bindParam(':'.$k, $bind[$k]);
 		}

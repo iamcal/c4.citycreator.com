@@ -1,16 +1,14 @@
 <?
-	#include("include/init.txt");
-	#include("include/login.txt");
 	include("../include/init.php");
 
 	$nav = 'build';
-	$city = 1;
+	$city = 4;
 
 	if ($_GET['saved_id']){
-		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:saved_id'$saved_id' AND user_id=:user_id", [
-			'saved_id'	=> $_GET['saved_id'],
-			'user_id'	=> $cfg['user']['id'] ? $cfg['user']['id'] : 0,
-		]));
+		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:saved_id AND user_id=:user_id", array(
+			'saved_id' => $_GET['saved_id'],
+			'user_id' => $cfg['user']['id'] ? $cfg['user']['id'] : 0,
+		)));
 
 		$city = $saved_row['city_id'];
 	}
@@ -18,16 +16,16 @@
 	$city_row = get_city($city);
 	$city_id = $city_row['id'];
 
-	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", [
+	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
 		'city_id' => $city_id,
-	]));
+	)));
 ?>
 <html>
 <head>
 <title>City Creator - Build</title>
-<script language="JavaScript" src="detect.js?revision=2"></script>
-<script language="JavaScript" src="cookies.js"></script>
-<script language="JavaScript" src="build.js?revision=19"></script>
+<script language="JavaScript" src="js/detect.js?revision=2"></script>
+<script language="JavaScript" src="js/cookies.js"></script>
+<script language="JavaScript" src="js/build.js?revision=19"></script>
 <script language="JavaScript">
 <!--
 
@@ -61,13 +59,15 @@ function pre_init(){
 	$buffer = '';
 	$count = 0;
 
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_pieces WHERE city_id='$city_id'",$db);
-	while($row = mysql_fetch_array($result)){
-		if ($row[enabled]){
-			$buffer .= "\tadd_piece($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$row[uid].gif');\n";
+	$ret = db_fetch('SELECT * FROM citycreator_pieces WHERE city_id=:city_id', [
+		'city_id' => $city_id,
+	]);
+	foreach ($ret['rows'] as $row){
+		if ($row['enabled']){
+			$buffer .= "\tadd_piece({$row['uid']}, {$row['tab_id']}, {$row['in_order']}, {$row['palette']}, {$row['id']}, {$row['w']}, {$row['h']}, {$row['offset_x']}, {$row['offset_y']}, '{$row['uid']}.gif');\n";
 			$count++;
 		}else{
-			$buffer .= "\tadd_piece_holder($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id]);\n";
+			$buffer .= "\tadd_piece_holder({$row['uid']}, {$row['tab_id']}, {$row['in_order']}, {$row['palette']}, {$row['id']});\n";
 		}
 	}
 
@@ -77,17 +77,20 @@ function pre_init(){
 
 <?
 	$thumbs = array();
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_bgs WHERE city_id='$city_id' ORDER BY order_id ASC",$db);
-	while($row = mysql_fetch_array($result)){
-		$thumbs[$row[order_id]] = ($row[thumb])?"bgs/$row[thumb]":"images/space.gif";
-		$bg_image = ($row[bg_image])?"bgs/$row[bg_image]":"";
-		echo "\tadd_bg($row[order_id], '$bg_image', '$row[bg_color]');\n";
+
+	$ret = db_fetch('SELECT * FROM citycreator_bgs WHERE city_id=:city_id ORDER BY order_id ASC', [
+		'city_id' => $city_id,
+	]);
+	foreach ($ret['rows'] as $row){
+		$thumbs[$row['order_id']] = ($row['thumb']) ? "bgs/{$row['thumb']}" : "images/space.gif";
+		$bg_image = ($row['bg_image']) ? "bgs/{$row['bg_image']}" : "";
+		echo "\tadd_bg({$row['order_id']}, '{$bg_image}', '{$row['bg_color']}');\n";
 	}
 ?>
 
-<? if ($saved_row[id]){ ?>
-	bg_nosave(<?=$saved_row[city_bg_id]?>);
-	unserialize_all('<?=$saved_row[city_pieces]?>');
+<? if ($saved_row['id']){ ?>
+	bg_nosave(<?=$saved_row['city_bg_id']?>);
+	unserialize_all('<?=$saved_row['city_pieces']?>');
 	update_pieces();
 <? }else{ ?>
 	bg_nosave(1); // set default background
@@ -136,14 +139,16 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 
 <?
 	$left = 2;
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_tabs WHERE city_id=$city_id ORDER BY in_order ASC", $db);
-	while($row = mysql_fetch_array($result)){
+	$ret = db_fetch('SELECT * FROM citycreator_tabs WHERE city_id=:city_id  ORDER BY in_order ASC', [
+		'city_id' => $city_id,
+	]);
+	foreach ($ret['rows'] as $row){
 ?>
-	<div id="tab<?=$row[id]?>off" class="taboff" style="width: <?=$row[width]?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row[id]?>);"><img src="images/tab_<?=$row[id]?>_off.gif" width="<?=$row[width]?>" height="15"></a></div>
-	<div id="tab<?=$row[id]?>on"  class="tabon"  style="width: <?=$row[width]?>px; left: <?=$left?>px;"><img src="images/tab_<?=$row[id]?>_on.gif" width="<?=$row[width]?>" height="15"></div>
-	<div id="palette<?=$row[id]?>" class="palette"></div>
+	<div id="tab<?=$row['id']?>off" class="taboff" style="width: <?=$row['width']?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row['id']?>);"><img src="images/tab_<?=$row['id']?>_off.gif" width="<?=$row['width']?>" height="15"></a></div>
+	<div id="tab<?=$row['id']?>on"  class="tabon"  style="width: <?=$row['width']?>px; left: <?=$left?>px;"><img src="images/tab_<?=$row['id']?>_on.gif" width="<?=$row['width']?>" height="15"></div>
+	<div id="palette<?=$row['id']?>" class="palette"></div>
 <?
-		$left += $row[width];
+		$left += $row['width'];
 	}
 ?>
 

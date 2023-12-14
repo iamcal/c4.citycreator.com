@@ -105,66 +105,6 @@ Happy Building!<br>
 
 <? include('../templates-c4/inner_foot.txt'); ?>
 
-
-<? if (0){ ?>
-
-	<div id="borderbottom" ><img src="images/frame/border_bottom.gif" width="740" height="9"  ></div>
-	<div id="borderleft"   ><img src="images/frame/border_left.gif"   width="10"  height="422"></div>
-	<div id="borderright"  ><img src="images/frame/border_right.gif"  width="10"  height="422"></div>
-
-	<div id="pagebg"><img src="images/frame/main_home.gif" width="720" height="422" usemap="#topbarmap"></div>
-
-	<div style="position: absolute; left: 259px; top: 8px; width: 29px; height: 17px;"><a href="./"          ><img src="images/frame/tab_home_on.gif"     width="29" height="17" border="0"></a></div>
-	<div style="position: absolute; left: 290px; top: 8px; width: 46px; height: 17px;"><a href="members.city"><img src="images/frame/tab_members_off.gif" width="46" height="17" border="0"></a></div>
-	<div style="position: absolute; left: 338px; top: 8px; width: 24px; height: 17px;"><a href="faq.city"    ><img src="images/frame/tab_faq_off.gif"     width="24" height="17" border="0"></a></div>
-	<div style="position: absolute; left: 364px; top: 8px; width: 24px; height: 17px;"><a href="build.city"  ><img src="images/frame/tab_build_off.gif"   width="28" height="17" border="0"></a></div>
-
-	<div id="welcome" class="text">
-		<span style="color: #ffff00; font-weight: bold;">Instructions</span><br>
-		Choose a city from the selection on the right, and click the corresponding 'build' button to begin.<br>
-		<br>
-		Drag and drop pieces from the palettes on the left onto the space on the right. Clicking on a piece brings it to the front.
-		<br>
-		Arrange them to make your city. (It might help to start by adding the roads)<br>
-		<br>
-		<table border="0" cellpadding="0" cellspacing="0">
-			<tr valign="top">
-				<td><img src="images/truck.gif" width="66" height="48"></td>
-				<td><img src="images/space.gif" width="4" height="48"></td>
-				<td class="text">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.</td>
-			</tr>
-		</table>
-		<br>
-		You can delete your whole town by clicking the 'Delete all' button.<br>
-		<br>
-		Click 'Save &amp; send' to send your unique city to your friends.<br>
-		<br>
-		<span style="color: #ffff00;">Have fun,<br>
-		<b>The Construction Crew</b></span><br>
-	</div>
-
-	<div id="board">
-		<div style="position: absolute; left:  11px; top:   9px; width: 215px; height: 168px"><a href="build.city?city=3"><img src="images/pages/home_card_3.gif"    width="215" height="168" border="0"></a></div>
-		<div style="position: absolute; left: 244px; top:   9px; width: 215px; height: 168px"><a href="build.city?city=2"><img src="images/pages/home_card_2.gif"    width="215" height="168" border="0"></a></div>
-		<div style="position: absolute; left:  11px; top: 201px; width: 215px; height: 168px"><a href="build.city?city=1"><img src="images/pages/home_card_1.gif"    width="215" height="168" border="0"></a></div>
-		<div style="position: absolute; left: 244px; top: 201px; width: 215px; height: 168px"><a href="suggest.city"     ><img src="images/pages/home_card_next.gif" width="215" height="168" border="0"></a></div>
-
-		<div style="position: absolute; left: 185px; top: 181px; width:  39px; height:  18px"><a href="build.city?city=3"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></div>
-		<div style="position: absolute; left: 417px; top: 181px; width:  39px; height:  18px"><a href="build.city?city=2"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></div>
-		<div style="position: absolute; left: 185px; top: 374px; width:  39px; height:  18px"><a href="build.city?city=1"><img src="images/pages/btn_build.gif" width="39" height="18" border="0"></a></div>
-		<div style="position: absolute; left: 381px; top: 374px; width:  73px; height:  18px"><a href="suggest.city"     ><img src="images/pages/btn_suggest.gif" width="73" height="18" border="0"></a></div>
-
-		<div style="position: absolute; left: 140px; top: 181px; width:  45px; height:  18px"><img src="images/pages/home_label_3.gif" width="45" height="18"></div>
-		<div style="position: absolute; left: 372px; top: 181px; width:  45px; height:  18px"><img src="images/pages/home_label_2.gif" width="45" height="18"></div>
-		<div style="position: absolute; left: 140px; top: 374px; width:  45px; height:  18px"><img src="images/pages/home_label_1.gif" width="45" height="18"></div>
-	</div>
-
-
-</div>
-</div>
-
-<? } ?>
-
 <map name="topbarmap" id="topbarmap">
 	<area shape="rect" coords="43,9,194,39" href="./">
 </map>
