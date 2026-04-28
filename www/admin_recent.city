@@ -3,7 +3,7 @@
 
 	date_default_timezone_set('America/Los_Angeles');
 
-	if ($_GET['flume'] != 'magic') exit;
+	if (($_GET['flume'] ?? '') != 'magic') exit;
 
 	echo "<table border=\"1\">\n";
 

@@ -1,7 +1,7 @@
 <?php
 	function db_connect(){
 
-		if (!$GLOBALS['dbh']){
+		if (!isset($GLOBALS['dbh'])){
 			$GLOBALS['dbh'] = new PDO("mysql:host={$GLOBALS['cfg']['db_host']};dbname={$GLOBALS['cfg']['db_name']};charset=utf8", $GLOBALS['cfg']['db_user'], $GLOBALS['cfg']['db_pass']);
 		}
 
@@ -108,11 +108,11 @@
 	}
 
 	function db_single($ret){
-		return $ret['rows'][0];
+		return $ret['rows'][0] ?? array();
 	}
 
 	function db_list($ret){
-		$row = $ret['rows'][0];
+		$row = $ret['rows'][0] ?? null;
 		return is_array($row) ? array_values($row) : array();
 	}
 

@@ -9,10 +9,10 @@
 
 	$ret = db_insert('citycreator_saved', array(
 		'date_create'	=> time(),
-		'city_id'	=> $_POST['city_id'],
-		'city_pieces'	=> $_POST['city_pieces'],
-		'city_bg_id'	=> $_POST['city_bg'],
-		'user_id'	=> $cfg['user']['id'] ? $cfg['user']['id'] : 0,
+		'city_id'	=> $_POST['city_id'] ?? 0,
+		'city_pieces'	=> $_POST['city_pieces'] ?? '',
+		'city_bg_id'	=> $_POST['city_bg'] ?? 0,
+		'user_id'	=> $cfg['user']['id'] ?? 0,
 	));
 
 	$saved_id = $ret['insert_id'];
@@ -22,7 +22,7 @@
 	# members section
 	#
 
-	if ($cfg['user']['id']){
+	if (!empty($cfg['user']['id'])){
 		header("location: members.city");
 	}else{
 		header("location: members.city?saved_id={$saved_id}");

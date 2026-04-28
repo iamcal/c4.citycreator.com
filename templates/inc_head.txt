@@ -1,3 +1,8 @@
+<?
+	$title = $title ?? '';
+	$loadalert = $loadalert ?? '';
+	$nav = $nav ?? '';
+?>
 <html>
 <head>
 <title>City Creator<?if($title){echo " - $title";}?></title>

@@ -8,7 +8,11 @@
 
 	#######################################################################
 
-	if ($_GET['c']){
+	$city_id = 0;
+	$piece_data = '';
+	$bg_id = 0;
+
+	if (!empty($_GET['c'])){
 
 		list($id, $check) = explode('.', $_GET['c'], 2);
 
@@ -17,36 +21,36 @@
 			'check' => $check,
 		)));
 
-		if (!$card_row['id']){
+		if (empty($card_row['id'])){
 			header("location: no_card.city");
 			exit;
 		}
 
 		$city_row	= get_city($card_row['city_id']);
-		$city_id	= $city_row['id'];
+		$city_id	= $city_row['id'] ?? 0;
 		$piece_data	= $card_row['pieces'];
 		$bg_id		= $card_row['bg_id'];
 	}
 
-	if ($_GET['s']){
+	if (!empty($_GET['s'])){
 
 		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:save_id AND user_id=:user_id", array(
 			'save_id'	=> $_GET['s'],
-			'user_id'	=> $cfg['user']['id'],
+			'user_id'	=> $cfg['user']['id'] ?? 0,
 		)));
 
-		if (!$saved_row['id']){
+		if (empty($saved_row['id'])){
 			header("location: no_card.city");
 			exit;
 		}
 
 		$city_row	= get_city($saved_row['city_id']);
-		$city_id	= $city_row['id'];
+		$city_id	= $city_row['id'] ?? 0;
 		$piece_data	= $saved_row['city_pieces'];
 		$bg_id		= $saved_row['city_bg_id'];
 	}
 
-	if ($_GET['sh']){
+	if (!empty($_GET['sh'])){
 
 		list($id, $check) = explode('.', $_GET['sh'], 2);
 
@@ -55,13 +59,13 @@
 			'check'	=> $check,
 		)));
 
-		if (!$saved_row['id']){
+		if (empty($saved_row['id'])){
 			header("location: no_card.city");
 			exit;
 		}
 
 		$city_row	= get_city($saved_row['city_id']);
-		$city_id	= $city_row['id'];
+		$city_id	= $city_row['id'] ?? 0;
 		$piece_data	= $saved_row['city_pieces'];
 		$bg_id		= $saved_row['city_bg_id'];
 	}
@@ -81,8 +85,8 @@
 	));
 
 	foreach ($ret['rows'] as $row){
-		$pieces_index_1["$row[uid]"] = $row;
-		$pieces_index_2["$row[palette]_$row[id]"] = $row;
+		$pieces_index_1["{$row['uid']}"] = $row;
+		$pieces_index_2["{$row['palette']}_{$row['id']}"] = $row;
 	}
 
 	#######################################################################
@@ -98,7 +102,7 @@
 
 	# set background image
 
-	if ($bg_row['bg_image']){
+	if (!empty($bg_row['bg_image'])){
 		$bg_row['bg_image'] = str_replace(".gif", ".png", $bg_row['bg_image']);
 		$bg_img = imagecreatefrompng("bgs/{$city_id}_png/{$bg_row['bg_image']}");
 		$bg_w = imagesx($bg_img);
@@ -116,7 +120,7 @@
 
 	# or background color
 
-	if ($bg_row['bg_color']){
+	if (!empty($bg_row['bg_color'])){
 		$r = hexdec(substr($bg_row['bg_color'],1,2));
 		$g = hexdec(substr($bg_row['bg_color'],3,2));
 		$b = hexdec(substr($bg_row['bg_color'],5,2));
@@ -134,10 +138,10 @@
 		$bits = explode('|',$piece);
 
 		if (count($bits) == 5){
-		
+
 			list($palette, $id, $x, $y, $z) = explode('|',$piece);
 			$card_pieces[] = array(
-				'piece' => $pieces_index_2[$palette.'_'.$id],
+				'piece' => $pieces_index_2[$palette.'_'.$id] ?? null,
 				'x' => $x,
 				'y' => $y,
 				'z' => $z,
@@ -146,7 +150,7 @@
 
 			list($uid, $x, $y, $z) = explode('|',$piece);
 			$card_pieces[] = array(
-				'piece' => $pieces_index_1[$uid],
+				'piece' => $pieces_index_1[$uid] ?? null,
 				'x' => $x,
 				'y' => $y,
 				'z' => $z,
@@ -165,7 +169,8 @@
 
 	foreach($card_pieces as $card_piece){
 		$piece = $card_piece['piece'];
-		$piece['image'] = str_replace(".gif", ".png", $piece['image']);
+		if (!$piece) continue;
+		$piece['image'] = str_replace(".gif", ".png", $piece['image'] ?? '');
 		if ($piece['image']){
 			$sub_img = imagecreatefrompng("blocks/{$city_id}_png/{$piece['image']}");
 			imagecopy($img, $sub_img, $card_piece['x'], $card_piece['y'] ,0 ,0, $piece['w'], $piece['h']);
@@ -174,7 +179,7 @@
 
 	#######################################################################
 
-	if ($_GET['thumb']){
+	if (!empty($_GET['thumb'])){
 		$w = floor($canvas_w * $fraction);
 		$h = floor($canvas_h * $fraction);
 		$new_img = ImageCreateTrueColor($w, $h);
@@ -187,7 +192,7 @@
 
 	$png = 1;
 
-	if ($_GET['debug']){
+	if (!empty($_GET['debug'])){
 		echo "OK!";
 		exit;
 	}

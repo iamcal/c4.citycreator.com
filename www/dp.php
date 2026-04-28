@@ -8,7 +8,7 @@
 </form>
 
 <?
-	if ($_GET['s']){
+	if (!empty($_GET['s'])){
 		$ret = db_fetch("SELECT * FROM citycreator_users WHERE username=:s OR email=:s", array(
 			's' => $_GET['s'],
 		));

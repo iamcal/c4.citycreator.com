@@ -2,8 +2,8 @@
 	include("../include/init.php");
 	include("../include/login.php");
 
-	if (!$cfg['user']['id']){
-		header("location: members.city?share_id=".urlencode($_REQUEST['share_id']));
+	if (empty($cfg['user']['id'])){
+		header("location: members.city?share_id=".urlencode($_REQUEST['share_id'] ?? ''));
 		exit;
 	}
 
@@ -12,14 +12,14 @@
 	# load saved/shared city
 	#
 
-	list($id, $check) = explode('.', $_REQUEST['share_id'], 2);
+	list($id, $check) = explode('.', $_REQUEST['share_id'] ?? '', 2);
 
 	$share_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND share_check=:check AND user_id=0 AND is_deleted=0", array(
 		'id'	=> $id,
 		'check'	=> $check,
 	)));
 
-	if (!$share_row['id']){
+	if (empty($share_row['id'])){
 		# not a share we can accept
 		header("location: members.city");
 		exit;
@@ -30,7 +30,7 @@
 	# accept the share?
 	#
 
-	if ($_GET['done'] == 1){
+	if (($_GET['done'] ?? 0) == 1){
 
 		db_update('citycreator_saved', array(
 			'is_deleted' => 1,
@@ -42,7 +42,7 @@
 		exit;
 	}
 
-	if ($_GET['done'] == 2){
+	if (($_GET['done'] ?? 0) == 2){
 
 		db_update('citycreator_saved', array(
 			'user_id'	=> $cfg['user']['id'],
@@ -55,7 +55,7 @@
 		exit;
 	}
 
-	if ($_GET['done'] == 3){
+	if (($_GET['done'] ?? 0) == 3){
 
 		db_update('citycreator_saved', array(
 			'user_id'	=> $cfg['user']['id'],
@@ -78,18 +78,18 @@
 	<b class="heading">Share A City</b><br>
 
 	<br>
-	<img src="image.city?sh=<?=htmlspecialchars($_REQUEST['share_id'])?>&thumb=1" align="left">
+	<img src="image.city?sh=<?=htmlspecialchars($_REQUEST['share_id'] ?? '')?>&thumb=1" align="left">
 
 	You have been sent a city by another citycreator.com member. Please choose from the following options:<br>
 	<br>
 	<table cellpadding="5" cellspacing="0" border"0">
 		<tr valign="middle">
-			<td><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'])?>&done=2" class="white"><img src="images/share_yes.gif" width="17" height="16" border="0"></a></td>
-			<td class="text"><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'])?>&done=2" class="white">Add this city design to my account</a></td>
+			<td><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'] ?? '')?>&done=2" class="white"><img src="images/share_yes.gif" width="17" height="16" border="0"></a></td>
+			<td class="text"><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'] ?? '')?>&done=2" class="white">Add this city design to my account</a></td>
 		</tr>
 		<tr valign="middle">
-			<td><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'])?>&done=3" class="white"><img src="images/share_edit.gif" width="17" height="16" border="0"></a></td>
-			<td class="text"><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'])?>&done=3" class="white">Add this city design and let me edit it straight away!</a></td>
+			<td><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'] ?? '')?>&done=3" class="white"><img src="images/share_edit.gif" width="17" height="16" border="0"></a></td>
+			<td class="text"><a href="share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'] ?? '')?>&done=3" class="white">Add this city design and let me edit it straight away!</a></td>
 		</tr>
 		<tr valign="middle">
 			<td><a href="Javascript:confirm_delete();" class="white"><img src="images/share_no.gif" width="17" height="16" border="0"></a></td>
@@ -102,7 +102,7 @@
 
 function confirm_delete(){
 	if (window.confirm('Are you sure you don\'t want this design?')){
-		window.location.href = 'share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'])?>&done=1';
+		window.location.href = 'share_take.city?share_id=<?=htmlspecialchars($_GET['share_id'] ?? '')?>&done=1';
 	}
 }
 

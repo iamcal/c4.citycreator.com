@@ -7,13 +7,13 @@
 	# delete a city?
 	#
 
-	if ($_GET['delete']){
+	if (!empty($_GET['delete'])){
 
 		db_update('citycreator_saved', array(
 			'is_deleted'	=> 1,
 		), "id=:id AND user_id=:user_id", array(
 			'id'		=> $_GET['delete'],
-			'user_id'	=> $cfg['user']['id'],
+			'user_id'	=> $cfg['user']['id'] ?? 0,
 		));
 
 
@@ -26,15 +26,15 @@
 	# accecpt a share?
 	#
 
-	if ($_GET['share_id'] && $cfg['user']['id']){
+	if (!empty($_GET['share_id']) && !empty($cfg['user']['id'])){
 		header("location: share_take.city?share_id=".urlencode($_GET['share_id']));
 		exit;
 	}
 
 
 	$extra = '';
-	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
-	if ($_REQUEST['share_id']){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
+	if (!empty($_REQUEST['saved_id'])){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if (!empty($_REQUEST['share_id'])){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
 
 	$title = 'Members Area';
 	$long = 1;
@@ -62,7 +62,7 @@ function delete_city(id){
 
 	<b class="heading">Members Area</b><br>
 	<br>
-<? if ($cfg['user']['id']){ ?>
+<? if (!empty($cfg['user']['id'])){ ?>
 	You are logged in as <span class="username"><?=$cfg['user']['username']?></span><br>
 	(<a href="logout.city">click here</a> to logout)<br>
 	<br>

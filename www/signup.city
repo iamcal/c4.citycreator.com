@@ -4,15 +4,15 @@
 
 	$error = '';
 
-	if ($_POST['done']){
+	if (!empty($_POST['done'])){
 		$error = local_process();
 	}
 
 	function local_process(){
 
-		$username	= trim($_POST['signup_username']);
-		$password	= trim($_POST['signup_password']);
-		$email		= trim(StrToLower($_POST['signup_email']));
+		$username	= trim($_POST['signup_username'] ?? '');
+		$password	= trim($_POST['signup_password'] ?? '');
+		$email		= trim(StrToLower($_POST['signup_email'] ?? ''));
 
 		if (strlen($username) < 3){
 
@@ -40,7 +40,7 @@
 			'username' => $username,
 		)));
 
-		if ($row['id']){
+		if (!empty($row['id'])){
 			return "The username you entered is already taken";
 		}
 
@@ -55,7 +55,7 @@
 				'email' => $email,
 			)));
 
-			if ($row['id']){
+			if (!empty($row['id'])){
 
 				return "The email address you entered has already been registered\\nClick on the forgotten password link so we can email you your password";
 			}
@@ -75,7 +75,7 @@
 			'password'	=> $hash,
 			'date_create'	=> time(),
 			'email'		=> $email,
-			'can_email'	=> strlen($email) && $_POST['maillist'] ? 1 : 0,
+			'can_email'	=> strlen($email) && !empty($_POST['maillist']) ? 1 : 0,
 		));
 
 
@@ -94,7 +94,7 @@
 		# take ownership of a saved city?
 		#
 
-		if ($_POST['saved_id']){
+		if (!empty($_POST['saved_id'])){
 			db_update('citycreator_saved', array(
 				'user_id' => $row['id'],
 			), "id=:saved_id AND user_id=0", array(
@@ -107,7 +107,7 @@
 		# redirect
 		#
 
-		if ($_POST['share_id']){
+		if (!empty($_POST['share_id'])){
 			header("location: members.city?share_id=".urlencode($_REQUEST['share_id']));
 		}else{
 			header("location: members.city");
@@ -117,8 +117,8 @@
 
 
 	$extra = '';
-	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
-	if ($_REQUEST['share_id']){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
+	if (!empty($_REQUEST['saved_id'])){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if (!empty($_REQUEST['share_id'])){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
 
 	$title = "Members Area";
 	$long = 1;
@@ -130,8 +130,8 @@
 	<br>
 	<form action="signup.city" method="post">
 	<input type="hidden" name="done" value="1">
-	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'])?>">
-	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'])?>">
+	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'] ?? '')?>">
+	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'] ?? '')?>">
 
 	<p>If you're already a member, <a href="login.city<?=$extra?>">click here</a></p>
 
@@ -143,15 +143,15 @@
 
 	<br>
 	Choose a username:<br>
-	<input type="text" class="edit" name="signup_username" value="<?=HtmlSpecialChars($_POST['signup_username'])?>"><br>
+	<input type="text" class="edit" name="signup_username" value="<?=HtmlSpecialChars($_POST['signup_username'] ?? '')?>"><br>
 
 	<br>
 	Choose a password:<br>
-	<input type="password" class="edit" name="signup_password" value="<?=HtmlSpecialChars($_POST['signup_password'])?>"><br>
+	<input type="password" class="edit" name="signup_password" value="<?=HtmlSpecialChars($_POST['signup_password'] ?? '')?>"><br>
 
 	<br>
 	Enter your email address:<br>
-	<input type="text" class="edit" name="signup_email" value="<?=HtmlSpecialChars($_POST['signup_email'])?>"> (Optional)<br>
+	<input type="text" class="edit" name="signup_email" value="<?=HtmlSpecialChars($_POST['signup_email'] ?? '')?>"> (Optional)<br>
 	We ask you for your email address so that we can<br>
 	email you your password, should you forget it.<br>
 

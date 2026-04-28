@@ -2,9 +2,9 @@
 	include('../include/init.php');
 	include('../include/login.php');
 
-	if ($cfg['user']['id']){
+	if (!empty($cfg['user']['id'])){
 
-		if ($_POST['saved_id']){
+		if (!empty($_POST['saved_id'])){
 
 			db_update('citycreator_saved', array(
 				'user_id' => $cfg['user']['id'],
@@ -13,7 +13,7 @@
 			));
 		}
 
-		if ($_REQUEST['share_id']){
+		if (!empty($_REQUEST['share_id'])){
 			header("location: members.city?share_id=".urlencode($_REQUEST['share_id']));
 			exit;
 		}
@@ -22,15 +22,15 @@
 	}
 
 	$extra = '';
-	if ($_REQUEST['saved_id']){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
-	if ($_REQUEST['share_id']){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
+	if (!empty($_REQUEST['saved_id'])){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if (!empty($_REQUEST['share_id'])){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
 
 
 	$title = 'Members Area';
 	$long = 1;
 	$nav = 'members';
 
-	if ($_POST['username'] || $_POST['password']){
+	if (!empty($_POST['username']) || !empty($_POST['password'])){
 		$loadalert = 'Your username and password were not correct!';
 	}
 
@@ -41,8 +41,8 @@
 	<br>
 
 	<form action="login.city" method="post">
-	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'])?>">
-	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'])?>">
+	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'] ?? '')?>">
+	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'] ?? '')?>">
 
 	Please type in your login details.<br>
 	If you're not yet a member, <a href="signup.city<?=$extra?>">click here</a><br>

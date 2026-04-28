@@ -2,7 +2,7 @@
 	include("../include/init.php");
 	include("../include/login.php");
 
-	if (!$cfg['user']['id']){
+	if (empty($cfg['user']['id'])){
 		header("location: members.city");
 		exit;
 	}
@@ -18,7 +18,7 @@
 
 	Your city has been shared.<br>
 	<br>
-	<a href="share.city?saved_id=<?=htmlspecialchars($_GET['saved_id'])?>" class="white">Click here</a> to share the same city with someone else.<br>
+	<a href="share.city?saved_id=<?=htmlspecialchars($_GET['saved_id'] ?? '')?>" class="white">Click here</a> to share the same city with someone else.<br>
 	<br>
 	<a href="members.city" class="white">Click here</a> to return to the members page.<br>
 

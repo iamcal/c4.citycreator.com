@@ -6,14 +6,14 @@
 	# load city
 	#
 
-	list($id, $check) = explode('.', $_GET['c'], 2);
+	list($id, $check) = explode('.', $_GET['c'] ?? '', 2);
 
 	$card_row = db_single(db_fetch("SELECT * FROM citycreator_cards WHERE id=:id AND `check`=:check", array(
 		'id'	=> $id,
 		'check'	=> $check,
 	)));
 
-	if (!$card_row['id']){
+	if (empty($card_row['id'])){
 		header("location: no_card.city");
 		exit;
 	}
@@ -24,17 +24,17 @@
 	#
 
 	$city_row = get_city($card_row['city_id']);
-	$city_id = $city_row['id'];
+	$city_id = $city_row['id'] ?? 0;
 
 	$bg_row = db_single(db_fetch("SELECT * FROM citycreator_bgs WHERE order_id=:bg_id AND city_id=:city_id", array(
 		'bg_id'		=> $card_row['bg_id'],
 		'city_id'	=> $city_id,
 	)));
 
-	if ($bg_row['bg_image']){
+	if (!empty($bg_row['bg_image'])){
 		$bg = "url(bgs/{$city_id}/{$bg_row['bg_image']})";
 	}else{
-		$bg = $bg_row['bg_color'];
+		$bg = $bg_row['bg_color'] ?? '';
 	}
 
 
@@ -124,15 +124,15 @@ function print_city(id){
 	<div style="position: absolute; left: <?=($left-38)?>px; top: 8px; width: 35px; height: 16px;"><img src="images/frame/tab_label.gif" width="35" height="16"></div>
 
 	<div id="welcome" class="text">
-<? if ($card_row['message']){ ?>
-		<?=htmlspecialchars($card_row['your_name'])?> (<?=htmlspecialchars($card_row['your_email'])?>) made you a city and sent you this message:<br>
+<? if (!empty($card_row['message'])){ ?>
+		<?=htmlspecialchars($card_row['your_name'] ?? '')?> (<?=htmlspecialchars($card_row['your_email'] ?? '')?>) made you a city and sent you this message:<br>
 		<br>
 		<i><?=nl2br(trim(htmlspecialchars($card_row['message'])))?></i><br>
 <? }else{ ?>
-		<?=htmlspecialchars($card_row['your_name'])?> (<?=htmlspecialchars($card_row['your_email'])?>) made you a city!<br>
+		<?=htmlspecialchars($card_row['your_name'] ?? '')?> (<?=htmlspecialchars($card_row['your_email'] ?? '')?>) made you a city!<br>
 <? } ?>
 		<br>
-		If you'd like to print this card out, <a href="Javascript:print_city('<?=$_GET['c']?>');" style="color: #ffffff;">click here</a>.<br>
+		If you'd like to print this card out, <a href="Javascript:print_city('<?=$_GET['c'] ?? ''?>');" style="color: #ffffff;">click here</a>.<br>
 		<br>
 		<img src="images/white.gif" width="224" height="1"><br>
 		<br>
@@ -143,20 +143,21 @@ function print_city(id){
 
 	<div id="board" style="background: <?=$bg?>;">
 <?
-	foreach(explode(',',$card_row['pieces']) as $piece){
+	foreach(explode(',',$card_row['pieces'] ?? '') as $piece){
 		$bits = explode('|',$piece);
 		if (count($bits) == 5){
-			$piece = $pieces_index_2[$bits[0].'_'.$bits[1]];
+			$piece = $pieces_index_2[$bits[0].'_'.$bits[1]] ?? null;
 			$x = $bits[2];
 			$y = $bits[3];
 			$z = $bits[4];
 		}else{
-			$piece = $pieces_index_1[$bits[0]];
-			$x = $bits[1];
-			$y = $bits[2];
-			$z = $bits[3];
+			$piece = $pieces_index_1[$bits[0]] ?? null;
+			$x = $bits[1] ?? 0;
+			$y = $bits[2] ?? 0;
+			$z = $bits[3] ?? 0;
 		}
-		echo "\t\t<div style=\"position: absolute; left: ${x}px; top: ${y}px; width: $piece[w]px; height: $piece[h]px; z-index: ${z};\"><img src=\"blocks/$city_id/{$piece['image']}\" width=\"$piece[w]\" height=\"$piece[h]\"></div>\n";
+		if (!$piece) continue;
+		echo "\t\t<div style=\"position: absolute; left: {$x}px; top: {$y}px; width: {$piece['w']}px; height: {$piece['h']}px; z-index: {$z};\"><img src=\"blocks/{$city_id}/{$piece['image']}\" width=\"{$piece['w']}\" height=\"{$piece['h']}\"></div>\n";
 	}
 ?>
 	</div>

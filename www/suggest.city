@@ -7,13 +7,13 @@
 	# save suggestion and maybe email
 	#
 
-	if ($_POST['done']){
+	if (!empty($_POST['done'])){
 
 		db_insert('citycreator_suggestions', array(
 			'date_create'	=> time(),
-			'from_name'	=> $_POST['your_name'],
-			'from_email'	=> $_POST['your_email'],
-			'suggestion'	=> $_POST['comment'],
+			'from_name'	=> $_POST['your_name'] ?? '',
+			'from_email'	=> $_POST['your_email'] ?? '',
+			'suggestion'	=> $_POST['comment'] ?? '',
 		));
 
 
@@ -21,7 +21,7 @@
 		# only send email to valid-looking email addresses
 		#
 
-		if (filter_var($_POST['your_email'], FILTER_VALIDATE_EMAIL) !== false){
+		if (filter_var($_POST['your_email'] ?? '', FILTER_VALIDATE_EMAIL) !== false){
 
 			$msg = "Thanks for your suggestion - we've noted it down and might use it in the future!\n\n";
 			$msg .= "--cal & denise, citycreator.com\n";
@@ -55,10 +55,10 @@
 	<br>
 
 	Your name:<br>
-	<input type="text" name="your_name" value="<?=htmlspecialchars($cfg['user']['username'])?>" class="edit"><br>
+	<input type="text" name="your_name" value="<?=htmlspecialchars($cfg['user']['username'] ?? '')?>" class="edit"><br>
 
 	Your email address:<br>
-	<input type="text" name="your_email" value="<?=htmlspecialchars($cfg['user']['email'])?>" class="edit"><br>
+	<input type="text" name="your_email" value="<?=htmlspecialchars($cfg['user']['email'] ?? '')?>" class="edit"><br>
 
 	Your City Idea:<br>
 	<textarea name="comment" wrap="virtual" class="edit"></textarea><br>

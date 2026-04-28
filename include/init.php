@@ -32,7 +32,7 @@
 		$msg .= "Someone has made you a special e-card at citycreator.com\n";
 		$msg .= "\n";
 		$msg .= "Click here to see it:\n";
-		$msg .= "{$GLOBALS['cfg']['pickup_url']}?c={$card_row['id']}.{$card_row['check']}\n";
+		$msg .= "{$GLOBALS['cfg']['pickup_url']}?c=".($card_row['id'] ?? '').".".($card_row['check'] ?? '')."\n";
 		$msg .= "\n";
 		$msg .= "(If you can't click the link above, try to copy and paste it into\n";
 		$msg .= " your browser)\n";
@@ -41,7 +41,7 @@
 		$msg .= "This mail was sent to you by citycreator.com\n";
 		$msg .= "\n";
 
-		mail($card_row['friend_email'], "You've got an ecard!", $msg, "From: City Creator <cards@citycreator.com>\nReply-to: \"{$card_row['your_name']}\" <{$card_row['your_email']}>");
+		mail($card_row['friend_email'] ?? '', "You've got an ecard!", $msg, "From: City Creator <cards@citycreator.com>\nReply-to: \"".($card_row['your_name'] ?? '')."\" <".($card_row['your_email'] ?? '').">");
 	}
 
 	function get_password_reset_code($user){
@@ -61,7 +61,7 @@
 			'id' => $id,
 		)));
 
-		if (!$user['id']) return null;
+		if (!isset($user['id']) || !$user['id']) return null;
 
 		$test_hmac = hash_hmac("sha256", $user['id'].$ts, $user['password']);
 		$test_hmac = substr($test_hmac, 0, 20);

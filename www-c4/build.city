@@ -4,17 +4,17 @@
 	$nav = 'build';
 	$city = 4;
 
-	if ($_GET['saved_id']){
+	if (isset($_GET['saved_id']) && $_GET['saved_id']){
 		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:saved_id AND user_id=:user_id", array(
 			'saved_id' => $_GET['saved_id'],
-			'user_id' => $cfg['user']['id'] ? $cfg['user']['id'] : 0,
+			'user_id' => $cfg['user']['id'] ?? 0,
 		)));
 
-		$city = $saved_row['city_id'];
+		$city = $saved_row['city_id'] ?? $city;
 	}
 
 	$city_row = get_city($city);
-	$city_id = $city_row['id'];
+	$city_id = $city_row['id'] ?? 0;
 
 	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
 		'city_id' => $city_id,
@@ -88,7 +88,7 @@ function pre_init(){
 	}
 ?>
 
-<? if ($saved_row['id']){ ?>
+<? if (isset($saved_row['id']) && $saved_row['id']){ ?>
 	bg_nosave(<?=$saved_row['city_bg_id']?>);
 	unserialize_all('<?=$saved_row['city_pieces']?>');
 	update_pieces();
@@ -155,14 +155,14 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 	<div id="boardback"></div>
 	<div id="board"><div id="shadow"></div></div>
 
-	<div style="position: absolute; left:   7px; top: 404px; width: 21px; height: 12px; background-color: #ffffff;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1]?>" width="21" height="12" border="0"></a></div>
-	<div style="position: absolute; left:  32px; top: 404px; width: 21px; height: 12px; background-color: #000000;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2]?>" width="21" height="12" border="0"></a></div>
-	<div style="position: absolute; left:  68px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left:  96px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 124px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 152px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 180px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 208px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left:   7px; top: 404px; width: 21px; height: 12px; background-color: #ffffff;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1] ?? ''?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  32px; top: 404px; width: 21px; height: 12px; background-color: #000000;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2] ?? ''?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  68px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left:  96px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 124px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 152px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 180px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 208px; top: 392px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8] ?? ''?>" width="25" height="24" border="0"></a></div>
 
 
 	<div style="position: absolute; left: 662px; top: 391px; width: 52px; height: 45px; z-index: 5;"><img src="images/skip.gif" width="52" height="45"></div>

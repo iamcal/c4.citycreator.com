@@ -8,11 +8,11 @@
 	#
 
 	$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND user_id=:user_id", array(
-		'id'		=> $_REQUEST['saved_id'],
-		'user_id'	=> $cfg['user']['id'],
+		'id'		=> $_REQUEST['saved_id'] ?? 0,
+		'user_id'	=> $cfg['user']['id'] ?? 0,
 	)));
 
-	if (!$saved_row['id']){
+	if (empty($saved_row['id'])){
 		header("location: members.city");
 		exit;
 	}
@@ -24,7 +24,7 @@
 
 	$error = '';
 
-	if ($_POST['done']){
+	if (!empty($_POST['done'])){
 		$error = local_share_city();
 	}
 
@@ -33,9 +33,9 @@
 
 		global $saved_row;
 
-		$name	= trim($_POST['your_name']);
-		$from	= trim($_POST['your_email']);
-		$to	= trim($_POST['friend_email']);
+		$name	= trim($_POST['your_name'] ?? '');
+		$from	= trim($_POST['your_email'] ?? '');
+		$to	= trim($_POST['friend_email'] ?? '');
 
 		if (!strlen($name)) return 'missing_fields';
 		if (!strlen($to)) return 'missing_fields';
@@ -62,7 +62,7 @@
 
 		$new_id = $ret['insert_id'];
 
-		send_share($to, $name, $from, "$new_id.$check", $_POST['message']);
+		send_share($to, $name, $from, "$new_id.$check", $_POST['message'] ?? '');
 
 		header("location: share_done.city?saved_id={$saved_row['id']}");
 		exit;
@@ -92,16 +92,16 @@
 	<br>
 
 	Your name:<br>
-	<input type="text" name="your_name" value="<?=htmlspecialchars($_POST['your_name'] ? $_POST['your_name'] : $cfg['user']['username'])?>" class="edit"><br>
+	<input type="text" name="your_name" value="<?=htmlspecialchars(!empty($_POST['your_name']) ? $_POST['your_name'] : ($cfg['user']['username'] ?? ''))?>" class="edit"><br>
 
 	Your email address:<br>
-	<input type="text" name="your_email" value="<?=htmlspecialchars($_POST['your_email'] ? $_POST['your_email'] : $cfg['user']['email'])?>" class="edit"><br>
+	<input type="text" name="your_email" value="<?=htmlspecialchars(!empty($_POST['your_email']) ? $_POST['your_email'] : ($cfg['user']['email'] ?? ''))?>" class="edit"><br>
 
 	Friend's email address:<br>
-	<input type="text" name="friend_email" value="<?=htmlspecialchars($_POST['friend_email'])?>" class="edit"><br>
+	<input type="text" name="friend_email" value="<?=htmlspecialchars($_POST['friend_email'] ?? '')?>" class="edit"><br>
 
 	Message:<br>
-	<textarea name="message" wrap="virtual" class="edit"><?=htmlspecialchars($_POST['message'])?></textarea><br>
+	<textarea name="message" wrap="virtual" class="edit"><?=htmlspecialchars($_POST['message'] ?? '')?></textarea><br>
 
 	<br>
 	<input type="image" src="images/btn_share.gif" width="53" height="16" border="0"><br>

@@ -2,21 +2,21 @@
 	include("../include/init.php");
 	include("../include/login.php");
 
-	$city = $_GET['city'];
+	$city = $_GET['city'] ?? 0;
 	if ($city>3){$city = 3;}
 
-	if ($_GET['saved_id']){
+	if (!empty($_GET['saved_id'])){
 
 		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:saved_id AND user_id=:user_id", array(
 			'saved_id' => $_GET['saved_id'],
-			'user_id' => $cfg['user']['id'] ? $cfg['user']['id'] : 0,
+			'user_id' => $cfg['user']['id'] ?? 0,
 		)));
 
-		$city = $saved_row['city_id'];
+		$city = $saved_row['city_id'] ?? $city;
 	}
 
 	$city_row = get_city($city);
-	$city_id = $city_row['id'];
+	$city_id = $city_row['id'] ?? 0;
 
 	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
 		'city_id' => $city_id,
@@ -64,7 +64,7 @@ function pre_init(){
 
 	echo "\tpiece_count = ".count($ret['rows']).";\n";
 	foreach ($ret['rows'] as $row){
-		echo "\tadd_piece($row[uid], $row[tab_id], $row[in_order], $row[palette], $row[id], $row[w], $row[h], $row[offset_x], $row[offset_y], '$city_id/$row[image]');\n";
+		echo "\tadd_piece({$row['uid']}, {$row['tab_id']}, {$row['in_order']}, {$row['palette']}, {$row['id']}, {$row['w']}, {$row['h']}, {$row['offset_x']}, {$row['offset_y']}, '{$city_id}/{$row['image']}');\n";
 	}
 ?>
 
@@ -82,7 +82,7 @@ function pre_init(){
 	}
 ?>
 
-<? if ($saved_row['id']){ ?>
+<? if (!empty($saved_row['id'])){ ?>
 	bg_nosave(<?=$saved_row['city_bg_id']?>);
 	unserialize_all('<?=$saved_row['city_pieces']?>');
 	update_pieces();
@@ -104,7 +104,7 @@ form		{ border: 0px; margin: 0px; padding: 0px; }
 #outer		{ position: absolute; left:    50%; top:  20px; }
 #canvas		{ position: absolute; left: -370px; top:   0px; width: 740px; height: 439px; z-index: 1; }
 #loading	{ position: absolute; left:    0px; top: 200px; width: 740px; height:  20px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
-#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: <?=$city_row['bgcolor']?>; }
+#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: <?=$city_row['bgcolor'] ?? '#ffffff'?>; }
 #copyright	{ position: absolute; left: -370px; top: 442px; width: 740px; height:  20px; z-index: 1; visibility: hidden; }
 
 #bordertop	{ position: absolute; left:    0px; top:   0px; width: 740px; height:   8px; }
@@ -198,14 +198,14 @@ div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 3
 
 	<div id="grid"><img src="images/grid.gif" width="469" height="364"></div>
 
-	<div style="position: absolute; left:  17px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1]?>" width="21" height="12" border="0"></a></div>
-	<div style="position: absolute; left:  42px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2]?>" width="21" height="12" border="0"></a></div>
-	<div style="position: absolute; left:  78px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 106px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 134px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 162px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 190px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7]?>" width="25" height="24" border="0"></a></div>
-	<div style="position: absolute; left: 218px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8]?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left:  17px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(1);"><img src="<?=$thumbs[1] ?? ''?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  42px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(2);"><img src="<?=$thumbs[2] ?? ''?>" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  78px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="<?=$thumbs[3] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 106px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="<?=$thumbs[4] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 134px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="<?=$thumbs[5] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 162px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="<?=$thumbs[6] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 190px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="<?=$thumbs[7] ?? ''?>" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 218px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="<?=$thumbs[8] ?? ''?>" width="25" height="24" border="0"></a></div>
 
 	<div style="position: absolute; left: 656px; top: 400px; width: 66px; height: 49px; z-index: 5;"><img src="images/frame/truck_<?=$city_id?>.gif" width="66" height="49"></div>
 

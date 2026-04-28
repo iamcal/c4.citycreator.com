@@ -6,14 +6,14 @@
 	# process cookies
 	#
 
-	if ($_COOKIE['u']){
+	if (isset($_COOKIE['u'])){
 		list($id, $ts, $hash) = explode('-', $_COOKIE['u']);
 
 		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE id=:id", array(
 			'id' => $id,
 		)));
 
-		$test = login_gen_hash($row['id'], $row['password'], $ts);
+		$test = login_gen_hash($row['id'] ?? 0, $row['password'] ?? '', $ts);
 
 		if ($test == $hash){
 
@@ -27,7 +27,7 @@
 	# perform a login?
 	#
 
-	if ($_POST['username'] && $_POST['password']){
+	if (isset($_POST['username']) && isset($_POST['password']) && $_POST['username'] && $_POST['password']){
 
 		$username = trim($_POST['username']);
 		$password = trim($_POST['password']);
@@ -36,7 +36,7 @@
 			'username' => $username,
 		)));
 
-		if ($row['id']){
+		if (isset($row['id']) && $row['id']){
 
 			if (password_verify($password, $row['password'])){
 
@@ -55,15 +55,15 @@
 	# unset old cookies?
 	#
 
-	if ($_COOKIE['cookie_username']) setcookie('cookie_username', '', time() - (24*60*60), '/', '.citycreator.com');
-	if ($_COOKIE['cookie_password']) setcookie('cookie_password', '', time() - (24*60*60), '/', '.citycreator.com');
+	if (isset($_COOKIE['cookie_username'])) setcookie('cookie_username', '', time() - (24*60*60), '/', '.citycreator.com');
+	if (isset($_COOKIE['cookie_password'])) setcookie('cookie_password', '', time() - (24*60*60), '/', '.citycreator.com');
 
 
 	#
 	# set a test cookie (to check cookies are enabled)
 	#
 
-	if (!$_COOKIE['t']){
+	if (!isset($_COOKIE['t'])){
 		setcookie('t', 1, time() + (365*24*60*60), '/', '.citycreator.com');
 	}
 
@@ -84,7 +84,7 @@
 
 		setcookie('u', $cookie, time() + (365*24*60*60), '/', '.citycreator.com');
 
-		if (!$_COOKIE['t']){
+		if (!isset($_COOKIE['t'])){
 			header("location: no_cookies.city");
 			exit;
 		}

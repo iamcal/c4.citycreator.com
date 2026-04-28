@@ -43,12 +43,12 @@ td {
 	}
 
 	foreach($data as $item){
-		$per = round(100*$item[count]/$max);
+		$per = $max ? round(100*$item['count']/$max) : 1;
 		if (!$per){ $per=1; }
-		$date = date(' jS F Y ',$item[time]);
-		$day = date('w',$item[time]);
+		$date = date(' jS F Y ',$item['time']);
+		$day = date('w',$item['time']);
 		$color = ($day==0 || $day==6)?'blue':'green';
-		echo "$date : $item[count] cards<br>\n<div style=\"background-color: $color; width: $per%;\">&nbsp</div>\n";
+		echo "$date : {$item['count']} cards<br>\n<div style=\"background-color: $color; width: $per%;\">&nbsp</div>\n";
 	}
 ?>
 
@@ -64,11 +64,11 @@ td {
 
 	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC LIMIT 50");
 	foreach ($ret['rows'] as $row){
-		$piece_count = count(explode(',',$row[pieces]));
-		$date = date('H:i d/m/Y',$row[date_create]);
+		$piece_count = count(explode(',',$row['pieces']));
+		$date = date('H:i d/m/Y',$row['date_create']);
 ?>
 	<tr bgcolor="#cccccc">
-		<td><a href="pickup.city?c=<?=$row[id]?>.<?=$row[check]?>">city <?=$row[id]?></a></td>
+		<td><a href="pickup.city?c=<?=$row['id']?>.<?=$row['check']?>">city <?=$row['id']?></a></td>
 		<td><?=$date?></td>
 		<td><?=$piece_count?> pieces</td>
 	</tr>
@@ -79,9 +79,10 @@ td {
 		<td colspan="3">Biggest City</td>
 	</tr>
 <?
+	$max_row = null;
 	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC");
 	foreach ($ret['rows'] as $row){
-		$piece_count = count(explode(',',$row[pieces]));
+		$piece_count = count(explode(',',$row['pieces']));
 		if ($piece_count > $max_count){
 			$max_count = $piece_count;
 			$max_id = $row['id'];
@@ -89,15 +90,19 @@ td {
 		}
 	}
 
-	$row = $max_row;
-	$piece_count = count(explode(',',$row[pieces]));
-	$date = date('H:i d/m/Y',$row[date_create]);
+	if ($max_row){
+		$row = $max_row;
+		$piece_count = count(explode(',',$row['pieces']));
+		$date = date('H:i d/m/Y',$row['date_create']);
 ?>
 	<tr bgcolor="#cccccc">
-		<td><a href="pickup.city?c=<?=$row[id]?>.<?=$row[check]?>">city <?=$row[id]?></a></td>
+		<td><a href="pickup.city?c=<?=$row['id']?>.<?=$row['check']?>">city <?=$row['id']?></a></td>
 		<td><?=$date?></td>
 		<td><?=$piece_count?> pieces</td>
 	</tr>
+<?
+	}
+?>
 </table>
 
 </body>

@@ -8,9 +8,9 @@
 	# get user to reset
 	#
 
-	$user = verify_password_reset_code($_REQUEST['c']);
+	$user = verify_password_reset_code($_REQUEST['c'] ?? '');
 
-	if (!$user['id']){
+	if (empty($user['id'])){
 		echo "Bad URL - please try copying the entire link from your email";
 		exit;
 	}
@@ -18,7 +18,7 @@
 
 	$error = '';
 
-	if ($_POST['done']){
+	if (!empty($_POST['done'])){
 		$error = local_reset_password($user);
 	}
 
@@ -28,7 +28,7 @@
 		# verify
 		#
 
-		$password = trim($_POST['password']);
+		$password = trim($_POST['password'] ?? '');
 
 		if (strlen($password) < 3){
 			return "Please choose a password at least three letters long";
@@ -79,11 +79,11 @@
 	<br>
 
 	<form action="reset.city" method="post">
-	<input type="hidden" name="c" value="<?=htmlspecialchars($_REQUEST['c'])?>">
+	<input type="hidden" name="c" value="<?=htmlspecialchars($_REQUEST['c'] ?? '')?>">
 	<input type="hidden" name="done" value="1">
 
 	Choose a new password:<br>
-	<input type="text" class="edit" name="password" value="<?=htmlspecialchars($_POST['password'])?>"><br>
+	<input type="text" class="edit" name="password" value="<?=htmlspecialchars($_POST['password'] ?? '')?>"><br>
 	<br>
 	<input type="image" src="images/btn_login.gif" width="33" height="16">
 	</form>
