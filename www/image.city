@@ -147,8 +147,12 @@
 				'z' => $z,
 			);
 		}else{
+			$list = explode('|', $piece);
+			$uid  = $list[0] ?? null;
+			$x    = $list[1] ?? null;
+			$y    = $list[2] ?? null;
+			$z    = $list[3] ?? null;
 
-			list($uid, $x, $y, $z) = explode('|',$piece);
 			$card_pieces[] = array(
 				'piece' => $pieces_index_1[$uid] ?? null,
 				'x' => $x,
