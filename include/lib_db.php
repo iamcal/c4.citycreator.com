@@ -31,15 +31,20 @@
 		foreach ($bind as $k => $v){
 			$stmt->bindParam(':'.$k, $bind[$k]);
 		}
-		$ret = $stmt->execute();
 
-		if ($ret){
-			return array(
-				'ok'		=> true,
-				'affected_rows' => $stmt->rowCount(),
-				'dbh'		=> $dbh,
-				'stmt'		=> $stmt,
-			);
+		try {
+			$ret = $stmt->execute();
+
+			if ($ret){
+				return array(
+					'ok'		=> true,
+					'affected_rows' => $stmt->rowCount(),
+					'dbh'		=> $dbh,
+					'stmt'		=> $stmt,
+				);
+			}
+
+		}catch (Exception $e){
 		}
 
 		$info = $stmt->errorInfo();
