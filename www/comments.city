@@ -49,8 +49,8 @@
 	list($count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_comments WHERE published=1")), 1, 0);
 	$page = $page ? $page : 1;
 	$pages = (int)ceil($count / $perpage);
-	if ($page < 1)      { $page = 1; }
 	if ($page > $pages) { $page = $pages; }
+	if ($page < 1)      { $page = 1; }
 
 	#
 	# grab results
