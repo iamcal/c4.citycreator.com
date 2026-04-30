@@ -1,13 +1,14 @@
 <?
-	include("include/init.txt");
-	include("include/login.txt");
+	include('../include/init.php');
 
-	$ok = 0;
+	$id = (int)($_GET['id'] ?? 0);
 
-	$row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_gallery WHERE id='$id' AND deleted=0",$db));
+	$row = db_single(db_fetch("SELECT * FROM citycreator_gallery WHERE id=:id AND deleted=0", array(
+		'id' => $id,
+	)));
 
-	if (!$row[id]){
-		header("location: no_card.city");
+	if (!isset($row['id']) || !$row['id']){
+		header('location: no_card.city');
 		exit;
 	}
 ?>
@@ -39,11 +40,11 @@ img {
 
 	<img src="image.city?g=<?=$id?>"><br>
 	<br>
-<? if ($row[your_name]){ ?>
-	By: <b><?=HtmlSpecialChars($row[your_name])?></b><br>
+<? if (!empty($row['your_name'])){ ?>
+	By: <b><?=HtmlSpecialChars($row['your_name'])?></b><br>
 <? } ?>
-<? if ($row[your_location]){ ?>
-	From: <b><?=HtmlSpecialChars($row[your_location])?></b><br>
+<? if (!empty($row['your_location'])){ ?>
+	From: <b><?=HtmlSpecialChars($row['your_location'])?></b><br>
 <? } ?>
 	<br>
 	<a href="Javascript:window.close();">close window</a>

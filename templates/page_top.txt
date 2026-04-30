@@ -1,15 +1,15 @@
 <html>
 <head>
-<title>City Creator<? if ($title){ echo " - $title"; } ?></title>
+<title>City Creator<? if ($title ?? ''){ echo " - $title"; } ?></title>
 <style>
 
-<? include('include/styles.txt'); ?>
+<? include(__DIR__.'/styles.txt'); ?>
 
 </style>
 </head>
 <body>
 
-<? include('include/inner_head.txt'); ?>
+<? include(__DIR__.'/inner_head.txt'); ?>
 
 <map name="topbarmap" id="topbarmap">
 	<area shape="rect" coords="10,6,229,33" href="./">
@@ -19,7 +19,7 @@
 	<tr valign="top">
 		<td><img src="images/inner_logo.gif" width="243" height="45" usemap="#topbarmap"></td>
 		<td>
-<? include('include/tabs.txt'); ?>
+<? include(__DIR__.'/tabs.txt'); ?>
 			<img src="images/inner_navbottom.gif" width="477" height="29"></td>
 	</tr>
 </table>

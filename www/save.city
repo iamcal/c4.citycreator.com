@@ -1,15 +1,26 @@
 <?
-	include("include/init.txt");
-	include('include/login.txt');
+	include('../include/init.php');
+	include('../include/login.php');
 
-	mysql_query("INSERT INTO $cfg[db_prefix]_saved (date_create, city_id, city_pieces, city_bg_id) VALUES ($cfg[time], '$city_id', '$city_pieces', '$city_bg')",$db);
-	$saved_id = mysql_insert_id();
+	$user_id     = $cfg['user']['id'] ?? 0;
+	$city_id     = $_POST['city_id']     ?? 0;
+	$city_pieces = $_POST['city_pieces'] ?? '';
+	$city_bg     = $_POST['city_bg']     ?? 0;
 
-	if ($cfg[user_ok]){
-		mysql_query("UPDATE $cfg[db_prefix]_saved SET user_id='{$cfg[user][id]}' WHERE id=$saved_id",$db);
-		header("location: members.city");
+	$ret = db_insert('citycreator_saved', array(
+		'date_create' => time(),
+		'city_id'     => $city_id,
+		'city_pieces' => $city_pieces,
+		'city_bg_id'  => $city_bg,
+		'user_id'     => $user_id,
+		'is_deleted'  => 0,
+		'share_check' => '',
+	));
+	$saved_id = $ret['insert_id'] ?? 0;
+
+	if ($user_id){
+		header('location: members.city');
 	}else{
-		header("location: members.city?saved_id=$saved_id");		
+		header('location: members.city?saved_id='.urlencode($saved_id));
 	}
-
 ?>

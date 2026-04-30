@@ -27,8 +27,12 @@
 	# perform a login?
 	#
 
+	$login_attempted = false;
+	$login_failed = false;
+
 	if (isset($_POST['username']) && isset($_POST['password']) && $_POST['username'] && $_POST['password']){
 
+		$login_attempted = true;
 		$username = trim($_POST['username']);
 		$password = trim($_POST['password']);
 
@@ -36,17 +40,10 @@
 			'username' => $username,
 		)));
 
-		if (isset($row['id']) && $row['id']){
-
-			if (password_verify($password, $row['password'])){
-
-				login_set_user($row);
-				echo "setting user";
-			}else{
-				echo "password failed $password / {$row['password']}";
-			}
+		if (isset($row['id']) && $row['id'] && password_verify($password, $row['password'])){
+			login_set_user($row);
 		}else{
-			echo "user row not found";
+			$login_failed = true;
 		}
 	}
 

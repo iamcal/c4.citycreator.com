@@ -1,24 +1,40 @@
 <?
-	include('include/init.txt');
-	include('include/login.txt');
+	include('../include/init.php');
+	include('../include/login.php');
 
-	if ($delete){
-		mysql_query("DELETE FROM $cfg[db_prefix]_saved WHERE id='$delete' AND user_id='{$cfg[user][id]}'",$db);
+	$user_id = $cfg['user']['id'] ?? 0;
+	$delete   = $_REQUEST['delete']   ?? 0;
+	$saved_id = $_REQUEST['saved_id'] ?? '';
+	$share_id = $_REQUEST['share_id'] ?? '';
+
+	if ($delete && $user_id){
+		db_query("DELETE FROM citycreator_saved WHERE id=:id AND user_id=:user_id", array(
+			'id'      => $delete,
+			'user_id' => $user_id,
+		));
 	}
 
-	if ($share_id && $cfg[user_ok]){
-		header("location: share_take.city?share_id=$share_id");
+	if ($share_id && $user_id){
+		header("location: share_take.city?share_id=".urlencode($share_id));
 		exit;
 	}
 
 	$extra = '';
-	if ($saved_id){ $extra = "?saved_id=$saved_id"; }
-	if ($share_id){ $extra = "?share_id=$share_id"; }
+	if ($saved_id){ $extra = '?saved_id='.urlencode($saved_id); }
+	if ($share_id){ $extra = '?share_id='.urlencode($share_id); }
+
+	$saved_rows = array();
+	if ($user_id){
+		$ret = db_fetch("SELECT * FROM citycreator_saved WHERE user_id=:user_id ORDER BY date_create DESC", array(
+			'user_id' => $user_id,
+		));
+		$saved_rows = $ret['rows'];
+	}
 
 	$title = 'Members Area';
 	$nav = 'members';
 
-	include('include/page_top.txt');
+	include('../templates/page_top.txt');
 ?>
 
 <script language="Javascript" src="gallery.js"></script>
@@ -42,21 +58,18 @@ function delete_city(id){
 	<img src="images/title_members.gif" width="63" height="11"><br>
 	<br>
 
-<? if ($cfg[user_ok]){ ?>
-	<b>You are logged in as <?=$cfg[user][username]?></b><br>
+<? if ($user_id){ ?>
+	<b>You are logged in as <?=HtmlSpecialChars($cfg['user']['username'] ?? '')?></b><br>
 	(<a href="logout.city">click here</a> to logout)<br>
 	<br>
 	As a member, you have your own personal "members page" which contains any city designs that you have created or been sent. To get back to this page at any time, simply click on the "members" tab at the bottom of the page. From this page you can send your cities as e-cards, share your city designs with other designers, continuing working on previously saved cities, print your city designs, and delete cities you don't want to keep any longer.<br>
 	<br>
-<?
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_saved WHERE user_id='{$cfg[user][id]}' ORDER BY date_create DESC",$db);
-	if (mysql_num_rows($result)){
-?>
+<? if (count($saved_rows)){ ?>
 	<b>You have saved the following cities:</b><br>
 
 	<table cellpadding="0" cellspacing="0" border="0">
 <?
-	while($row = mysql_fetch_array($result)){
+	foreach($saved_rows as $row){
 ?>
 		<tr>
 			<td><img src="images/space.gif" width="93" height="16"></td>
@@ -66,40 +79,28 @@ function delete_city(id){
 			<td><img src="images/space.gif" width="228" height="16"></td>
 		</tr>
 		<tr>
-			<td colspan="5" class="text">Saved <?=date('H:i jS F Y',$row[date_create])?></td>
+			<td colspan="5" class="text">Saved <?=date('H:i jS F Y', $row['date_create'])?></td>
 		</tr>
 		<tr>
 			<td colspan="5"><img src="images/space.gif" width="421" height="10"></td>
 		</tr>
 		<tr valign="top">
-			<td><a href="javascript:print_city(<?=$row[id]?>,0);"><img src="image.city?s=<?=$row[id]?>&thumb=1" width="93" height="72" class="citythumb"></a></td>
+			<td><a href="javascript:print_city(<?=$row['id']?>,0);"><img src="image.city?s=<?=$row['id']?>&thumb=1" width="93" height="72" class="citythumb"></a></td>
 			<td><img src="images/space.gif" width="12" height="10"></td>
 			<td class="text">
 				<img src="images/space.gif" width="71" height="5"><br>
-				<a href="send.city?saved_id=<?=$row[id]?>"><img src="images/button_send.gif" width="71" height="16" border="0"></a><br>
+				<a href="send.city?saved_id=<?=$row['id']?>"><img src="images/button_send.gif" width="71" height="16" border="0"></a><br>
 				<img src="images/space.gif" width="71" height="8"><br>
-				<a href="build.city?saved_id=<?=$row[id]?>"><img src="images/button_edit.gif" width="71" height="16" border="0"></a><br>
+				<a href="build.city?saved_id=<?=$row['id']?>"><img src="images/button_edit.gif" width="71" height="16" border="0"></a><br>
 				<img src="images/space.gif" width="71" height="8"><br>
-				<a href="share.city?saved_id=<?=$row[id]?>"><img src="images/button_share.gif" width="71" height="16" border="0"></a><br>
+				<a href="share.city?saved_id=<?=$row['id']?>"><img src="images/button_share.gif" width="71" height="16" border="0"></a><br>
 			</td>
 			<td><img src="images/space.gif" width="16" height="10"></td>
 			<td class="text">
 				<img src="images/space.gif" width="71" height="5"><br>
-				<a href="javascript:print_city(<?=$row[id]?>,1);"><img src="images/button_print.gif" width="71" height="16" border="0"></a><br>
+				<a href="javascript:print_city(<?=$row['id']?>,1);"><img src="images/button_print.gif" width="71" height="16" border="0"></a><br>
 				<img src="images/space.gif" width="71" height="8"><br>
-				<a href="javascript:delete_city(<?=$row[id]?>);"><img src="images/button_delete.gif" width="71" height="16" border="0"></a><br>
-<? if ($row[gallery_date]){ ?>
-				<img src="images/space.gif" width="71" height="10"><br>
-<? $gallery_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_gallery WHERE id='$row[gallery_id]'")); ?>
-<? if ($gallery_row[deleted]){ ?>
-				Removed from gallery
-<? }else{ ?>
-				<a href="Javascript:gallery_pop(<?=$row[gallery_id]?>);">Added to gallery <?=date('j/n/Y',$row[gallery_date])?></a>
-<? } ?>
-<? }else{ ?>
-				<img src="images/space.gif" width="71" height="8"><br>
-				<a href="gallery_add.city?saved_id=<?=$row[id]?>"><img src="images/button_gallery.gif" width="71" height="16" border="0"></a><br>
-<? } ?>
+				<a href="javascript:delete_city(<?=$row['id']?>);"><img src="images/button_delete.gif" width="71" height="16" border="0"></a><br>
 			</td>
 		</tr>
 		<tr>
@@ -129,13 +130,13 @@ function delete_city(id){
 <? } ?>
 
 <?
-	include('include/page_mid.txt');
+	include('../templates/page_mid.txt');
 
-	if ($cfg[user_ok]){
-		include('include/col2_normal.txt');
+	if ($user_id){
+		include('../templates/col2_normal.txt');
 	}else{
-		include('include/col2_signup.txt');
+		include('../templates/col2_signup.txt');
 	}
 
-	include('include/page_bottom.txt');
+	include('../templates/page_bottom.txt');
 ?>

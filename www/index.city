@@ -8,7 +8,7 @@
 <title>City Creator</title>
 <style>
 
-<? include('../templates-c4/styles.txt'); ?>
+<? include('../templates/styles.txt'); ?>
 
 .text a {
 	color: #000000;
@@ -22,7 +22,7 @@
 </head>
 <body>
 
-<? include('../templates-c4/inner_head.txt'); ?>
+<? include('../templates/inner_head.txt'); ?>
 
 <table border="0" cellpadding="0" cellspacing="0">
 	<tr valign="top">
@@ -67,7 +67,7 @@ Happy Building!<br>
 		</td>
 		<td width="4"><img src="images/space.gif" width="4" height="422"></td>
 		<td width="477">
-<? include('../templates-c4/tabs.txt'); ?>
+<? include('../templates/tabs.txt'); ?>
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td><img src="images/home_col2_top_left.gif"  width="12"  height="4"></td>
@@ -103,7 +103,7 @@ Happy Building!<br>
 	</tr>
 </table>
 
-<? include('../templates-c4/inner_foot.txt'); ?>
+<? include('../templates/inner_foot.txt'); ?>
 
 <map name="topbarmap" id="topbarmap">
 	<area shape="rect" coords="43,9,194,39" href="./">

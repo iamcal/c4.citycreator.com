@@ -1,23 +1,50 @@
 <?
-	include('include/init.txt');
+	include('../include/init.php');
 
 	$title = 'Gallery';
 	$nav = 'gallery';
 
 	$perpage = 9;
+	$page = (int)($_GET['page'] ?? 0);
 
-	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_gallery WHERE deleted=0"));
-	$page = $page?round($page):1;
-	$pages = ceil($count / $perpage);
-	if ($page < 1){ $page = 1; }
-	if ($page > $pages){ $page = $pages; }
+	list($count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_gallery WHERE deleted=0")), 1, 0);
+	$page = $page ? $page : 1;
+	$pages = (int)ceil($count / $perpage);
+	if ($page < 1)      { $page = 1; }
+	if ($page > $pages) { $page = $pages; }
 
 	#
 	# grab results
 	#
 
-	$start = ($page-1)*$perpage;
-	$gallery_result = mysql_query("SELECT * FROM $cfg[db_prefix]_gallery WHERE deleted=0 ORDER BY date_create DESC LIMIT $start,$perpage");
+	$start = ($page - 1) * $perpage;
+	$ret = db_fetch("SELECT * FROM citycreator_gallery WHERE deleted=0 ORDER BY date_create DESC LIMIT {$start}, {$perpage}");
+	$gallery_rows = $ret['rows'];
+	$gallery_idx = 0;
+
+	function insert_cell(){
+		global $gallery_rows, $gallery_idx;
+		$row = $gallery_rows[$gallery_idx] ?? null;
+		$gallery_idx++;
+		if ($row && !empty($row['id'])){
+?>
+			<td class="text">
+				<a href="Javascript:gallery_pop(<?=(int)$row['id']?>);"><img src="image.city?g=<?=(int)$row['id']?>&mid=1" width="125" height="96"></a><br>
+				<br>
+<? if (!empty($row['your_name'])){ ?>
+				By: <b><?=HtmlSpecialChars($row['your_name'])?></b><br>
+<? } ?>
+<? if (!empty($row['your_location'])){ ?>
+				From: <b><?=HtmlSpecialChars($row['your_location'])?></b><br>
+<? } ?>
+			</td>
+<?
+		}else{
+?>
+			<td><img src="images/gallery_hold.gif" width="125" height="96"></td>
+<?
+		}
+	}
 
 	#
 	# generate page markers
@@ -36,7 +63,7 @@
 	$markers = implode(' | ', $markers);
 
 
-	include('include/page_top.txt');
+	include('../templates/page_top.txt');
 ?>
 
 <script language="Javascript" src="gallery.js"></script>
@@ -75,38 +102,8 @@
 		<tr><td colspan="5" bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
 	</table>
 
-
-	
-
 <?
-	function insert_cell(){
-		global $gallery_result;
-		$row = mysql_fetch_array($gallery_result);
-		if ($row[id]){
-?>
-			<td class="text">
-				<a href="Javascript:gallery_pop(<?=$row[id]?>);"><img src="image.city?g=<?=$row[id]?>&mid=1" width="125" height="96"></a><br>
-				<br>
-<? if ($row[your_name]){ ?>
-				By: <b><?=HtmlSpecialChars($row[your_name])?></b><br>
-<? } ?>
-<? if ($row[your_location]){ ?>
-				From: <b><?=HtmlSpecialChars($row[your_location])?></b><br>
-<? } ?>
-			</td>
-<?
-		}else{
-?>
-			<td><img src="images/gallery_hold.gif" width="125" height="96"></td>
-<?
-		}
-	}
-?>
-
-
-
-<?
-	include('include/page_mid.txt');
-	include('include/col2_gallery.txt');
-	include('include/page_bottom.txt');
+	include('../templates/page_mid.txt');
+	include('../templates/col2_gallery.txt');
+	include('../templates/page_bottom.txt');
 ?>

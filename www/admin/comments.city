@@ -1,11 +1,11 @@
 <?
-	include("../include/init.txt");
+	include('../../include/init.php');
 
-	if ($HTTP_POST_VARS[ids]){
-		$ids = explode(',', $HTTP_POST_VARS[ids]);
+	if (!empty($_POST['ids'])){
+		$ids = explode(',', $_POST['ids']);
 		foreach($ids as $id){
-			$value = $HTTP_POST_VARS['approve'.$id]?1:2;
-			mysql_query("UPDATE $cfg[db_prefix]_comments SET published=$value WHERE id='$id'");
+			$value = !empty($_POST['approve'.$id]) ? 1 : 2;
+			db_update('citycreator_comments', array('published' => $value), 'id=:id', array('id' => $id));
 		}
 
 		header('location: comments.city');
@@ -13,15 +13,14 @@
 	}
 
 
-	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=0"));
+	list($count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_comments WHERE published=0")), 1, 0);
 
-	$rows = array();
+	$ret = db_fetch("SELECT * FROM citycreator_comments WHERE published=0 ORDER BY date_create ASC LIMIT 2");
+	$rows = $ret['rows'];
+
 	$ids = array();
-
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_comments WHERE published=0 ORDER BY date_create ASC LIMIT 2");
-	while ($row = mysql_fetch_array($result)){
-		$rows[] = $row;
-		$ids[] = $row[id];
+	foreach ($rows as $row){
+		$ids[] = $row['id'] ?? '';
 	}
 
 	include('head.txt');
@@ -31,10 +30,10 @@
 
 <? if ($count){ ?>
 
-<p>There are <?=$count?> pending comments...</p>
+<p>There are <?=(int)$count?> pending comments...</p>
 
 <form action="comments.city" method="post">
-<input type="hidden" name="ids" value="<?=implode(',', $ids)?>">
+<input type="hidden" name="ids" value="<?=HtmlSpecialChars(implode(',', $ids))?>">
 
 <table border="1">
 	<tr valign="top">
@@ -46,13 +45,13 @@
 	</tr>
 <? foreach ($rows as $row){ ?>
 	<tr valign="top">
-		<td><?=HtmlSpecialChars($row[comment])?></td>
-		<td><?=HtmlSpecialChars($row[author])?></td>
-		<td><?=HtmlSpecialChars($row[age])?></td>
-		<td><?=HtmlSpecialChars($row[location])?></td>
+		<td><?=HtmlSpecialChars($row['comment']  ?? '')?></td>
+		<td><?=HtmlSpecialChars($row['author']   ?? '')?></td>
+		<td><?=HtmlSpecialChars($row['age']      ?? '')?></td>
+		<td><?=HtmlSpecialChars($row['location'] ?? '')?></td>
 		<td>
-			<input type="radio" name="approve<?=$row[id]?>" id="approve<?=$row[id]?>1" value="1" checked>&nbsp;<label for="approve<?=$row[id]?>1">Approve</label><br />
-			<input type="radio" name="approve<?=$row[id]?>" id="approve<?=$row[id]?>0" value="0">&nbsp;<label for="approve<?=$row[id]?>0">Discard</label><br />
+			<input type="radio" name="approve<?=(int)($row['id'] ?? 0)?>" id="approve<?=(int)($row['id'] ?? 0)?>1" value="1" checked>&nbsp;<label for="approve<?=(int)($row['id'] ?? 0)?>1">Approve</label><br />
+			<input type="radio" name="approve<?=(int)($row['id'] ?? 0)?>" id="approve<?=(int)($row['id'] ?? 0)?>0" value="0">&nbsp;<label for="approve<?=(int)($row['id'] ?? 0)?>0">Discard</label><br />
 		</td>
 	</tr>
 <? } ?>

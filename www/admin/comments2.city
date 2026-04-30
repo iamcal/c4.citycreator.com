@@ -1,39 +1,38 @@
 <?
-	include("../include/init.txt");
+	include('../../include/init.php');
 
-	if ($HTTP_GET_VARS[delete]){
-		mysql_query("UPDATE $cfg[db_prefix]_comments SET published=2 WHERE id='$delete'");
+	$delete = $_GET['delete'] ?? 0;
+	$page = (int)($_GET['page'] ?? 0);
+
+	if ($delete){
+		db_update('citycreator_comments', array('published' => 2), 'id=:id', array('id' => $delete));
 
 		header('location: comments2.city?page='.$page);
 		exit;
 	}
 
 
-	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=1"));
+	list($count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_comments WHERE published=1")), 1, 0);
 
-	if (!$page){$page = 1;}
+	if (!$page){ $page = 1; }
 	$per_page = 10;
-	$start = ($page-1)*$per_page;
-	$pages = ceil($count / $per_page);
+	$start = ($page - 1) * $per_page;
+	$pages = (int)ceil($count / $per_page);
 
 	$links = array();
-	if ($page > 1){ $links[] = "<a href=\"comments2.city?page=".($page-1)."\">Prev</a>"; }
-	if ($page < $pages){ $links[] = "<a href=\"comments2.city?page=".($page+1)."\">Next</a>"; }
+	if ($page > 1)      { $links[] = "<a href=\"comments2.city?page=".($page-1)."\">Prev</a>"; }
+	if ($page < $pages) { $links[] = "<a href=\"comments2.city?page=".($page+1)."\">Next</a>"; }
 
 
-	$rows = array();
-
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_comments WHERE published=1 ORDER BY date_create DESC LIMIT $start, $per_page");
-	while ($row = mysql_fetch_array($result)){
-		$rows[] = $row;
-	}
+	$ret = db_fetch("SELECT * FROM citycreator_comments WHERE published=1 ORDER BY date_create DESC LIMIT {$start}, {$per_page}");
+	$rows = $ret['rows'];
 
 	include('head.txt');
 ?>
 
 <h1>Published Comments <span class="small">(<a href="comments.city">Pending Comments</a>)</span></h1>
 
-<p>There are <?=$count?> published comments...</p>
+<p>There are <?=(int)$count?> published comments...</p>
 
 <table border="1">
 	<tr valign="top">
@@ -45,11 +44,11 @@
 	</tr>
 <? foreach ($rows as $row){ ?>
 	<tr valign="top">
-		<td><?=HtmlSpecialChars($row[comment])?></td>
-		<td><?=HtmlSpecialChars($row[author])?></td>
-		<td><?=HtmlSpecialChars($row[age])?></td>
-		<td><?=HtmlSpecialChars($row[location])?></td>
-		<td><a href="comments2.city?delete=<?=$row[id]?>&page=<?=$page?>">Discard</a></td>
+		<td><?=HtmlSpecialChars($row['comment']  ?? '')?></td>
+		<td><?=HtmlSpecialChars($row['author']   ?? '')?></td>
+		<td><?=HtmlSpecialChars($row['age']      ?? '')?></td>
+		<td><?=HtmlSpecialChars($row['location'] ?? '')?></td>
+		<td><a href="comments2.city?delete=<?=(int)($row['id'] ?? 0)?>&page=<?=$page?>">Discard</a></td>
 	</tr>
 <? } ?>
 </table>

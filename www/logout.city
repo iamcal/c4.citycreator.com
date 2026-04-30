@@ -1,11 +1,8 @@
 <?
-	include('include/init.txt');
+	include('../include/init.php');
 
-	$cookie_username = '';
-	$cookie_password = '';
+	login_unset();
 
-	include('include/login.txt');
-
-	header("location: members.city");
+	header('location: members.city');
 	exit;
 ?>

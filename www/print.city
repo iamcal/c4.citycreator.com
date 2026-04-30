@@ -1,22 +1,40 @@
 <?
-	include("include/init.txt");
-	include("include/login.txt");
+	include('../include/init.php');
+	include('../include/login.php');
 
-	$ok = 0;
+	$user_id = $cfg['user']['id'] ?? 0;
+	$c        = $_GET['c']        ?? '';
+	$saved_id = $_GET['saved_id'] ?? 0;
+	$auto     = $_GET['auto']     ?? 0;
 
-	list($id,$check) = explode('.',$c,2);
-	if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_cards WHERE id='$id' AND `check`='$check'",$db))){
-		$ok = 1;
-		$url = "image.city?c=$c";
+	$ok = false;
+	$url = '';
+
+	if ($c){
+		list($id, $check) = array_pad(explode('.', $c, 2), 2, '');
+		$card_row = db_single(db_fetch("SELECT * FROM citycreator_cards WHERE id=:id AND `check`=:check", array(
+			'id'    => $id,
+			'check' => $check,
+		)));
+		if (isset($card_row['id']) && $card_row['id']){
+			$ok = true;
+			$url = "image.city?c=".urlencode($c);
+		}
 	}
 
-	if ($saved_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db))){
-		$ok = 1;
-		$url = "image.city?s=$saved_id";
+	if ($saved_id && $user_id){
+		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND user_id=:user_id", array(
+			'id'      => $saved_id,
+			'user_id' => $user_id,
+		)));
+		if (isset($saved_row['id']) && $saved_row['id']){
+			$ok = true;
+			$url = "image.city?s=".urlencode($saved_id);
+		}
 	}
 
 	if (!$ok){
-		header("location: no_card.city");
+		header('location: no_card.city');
 		exit;
 	}
 ?>
@@ -44,7 +62,7 @@ img {
 
 <table width="100%" height="100%">
 	<tr valign="middle">
-		<td align="center"><img src="<?=$url?>"></td>
+		<td align="center"><img src="<?=HtmlSpecialChars($url)?>"></td>
 	</tr>
 </table>
 

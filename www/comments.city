@@ -1,6 +1,6 @@
 <?
-	include('include/init.txt');
-	include('include/login.txt');
+	include('../include/init.php');
+	include('../include/login.php');
 
 	$title = 'Comments';
 	$nav = 'comments';
@@ -9,19 +9,30 @@
 	# submitted a comment?
 	#
 
-	if ($HTTP_POST_VARS[done]){
+	if (!empty($_POST['done'])){
 
-		$time = time();
+		$dob_d = (int)($_POST['dob_d'] ?? 0);
+		$dob_m = (int)($_POST['dob_m'] ?? 0);
+		$dob_y = (int)($_POST['dob_y'] ?? 0);
 
 		# get number of years
-		$age = date('Y') - $dob_y;
+		$age = (int)date('Y') - $dob_y;
 
 		# adjust for this year
-		$now_day = mktime(0,0,0,date('m'),date('d'),2000);
+		$now_day = mktime(0,0,0,(int)date('m'),(int)date('d'),2000);
 		$dob_day = mktime(0,0,0,$dob_m,$dob_d,2000);
 		if ($dob_day > $now_day){ $age--; }
 
-		mysql_query("INSERT INTO c4cc_comments (date_create, comment, author, age, location, email, title) VALUES ('$time', '$comment', '$name', '$age', '$location', '$email', '$name_title')");
+		db_insert('citycreator_comments', array(
+			'date_create' => time(),
+			'comment'     => $_POST['comment']    ?? '',
+			'author'      => $_POST['name']       ?? '',
+			'age'         => $age,
+			'location'    => $_POST['location']   ?? '',
+			'email'       => $_POST['email']      ?? '',
+			'title'       => $_POST['name_title'] ?? '',
+			'published'   => 0,
+		));
 
 		header('location: comments_thanks.city');
 		exit;
@@ -33,19 +44,21 @@
 	#
 
 	$perpage = 5;
+	$page = (int)($_GET['page'] ?? 0);
 
-	list($count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=1"));
-	$page = $page?round($page):1;
-	$pages = ceil($count / $perpage);
-	if ($page < 1){ $page = 1; }
-	if ($page > $pages){ $page = $pages; }
+	list($count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_comments WHERE published=1")), 1, 0);
+	$page = $page ? $page : 1;
+	$pages = (int)ceil($count / $perpage);
+	if ($page < 1)      { $page = 1; }
+	if ($page > $pages) { $page = $pages; }
 
 	#
 	# grab results
 	#
 
-	$start = ($page-1)*$perpage;
-	$comments_result = mysql_query("SELECT * FROM $cfg[db_prefix]_comments WHERE published=1 ORDER BY date_create DESC LIMIT $start,$perpage");
+	$start = ($page - 1) * $perpage;
+	$ret = db_fetch("SELECT * FROM citycreator_comments WHERE published=1 ORDER BY date_create DESC LIMIT {$start}, {$perpage}");
+	$comments = $ret['rows'];
 
 	#
 	# generate page markers
@@ -64,7 +77,7 @@
 	$markers = implode(' | ', $markers);
 
 
-	include('include/page_top.txt');
+	include('../templates/page_top.txt');
 ?>
 
 	<img src="images/title_comments.gif" width="112" height="11"><br>
@@ -79,24 +92,24 @@
 		<tr><td><img src="images/space.gif" width="23" height="8"></td></tr>
 		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
 <?
-	$first = 1;
-	while($row = mysql_fetch_array($comments_result)){
+	$first = true;
+	foreach ($comments as $row){
 		$bits = array();
-		$bits[] = $row[author]?HtmlSpecialChars($row[author]):'<i>anon</i>';
-		if ($row[age]){ $bits[] = HtmlSpecialChars($row[age]); }
-		if ($row[location]){ $bits[] = HtmlSpecialChars($row[location]); }
+		$bits[] = !empty($row['author']) ? HtmlSpecialChars($row['author']) : '<i>anon</i>';
+		if (!empty($row['age']))      { $bits[] = HtmlSpecialChars($row['age']); }
+		if (!empty($row['location'])) { $bits[] = HtmlSpecialChars($row['location']); }
 ?>
 <? if (!$first){ ?>
 		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
 <? } ?>
 		<tr><td class="text">
 			<img src="images/space.gif" width="23" height="16"><br>
-			<?=nl2br(chop(htmlspecialchars($row[comment])))?><br>
+			<?=nl2br(chop(HtmlSpecialChars($row['comment'] ?? '')))?><br>
 			<b style="color: #37591B;"><?=implode(', ', $bits)?></b><br>
 			<img src="images/space.gif" width="23" height="12"><br>
 		</td></tr>
 <?
-		$first = 0;
+		$first = false;
 	}
 ?>
 		<tr><td><img src="images/space.gif" width="23" height="18"></td></tr>
@@ -109,7 +122,7 @@
 	</table>
 
 <?
-	include('include/page_mid.txt');
-	include('include/col2_comments.txt');
-	include('include/page_bottom.txt');
+	include('../templates/page_mid.txt');
+	include('../templates/col2_comments.txt');
+	include('../templates/page_bottom.txt');
 ?>

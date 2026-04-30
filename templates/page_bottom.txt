@@ -6,7 +6,7 @@
 	</tr>
 </table>
 
-<? include('include/inner_foot.txt'); ?>
+<? include(__DIR__.'/inner_foot.txt'); ?>
 
 </body>
 </html>

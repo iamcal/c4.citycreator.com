@@ -103,7 +103,7 @@ function pre_init(){
 </script>
 <style>
 
-<? include('../templates-c4/styles.txt'); ?>
+<? include('../templates/styles.txt'); ?>
 
 #loading	{ position: relative; left:    0px; top: 0px; width: 720px; height: 422px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
 #canvasinner	{ position: relative; left:    0px; top: 0px; width: 720px; height: 422px; z-index: 1; background: url('images/build_canvas.gif'); display: none; }
@@ -127,14 +127,14 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 </head>
 <body onLoad="init()">
 
-<? include('../templates-c4/inner_head.txt'); ?>
+<? include('../templates/inner_head.txt'); ?>
 
 <div id="canvasinner">
 
 	<div id="logo"><a href="/"><img src="images/space.gif" width="219" height="27"></a></div>
 
 	<div id="navigation">
-<? include('../templates-c4/tabs.txt'); ?>
+<? include('../templates/tabs.txt'); ?>
 	</div>
 
 <?
@@ -205,7 +205,7 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 	</div>
 </div>
 
-<? include('../templates-c4/inner_foot.txt'); ?>
+<? include('../templates/inner_foot.txt'); ?>
 
 
 <form action="save.city" method="post" name="sendform">

@@ -1,25 +1,25 @@
 <?
-	include("../include/init.txt");
+	include('../../include/init.php');
 
-	list($user_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_users"));
-	list($city_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_saved"));
-	list($card_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_cards"));
-	list($vote_count) = mysql_fetch_array(mysql_query("SELECT SUM(votes) FROM $cfg[db_prefix]_votes"));
-	list($gall_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_gallery WHERE deleted=0"));
-	list($com1_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=1"));
-	list($com2_count) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM $cfg[db_prefix]_comments WHERE published=0"));
+	list($user_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_users")), 1, 0);
+	list($city_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_saved")), 1, 0);
+	list($card_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_cards")), 1, 0);
+	list($vote_count) = array_pad(db_list(db_fetch("SELECT SUM(votes) FROM citycreator_votes")), 1, 0);
+	list($gall_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_gallery WHERE deleted=0")), 1, 0);
+	list($com1_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_comments WHERE published=1")), 1, 0);
+	list($com2_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_comments WHERE published=0")), 1, 0);
 
 	include('head.txt');
 ?>
 
 <h1>Statistics</h1>
 
-<p>Number of registered users: <b><?=$user_count?></b></p>
-<p>Number of saved cities: <b><?=$city_count?></b></p>
-<p>Number of ecards sent: <b><?=$card_count?></b></p>
-<p>Number of votes cast: <b><?=$vote_count?></b></p>
-<p>Number of cities in gallery: <b><?=$gall_count?></b></p>
-<p>Number of comments: <b><?=$com1_count?> published, <a href="comments.city"><?=$com2_count?> pending</a></b></p>
+<p>Number of registered users: <b><?=(int)$user_count?></b></p>
+<p>Number of saved cities: <b><?=(int)$city_count?></b></p>
+<p>Number of ecards sent: <b><?=(int)$card_count?></b></p>
+<p>Number of votes cast: <b><?=(int)$vote_count?></b></p>
+<p>Number of cities in gallery: <b><?=(int)$gall_count?></b></p>
+<p>Number of comments: <b><?=(int)$com1_count?> published, <a href="comments.city"><?=(int)$com2_count?> pending</a></b></p>
 
 <?
 	include('foot.txt');

@@ -1,19 +1,70 @@
 <?
-	include('include/init.txt');
+	include('../include/init.php');
 
 	$title = 'Vote';
 	$nav = 'vote';
 
+	$vote = (int)($_GET['vote'] ?? 0);
+	$voted = (int)($_GET['voted'] ?? 0);
+
 	if ($vote){
-		mysql_query("UPDATE $cfg[db_prefix]_votes SET votes=votes+1 WHERE id='$vote'");
-		setcookie('voted', 1);
-		header("location: vote.city?voted=1");
+		db_query("UPDATE citycreator_votes SET votes=votes+1 WHERE id=:id", array(
+			'id' => $vote,
+		));
+		setcookie('voted', '1');
+		header('location: vote.city?voted=1');
 		exit;
 	}
 
-	list($total) = mysql_fetch_array(mysql_query("SELECT SUM(votes) FROM $cfg[db_prefix]_votes WHERE enabled=1"));
+	list($total) = array_pad(db_list(db_fetch("SELECT SUM(votes) FROM citycreator_votes WHERE enabled=1")), 1, 0);
+	$total = (int)$total;
 
-	include('include/page_top.txt');
+	function insert_vote_cell($id){
+		global $voted, $total;
+		$row = db_single(db_fetch("SELECT * FROM citycreator_votes WHERE id=:id", array(
+			'id' => $id,
+		)));
+		$votes = (int)($row['votes'] ?? 0);
+		$percent = $total ? round(100 * $votes / $total) : 0;
+		$width = $total ? round(85 * $votes / $total) : 0;
+
+		if (!empty($row['enabled'])){
+			if ($voted){
+?>
+		<td align="left">
+			<img src="vote/pair_<?=$id?>.gif" width="117" height="68"><br>
+			<img src="images/space.gif" width="117" height="6"><br>
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td bgcolor="#C3E1AA"><img src="images/space.gif" width="<?=$width?>" height="10"></td>
+					<td><img src="images/space.gif" width="4" height="10"></td>
+					<td class="result"><?=$percent?>%</td>
+				</tr>
+			</table>
+			<img src="images/space.gif" width="117" height="9"><br>
+		</td>
+<?
+			}else{
+?>
+		<td align="right">
+			<img src="vote/pair_<?=$id?>.gif" width="117" height="68"><br>
+			<img src="images/space.gif" width="117" height="5"><br>
+			<a href="vote.city?vote=<?=(int)($row['id'] ?? 0)?>"><img src="images/vote_button.gif" width="24" height="20"></a><br>
+		</td>
+<?
+			}
+		}else{
+?>
+		<td align="right">
+			<img src="vote/grey_<?=$id?>.gif" width="117" height="68"><br>
+			<img src="images/space.gif" width="117" height="5"><br>
+			<img src="images/vote_in.gif" width="117" height="20"><br>
+		</td>
+<?
+		}
+	}
+
+	include('../templates/page_top.txt');
 ?>
 
 <? if ($voted){ ?>
@@ -71,44 +122,7 @@
 	</table>
 
 <?
-	function insert_vote_cell($id){
-		global $cfg, $voted, $total;
-		$row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_votes WHERE id='$id'"));
-		$percent = round(100 * $row[votes] / $total);
-		$width = round(85 * $row[votes] / $total);
-?>
-<? if ($row[enabled]){ ?>
-<? if ($voted){ ?>
-			<td align="left">
-				<img src="vote/pair_<?=$id?>.gif" width="117" height="68"><br>
-				<img src="images/space.gif" width="117" height="6"><br>
-				<table cellpadding="0" cellspacing="0" border="0">
-					<tr>
-						<td bgcolor="#C3E1AA"><img src="images/space.gif" width="<?=$width?>" height="10"></td>
-						<td><img src="images/space.gif" width="4" height="10"></td>
-						<td class="result"><?=$percent?>%</td>
-					</tr>
-				</table>
-				<img src="images/space.gif" width="117" height="9"><br>
-			</td>
-<? }else{ ?>
-			<td align="right">
-				<img src="vote/pair_<?=$id?>.gif" width="117" height="68"><br>
-				<img src="images/space.gif" width="117" height="5"><br>
-				<a href="vote.city?vote=<?=$row[id]?>"><img src="images/vote_button.gif" width="24" height="20"></a><br>
-			</td>
-<? } ?>
-<? }else{ ?>
-			<td align="right">
-				<img src="vote/grey_<?=$id?>.gif" width="117" height="68"><br>
-				<img src="images/space.gif" width="117" height="5"><br>
-				<img src="images/vote_in.gif" width="117" height="20"><br>
-			</td>
-<? } ?>
-<? } ?>
-
-<?
-	include('include/page_mid.txt');
-	include('include/col2_normal.txt');
-	include('include/page_bottom.txt');
+	include('../templates/page_mid.txt');
+	include('../templates/col2_normal.txt');
+	include('../templates/page_bottom.txt');
 ?>

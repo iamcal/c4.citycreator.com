@@ -1,29 +1,40 @@
 <?
-	include("include/init.txt");
+	include('../include/init.php');
 
-	list($id,$check) = explode('.',$c,2);
+	$c = $_GET['c'] ?? '';
+	list($id, $check) = array_pad(explode('.', $c, 2), 2, '');
 
-	if ($card_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_cards WHERE id='$id' AND `check`='$check'",$db))){
-			$city_row = get_city($card_row[city_id]);
-			$city_id = $city_row[id];
-	}else{
-		header("location: no_card.city");
+	$card_row = db_single(db_fetch("SELECT * FROM citycreator_cards WHERE id=:id AND `check`=:check", array(
+		'id'    => $id,
+		'check' => $check,
+	)));
+
+	if (!isset($card_row['id']) || !$card_row['id']){
+		header('location: no_card.city');
 		exit;
 	}
 
-	$bg_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_bgs WHERE order_id='$card_row[bg_id]' AND city_id='$city_id'",$db));
-	if ($bg_row[bg_image]){
-		$bg = "url(bgs/$bg_row[bg_image])";
+	$city_row = get_city($card_row['city_id'] ?? 0);
+	$city_id = $city_row['id'] ?? 0;
+
+	$bg_row = db_single(db_fetch("SELECT * FROM citycreator_bgs WHERE order_id=:order_id AND city_id=:city_id", array(
+		'order_id' => $card_row['bg_id'] ?? 0,
+		'city_id'  => $city_id,
+	)));
+	if (!empty($bg_row['bg_image'])){
+		$bg = "url(bgs/".$bg_row['bg_image'].")";
 	}else{
-		$bg = $bg_row[bg_color];
+		$bg = $bg_row['bg_color'] ?? '#ffffff';
 	}
 
 	$pieces_index_1 = array();
 	$pieces_index_2 = array();
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_pieces WHERE city_id='$city_id'",$db);
-	while($row = mysql_fetch_array($result)){
-		$pieces_index_1[$row[uid]] = $row;
-		$pieces_index_2["$row[palette]_$row[id]"] = $row;
+	$ret = db_fetch("SELECT * FROM citycreator_pieces WHERE city_id=:city_id", array(
+		'city_id' => $city_id,
+	));
+	foreach($ret['rows'] as $row){
+		$pieces_index_1[$row['uid']] = $row;
+		$pieces_index_2[$row['palette'].'_'.$row['id']] = $row;
 	}
 ?>
 <html>
@@ -31,7 +42,7 @@
 <title>City Creator - Pickup Card</title>
 <style>
 
-<? include('include/styles.txt'); ?>
+<? include('../templates/styles.txt'); ?>
 
 #board		{ position: relative; width: 469px; height: 364px; z-index: 10; clip: rect(0px 469px 364px 0px); }
 
@@ -49,7 +60,7 @@ function print_city(id){
 </head>
 <body>
 
-<? include('include/inner_head.txt'); ?>
+<? include('../templates/inner_head.txt'); ?>
 
 <table border="0" cellpadding="0" cellspacing="0">
 	<tr valign="top">
@@ -72,15 +83,15 @@ function print_city(id){
 					<td><img src="images/home_col1_left.gif"  width="10"  height="379"></td>
 					<td><div class="text" style="padding: 8px;">
 
-<? if ($card_row[message]){ ?>
-						<?=htmlentities($card_row[your_name])?> (<?=htmlentities($card_row[your_email])?>) made you a city and sent you this message:<br>
+<? if (!empty($card_row['message'])){ ?>
+						<?=HtmlSpecialChars($card_row['your_name'] ?? '')?> (<?=HtmlSpecialChars($card_row['your_email'] ?? '')?>) made you a city and sent you this message:<br>
 						<br>
-						<i><?=nl2br(htmlentities(chop($card_row[message])))?></i><br>
+						<i><?=nl2br(HtmlSpecialChars(chop($card_row['message'])))?></i><br>
 <? }else{ ?>
-						<?=htmlentities($card_row[your_name])?> (<?=htmlentities($card_row[your_email])?>) made you a city!<br>
+						<?=HtmlSpecialChars($card_row['your_name'] ?? '')?> (<?=HtmlSpecialChars($card_row['your_email'] ?? '')?>) made you a city!<br>
 <? } ?>
 						<br>
-						If you'd like to print this card out, <a href="Javascript:print_city('<?=$c?>');">click here</a>.<br>
+						If you'd like to print this card out, <a href="Javascript:print_city('<?=HtmlSpecialChars($c)?>');">click here</a>.<br>
 						<br>
 						<br>
 						You can create your very own city, and send it to your friends, by clicking the button below.<br>
@@ -97,7 +108,7 @@ function print_city(id){
 		</td>
 		<td width="4"><img src="images/space.gif" width="4" height="422"></td>
 		<td width="477">
-<? include('include/tabs.txt'); ?>
+<? include('../templates/tabs.txt'); ?>
 
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -108,20 +119,23 @@ function print_city(id){
 					<td>
 			<div id="board" style="background: <?=$bg?>;">
 <?
-	foreach(explode(',',$card_row[pieces]) as $piece){
-		$bits = explode('|',$piece);
+	foreach(explode(',', $card_row['pieces'] ?? '') as $piece){
+		$bits = explode('|', $piece);
 		if (count($bits) == 5){
-			$piece = $pieces_index_2[$bits[0].'_'.$bits[1]];
+			$piece_row = $pieces_index_2[$bits[0].'_'.$bits[1]] ?? null;
 			$x = $bits[2];
 			$y = $bits[3];
 			$z = $bits[4];
-		}else{
-			$piece = $pieces_index_1[$bits[0]];
+		}else if (count($bits) == 4){
+			$piece_row = $pieces_index_1[$bits[0]] ?? null;
 			$x = $bits[1];
 			$y = $bits[2];
 			$z = $bits[3];
+		}else{
+			continue;
 		}
-		echo "\t\t\t\t<div style=\"position: absolute; left: ${x}px; top: ${y}px; width: $piece[w]px; height: $piece[h]px; z-index: ${z};\"><img src=\"blocks/$piece[uid].gif\" width=\"$piece[w]\" height=\"$piece[h]\"></div>\n";
+		if (!$piece_row) continue;
+		echo "\t\t\t\t<div style=\"position: absolute; left: {$x}px; top: {$y}px; width: {$piece_row['w']}px; height: {$piece_row['h']}px; z-index: {$z};\"><img src=\"blocks/{$piece_row['uid']}.gif\" width=\"{$piece_row['w']}\" height=\"{$piece_row['h']}\"></div>\n";
 	}
 ?>
 			</div>
@@ -146,7 +160,7 @@ function print_city(id){
 	</tr>
 </table>
 
-<? include('include/inner_foot.txt'); ?>
+<? include('../templates/inner_foot.txt'); ?>
 
 </body>
 </html>

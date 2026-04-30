@@ -138,6 +138,29 @@
 		)));
 	}
 
+	function insert_date_drop($name){
+
+		echo "<select name=\"{$name}_d\">\n";
+		for($i=1; $i<=31; $i++){
+			$label = date('jS', mktime(0,0,0,1,$i,2000));
+			echo "<option value=\"$i\">$label</option>\n";
+		}
+		echo "</select>\n";
+
+		echo "<select name=\"{$name}_m\">\n";
+		for($i=1; $i<=12; $i++){
+			$label = date('M', mktime(0,0,0,$i,1,2000));
+			echo "<option value=\"$i\">$label</option>\n";
+		}
+		echo "</select>\n";
+
+		echo "<select name=\"{$name}_y\">\n";
+		for($i=2000; $i>=1900; $i--){
+			echo "<option value=\"$i\">$i</option>\n";
+		}
+		echo "</select>\n";
+	}
+
 	function dumper($foo){
 		echo "<pre style=\"text-align: left;\">";
 		if (is_resource($foo)){

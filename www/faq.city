@@ -1,26 +1,27 @@
 <?
-	include('include/init.txt');
+	include('../include/init.php');
 
 	$title = 'Frequently Asked Questions';
 	$nav = 'faq';
 
-	include('include/page_top.txt');
+	$ret = db_fetch("SELECT * FROM citycreator_faq WHERE section=2 ORDER BY in_order ASC");
+	$faqs = $ret['rows'];
+
+	include('../templates/page_top.txt');
 ?>
 
 	<img src="images/title_faq.gif" width="219" height="14"><br>
 	<br>
 <?
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_faq WHERE section=2 ORDER BY in_order ASC",$db);
-	while($row = mysql_fetch_array($result)){
+	foreach ($faqs as $row){
 ?>
-	<a href="#faq<?=$row[id]?>" class="faqlink"><?=$row[question]?></a><br>
+	<a href="#faq<?=(int)($row['id'] ?? 0)?>" class="faqlink"><?=HtmlSpecialChars($row['question'] ?? '')?></a><br>
 <?
 	}
 ?>
 
 <?
-	$result = mysql_query("SELECT * FROM $cfg[db_prefix]_faq WHERE section=2 ORDER BY in_order ASC",$db);
-	while($row = mysql_fetch_array($result)){
+	foreach ($faqs as $row){
 ?>
 	<table cellpadding="0" cellspacing="0" border="0">
 		<tr><td><img src="images/space.gif" width="424" height="12"></td></tr>
@@ -28,9 +29,9 @@
 		<tr><td><img src="images/space.gif" width="424" height="12"></td></tr>
 	</table>
 
-	<a name="faq<?=$row[id]?>"></a>
-	<b><?=$row[question]?></b><br>
-	<?=$row[answer]?><br>
+	<a name="faq<?=(int)($row['id'] ?? 0)?>"></a>
+	<b><?=HtmlSpecialChars($row['question'] ?? '')?></b><br>
+	<?=$row['answer'] ?? ''?><br>
 <?
 	}
 ?>
@@ -43,7 +44,7 @@
 	</table>
 
 <?
-	include('include/page_mid.txt');
-	include('include/col2_normal.txt');
-	include('include/page_bottom.txt');
+	include('../templates/page_mid.txt');
+	include('../templates/col2_normal.txt');
+	include('../templates/page_bottom.txt');
 ?>
