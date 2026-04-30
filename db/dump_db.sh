@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DB_NAME="citycreator"
-DB_USER="citycreator"
+DB_NAME="c4.citycreator"
+DB_USER="c4.citycreator"
 
 cd "$(dirname "$0")"
 

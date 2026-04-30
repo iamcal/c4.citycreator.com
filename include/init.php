@@ -2,16 +2,16 @@
 	$cfg = array();
 
 	$cfg['db_host']			= 'localhost';
-	$cfg['db_name']			= 'citycreator';
-	$cfg['db_user']			= 'citycreator';
+	$cfg['db_name']			= 'c4.citycreator';
+	$cfg['db_user']			= 'c4.citycreator';
 	$cfg['db_pass']			= trim(file_get_contents(__DIR__.'/../secrets/mysql_password'));
 
 	include('lib_db.php');
 
-	$cfg['pickup_url'] = 'http://www.citycreator.com/pickup.city';
-	$cfg['login_url']  = 'http://www.citycreator.com/login.city';
-	$cfg['share_url']  = 'http://www.citycreator.com/members.city';
-	$cfg['reset_url']  = 'http://www.citycreator.com/reset.city';
+	$cfg['pickup_url'] = 'http://c4.citycreator.com/pickup.city';
+	$cfg['login_url']  = 'http://c4.citycreator.com/login.city';
+	$cfg['share_url']  = 'http://c4.citycreator.com/members.city';
+	$cfg['reset_url']  = 'http://c4.citycreator.com/reset.city';
 
 	function gen_check(){
 		$length = 10;

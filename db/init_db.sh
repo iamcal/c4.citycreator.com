@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DB_NAME="citycreator"
-DB_USER="citycreator"
+DB_NAME="c4.citycreator"
+DB_USER="c4.citycreator"
 
 cd "$(dirname "$0")"
 
@@ -17,7 +17,9 @@ echo "New password for ${DB_USER} is ${DB_PASS} - no need to write this down"
 $(mysql -uroot -p${ROOT_PASS} -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`")
 
 # create the user
-$(mysql -uroot -p${ROOT_PASS} -e "GRANT ALL ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';")
+$(mysql -uroot -p${ROOT_PASS} -e "CREATE USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';")
+$(mysql -uroot -p${ROOT_PASS} -e "GRANT ALL ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost';")
+$(mysql -uroot -p${ROOT_PASS} -e "FLUSH PRIVILEGES;")
 
 # import schema
 ./import_db.sh
