@@ -16,9 +16,9 @@
 	$city_row = get_city($city);
 	$city_id = $city_row['id'] ?? 0;
 
-	list($first_tab) = db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
+	list($first_tab) = array_pad(db_list(db_fetch("SELECT id FROM citycreator_tabs WHERE city_id=:city_id ORDER BY in_order ASC LIMIT 1", array(
 		'city_id' => $city_id,
-	)));
+	))), 1, 0);
 ?>
 <html>
 <head>

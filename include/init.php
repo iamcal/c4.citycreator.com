@@ -47,15 +47,15 @@
 	function get_password_reset_code($user){
 
 		$ts = time();
-		$hmac = hash_hmac("sha256", $user['id'].$ts, $user['password']);
+		$hmac = hash_hmac("sha256", ($user['id'] ?? '').$ts, $user['password'] ?? '');
 		$hmac = substr($hmac, 0, 20);
 
-		return "{$user['id']}.{$ts}.{$hmac}";
+		return ($user['id'] ?? '').".{$ts}.{$hmac}";
 	}
 
 	function verify_password_reset_code($code){
 
-		list($id, $ts, $hmac) = explode('.', $code, 3);
+		list($id, $ts, $hmac) = array_pad(explode('.', $code, 3), 3, null);
 
 		$user = db_single(db_fetch("SELECT * FROM citycreator_users WHERE id=:id", array(
 			'id' => $id,
@@ -78,7 +78,7 @@
 		$msg = '';
 		$msg .= "You asked to reset your citycreator.com password:\n";
 		$msg .= "\n";
-		$msg .= "Username: {$user['username']}\n";
+		$msg .= "Username: ".($user['username'] ?? '')."\n";
 		$msg .= "\n";
 		$msg .= "Click here to reset your password:\n";
 		$msg .= "{$GLOBALS['cfg']['reset_url']}?c={$code}\n";
@@ -92,7 +92,7 @@
 		$msg .= "This mail was sent to you by citycreator.com\n";
 		$msg .= "\n";
 
-		mail($user['email'], "City Creator password reset", $msg, "From: City Creator <admin@citycreator.com>");
+		mail($user['email'] ?? '', "City Creator password reset", $msg, "From: City Creator <admin@citycreator.com>");
 	}
 
 	function send_share($friend_email, $your_name, $your_email, $share_id, $message){

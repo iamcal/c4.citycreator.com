@@ -7,7 +7,7 @@
 	#
 
 	if (isset($_COOKIE['u'])){
-		list($id, $ts, $hash) = explode('-', $_COOKIE['u']);
+		list($id, $ts, $hash) = array_pad(explode('-', $_COOKIE['u']), 3, null);
 
 		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE id=:id", array(
 			'id' => $id,
