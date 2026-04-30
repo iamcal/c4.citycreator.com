@@ -101,6 +101,22 @@ function delete_city(id){
 				<a href="javascript:print_city(<?=$row['id']?>,1);"><img src="images/button_print.gif" width="71" height="16" border="0"></a><br>
 				<img src="images/space.gif" width="71" height="8"><br>
 				<a href="javascript:delete_city(<?=$row['id']?>);"><img src="images/button_delete.gif" width="71" height="16" border="0"></a><br>
+<? if (!empty($row['gallery_date'])){ ?>
+				<img src="images/space.gif" width="71" height="10"><br>
+<?
+		$gallery_row = db_single(db_fetch("SELECT * FROM citycreator_gallery WHERE id=:id", array(
+			'id' => $row['gallery_id'] ?? 0,
+		)));
+		if (!empty($gallery_row['deleted'])){
+?>
+				Removed from gallery
+<? }else{ ?>
+				<a href="Javascript:gallery_pop(<?=(int)($row['gallery_id'] ?? 0)?>);">Added to gallery <?=date('j/n/Y', $row['gallery_date'])?></a>
+<? } ?>
+<? }else{ ?>
+				<img src="images/space.gif" width="71" height="8"><br>
+				<a href="gallery_add.city?saved_id=<?=$row['id']?>"><img src="images/button_gallery.gif" width="71" height="16" border="0"></a><br>
+<? } ?>
 			</td>
 		</tr>
 		<tr>
