@@ -1,116 +1,70 @@
 <?
-	include("../include/init.php");
-	include("../include/login.php");
+	include("include/init.txt");
+	include("include/login.txt");
 
+	$saved_row = mysql_fetch_array(mysql_query("SELECT * FROM $cfg[db_prefix]_saved WHERE id='$saved_id' AND user_id='{$cfg[user][id]}'",$db));
 
-	#
-	# load city
-	#
-
-	$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND user_id=:user_id", array(
-		'id'		=> $_REQUEST['saved_id'] ?? 0,
-		'user_id'	=> $cfg['user']['id'] ?? 0,
-	)));
-
-	if (empty($saved_row['id'])){
+	if (!$saved_row){
 		header("location: members.city");
 		exit;
 	}
 
+	$ok = $done;
+	if ($ok && !$your_name) $ok = 0;
+	if ($ok && !$your_email) $ok = 0;
+	if ($ok && !$friend_email) $ok = 0;
 
-	#
-	# share city?
-	#
-
-	$error = '';
-
-	if (!empty($_POST['done'])){
-		$error = local_share_city();
-	}
-
-
-	function local_share_city(){
-
-		global $saved_row;
-
-		$name	= trim($_POST['your_name'] ?? '');
-		$from	= trim($_POST['your_email'] ?? '');
-		$to	= trim($_POST['friend_email'] ?? '');
-
-		if (!strlen($name)) return 'missing_fields';
-		if (!strlen($to)) return 'missing_fields';
-		if (!strlen($from)) return 'missing_fields';
-
-		if (filter_var($to, FILTER_VALIDATE_EMAIL) === false) return 'bad_email';
-		if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) return 'bad_email';
-
-
-		#
-		# do it
-		#
-
+	if ($ok){
 		$check = gen_check();
+		mysql_query("INSERT INTO $cfg[db_prefix]_saved (date_create, user_id, city_id, city_pieces, city_bg_id, share_check) VALUES ($saved_row[date_create], 0, $saved_row[city_id], '$saved_row[city_pieces]', '$saved_row[city_bg_id]', '$check')",$db);
+		$new_id = mysql_insert_id();
 
-		$ret = db_insert('citycreator_saved', array(
-			'date_create'	=> $saved_row['date_create'],
-			'user_id'	=> 0,
-			'city_id'	=> $saved_row['city_id'],
-			'city_pieces'	=> $saved_row['city_pieces'],
-			'city_bg_id'	=> $saved_row['city_bg_id'],
-			'share_check'	=> $check,
-		));
-
-		$new_id = $ret['insert_id'];
-
-		send_share($to, $name, $from, "$new_id.$check", $_POST['message'] ?? '');
-
-		header("location: share_done.city?saved_id={$saved_row['id']}");
+		send_share($friend_email, $your_name, $your_email, "$new_id.$check", $message);
+		header("location: share_done.city?saved_id=$saved_id");
 		exit;
 	}
 
+	if (!$your_name){$your_name = $cfg[user][username];}
+	if (!$your_email){$your_email = $cfg[user][email];}
 
 
 	$title = "Share Your City";
-	$long = 1;
 
-	include("../templates/inc_head.txt");
+	include("include/page_top.txt");
 ?>
 
 	<form action="share.city" method="post">
 	<input type="hidden" name="done" value="1">
-	<input type="hidden" name="saved_id" value="<?=htmlspecialchars($saved_row['id'])?>">
+	<input type="hidden" name="saved_id" value="<?=htmlentities($saved_id)?>">
 
 	<b class="heading">Share Your City</b><br>
 	<br>
 
-	<img src="image.city?s=<?=htmlspecialchars($saved_row['id'])?>&thumb=1" align="left">
+	<!-- <img src="image.city?s=<?=$saved_id?>&thumb=1" align="left"> -->
 
-	By sharing your city with friends, you can allow other people to continue building it.
-	Don't worry, your copy of the city will remain unchanged.
-	If the person wants to share their modifications back with you,
-	then they'll be added to your members account as a new city design - you wont lose your own designs!<br clear="all">
+	By sharing your city with friends, you can allow other people to continue building it. Don't worry, your copy of the city will remain unchanged. If the person wants to share their modifications back with you, then they'll be added to your members account as a new city design - you wont lose your own designs!<br clear="all">
 	<br>
 
 	Your name:<br>
-	<input type="text" name="your_name" value="<?=htmlspecialchars(!empty($_POST['your_name']) ? $_POST['your_name'] : ($cfg['user']['username'] ?? ''))?>" class="edit"><br>
+	<input type="text" name="your_name" value="<?=htmlentities($your_name)?>" class="edit"><br>
 
 	Your email address:<br>
-	<input type="text" name="your_email" value="<?=htmlspecialchars(!empty($_POST['your_email']) ? $_POST['your_email'] : ($cfg['user']['email'] ?? ''))?>" class="edit"><br>
+	<input type="text" name="your_email" value="<?=htmlentities($your_email)?>" class="edit"><br>
 
 	Friend's email address:<br>
-	<input type="text" name="friend_email" value="<?=htmlspecialchars($_POST['friend_email'] ?? '')?>" class="edit"><br>
+	<input type="text" name="friend_email" value="<?=htmlentities($friend_email)?>" class="edit"><br>
 
 	Message:<br>
-	<textarea name="message" wrap="virtual" class="edit"><?=htmlspecialchars($_POST['message'] ?? '')?></textarea><br>
+	<textarea name="message" wrap="virtual" class="edit"><?=htmlentities($message)?></textarea><br>
 
 	<br>
-	<input type="image" src="images/btn_share.gif" width="53" height="16" border="0"><br>
+	<input type="image" src="images/button_share_small.gif" width="38" height="16" border="0"><br>
 
-	<br>
-	<small><a href="faq.city#faq16">What do we do with information you provide?</a></small>
 
 	</form>
 
 <?
-	include("../templates/inc_foot.txt");
+	include("include/page_mid.txt");
+	include("include/col2_normal.txt");
+	include("include/page_bottom.txt");
 ?>

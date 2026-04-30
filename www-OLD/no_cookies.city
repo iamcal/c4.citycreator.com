@@ -1,0 +1,16 @@
+<?
+	include("../include/init.php");
+
+	$title = 'error';
+
+	include("../templates/inc_head.txt");
+?>
+
+	<b class="heading">There was an error!</b><br>
+	<br>
+	It doesn't look like you have cookies enabled, so we can't log you in.<br>
+	<br>
+	Enable cookies on your browser then <a href="login.city">try logging in again</a> :)
+<?
+	include("../templates/inc_foot.txt");
+?>

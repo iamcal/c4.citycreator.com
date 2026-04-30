@@ -1,0 +1,173 @@
+<?php
+	include('../include/init.php');
+	include('../include/login.php');
+
+	$error = '';
+
+	if (!empty($_POST['done'])){
+		$error = local_process();
+	}
+
+	function local_process(){
+
+		$username	= trim($_POST['signup_username'] ?? '');
+		$password	= trim($_POST['signup_password'] ?? '');
+		$email		= trim(StrToLower($_POST['signup_email'] ?? ''));
+
+		if (strlen($username) < 3){
+
+			return "Please choose a username at least three letters long";
+		}
+
+		if (strlen($password) < 3){
+
+			return "Please choose a password at least three letters long";
+		}
+
+		if (strlen($email)){
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+
+				return "Please enter a valid email address (or leave it blank)";
+			}
+		}
+
+
+		#
+		# is the username taken?
+		#
+
+		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE username=:username", array(
+			'username' => $username,
+		)));
+
+		if (!empty($row['id'])){
+			return "The username you entered is already taken";
+		}
+
+
+		#
+		# is the email taken?
+		#
+
+		if (strlen($email)){
+
+			$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE email=:email", array(
+				'email' => $email,
+			)));
+
+			if (!empty($row['id'])){
+
+				return "The email address you entered has already been registered\\nClick on the forgotten password link so we can email you your password";
+			}
+		}
+
+
+		#
+		# create user
+		#
+
+		$hash = password_hash($password, PASSWORD_DEFAULT, array(
+			"cost" => 13,
+		));
+
+		$ret = db_insert('citycreator_users', array(
+			'username'	=> $username,
+			'password'	=> $hash,
+			'date_create'	=> time(),
+			'email'		=> $email,
+			'can_email'	=> strlen($email) && !empty($_POST['maillist']) ? 1 : 0,
+		));
+
+
+		#
+		# set login cookies
+		#
+
+		$row = db_single(db_fetch("SELECT * FROM citycreator_users WHERE id=:id", array(
+			'id' => $ret['insert_id'],
+		)));
+
+		login_set_user($row);
+
+
+		#
+		# take ownership of a saved city?
+		#
+
+		if (!empty($_POST['saved_id'])){
+			db_update('citycreator_saved', array(
+				'user_id' => $row['id'],
+			), "id=:saved_id AND user_id=0", array(
+				'saved_id' => $_POST['saved_id'],
+			));
+		}
+
+
+		#
+		# redirect
+		#
+
+		if (!empty($_POST['share_id'])){
+			header("location: members.city?share_id=".urlencode($_REQUEST['share_id']));
+		}else{
+			header("location: members.city");
+		}
+		exit;
+	}
+
+
+	$extra = '';
+	if (!empty($_REQUEST['saved_id'])){ $extra = "?saved_id=".urlencode($_REQUEST['saved_id']); }
+	if (!empty($_REQUEST['share_id'])){ $extra = "?share_id=".urlencode($_REQUEST['share_id']); }
+
+	$title = "Members Area";
+	$long = 1;
+
+	include("../templates/inc_head.txt");
+?>
+
+	<b class="heading">Members Area - Sign Up</b><br>
+	<br>
+	<form action="signup.city" method="post">
+	<input type="hidden" name="done" value="1">
+	<input type="hidden" name="saved_id" value="<?=HtmlSpecialChars($_REQUEST['saved_id'] ?? '')?>">
+	<input type="hidden" name="share_id" value="<?=HtmlSpecialChars($_REQUEST['share_id'] ?? '')?>">
+
+	<p>If you're already a member, <a href="login.city<?=$extra?>">click here</a></p>
+
+	<p>We require you to register for a few reasons. Firstly, it cuts down abuse of the system. Secondly, it means we can let you save older cities and work on them later. Thirdly, it means we can let you share cities, so you can collaborate with your friends.<br></p>
+
+<? if ($error){ ?>
+	<div class="error"><?=HtmlspecialChars($error)?></div>
+<? } ?>
+
+	<br>
+	Choose a username:<br>
+	<input type="text" class="edit" name="signup_username" value="<?=HtmlSpecialChars($_POST['signup_username'] ?? '')?>"><br>
+
+	<br>
+	Choose a password:<br>
+	<input type="password" class="edit" name="signup_password" value="<?=HtmlSpecialChars($_POST['signup_password'] ?? '')?>"><br>
+
+	<br>
+	Enter your email address:<br>
+	<input type="text" class="edit" name="signup_email" value="<?=HtmlSpecialChars($_POST['signup_email'] ?? '')?>"> (Optional)<br>
+	We ask you for your email address so that we can<br>
+	email you your password, should you forget it.<br>
+
+	<br>
+	<input type="checkbox" name="maillist" checked> Email me updates<br>
+	We send an email to our members list when we make an update to the site. This might include adding a new city to build, or a new feature to play with.
+	There shouldn't ever be more than one email per year.<br>
+
+	<br>
+	<input type="image" src="images/btn_signup.gif" width="40" height="16"><br>
+
+	<br>
+	<small>Worried about giving us your email address? <a href="faq.city#faq16">Read this</a>.</small>
+
+	</form>
+
+<?
+	include("../templates/inc_foot.txt");
+?>

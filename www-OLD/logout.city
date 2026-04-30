@@ -1,0 +1,8 @@
+<?php
+	include('../include/init.php');
+	include('../include/login.php');
+
+	login_unset();
+
+	header("location: members.city");
+	exit;

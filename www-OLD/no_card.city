@@ -1,0 +1,16 @@
+<?
+	include('../include/init.php');
+
+	$title = 'error';
+
+	include("../templates/inc_head.txt");
+?>
+
+	<b class="heading">There was an error!</b><br>
+	<br>
+	We couldn't find the card you requested - please check the URL you entered. If you copy and pasted the URL, make sure you included all of it.<br>
+	<br>
+	You can <a href="./">make a city of your own</a> if you like.
+<?
+	include("../templates/inc_foot.txt");
+?>

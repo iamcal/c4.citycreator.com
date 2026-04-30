@@ -1,2 +1,3 @@
 AddType application/x-httpd-php .city
-DirectoryIndex index.city
+DirectoryIndex index.htm
+

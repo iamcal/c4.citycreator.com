@@ -1,0 +1,68 @@
+<?
+	include("../include/init.php");
+	include("../include/login.php");
+
+	$ok = 0;
+
+	if (!empty($_GET['c'])){
+		list($id, $check) = explode('.', $_GET['c'], 2);
+
+		$card_row = db_single(db_fetch("SELECT * FROM citycreator_cards WHERE id=:id AND `check`=:check", array(
+			'id'	=> $id,
+			'check'	=> $check,
+		)));
+
+		if (!empty($card_row['id'])){
+			$ok = 1;
+			$url = "image.city?c=".urlencode($_GET['c']);
+		}
+	}
+
+	if (!empty($_GET['saved_id'])){
+
+		$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:saved_id AND user_id=:user_id", array(
+			'saved_id'	=> $_GET['saved_id'],
+			'user_id'	=> $cfg['user']['id'] ?? 0,
+		)));
+
+		if (!empty($saved_row['id'])){
+			$ok = 1;
+			$url = "image.city?s={$saved_row['id']}";
+		}
+	}
+
+	if (!$ok){
+		header("location: no_card.city");
+		exit;
+	}
+?>
+<html>
+<head>
+<title>City Creator - Print City</title>
+<style>
+
+body {
+	margin: 0px;
+	background-color: #ffffff;
+}
+
+img {
+	border: 2px solid #eeeeee;
+}
+
+</style>
+</head>
+<? if (!empty($_GET['auto'])){ ?>
+<body onload="window.print();">
+<? }else{ ?>
+<body>
+<? } ?>
+
+<table width="100%" height="100%">
+	<tr valign="middle">
+		<td align="center"><img src="<?=$url?>"></td>
+	</tr>
+</table>
+
+</body
+</html>

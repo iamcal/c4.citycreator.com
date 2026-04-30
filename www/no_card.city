@@ -1,9 +1,7 @@
 <?
-	include('../include/init.php');
+	$title = 'Error';
 
-	$title = 'error';
-
-	include("../templates/inc_head.txt");
+	include("include/page_top.txt");
 ?>
 
 	<b class="heading">There was an error!</b><br>
@@ -12,5 +10,7 @@
 	<br>
 	You can <a href="./">make a city of your own</a> if you like.
 <?
-	include("../templates/inc_foot.txt");
+	include("include/page_mid.txt");
+	include("include/col2_normal.txt");
+	include("include/page_bottom.txt");
 ?>

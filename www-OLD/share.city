@@ -1,0 +1,116 @@
+<?
+	include("../include/init.php");
+	include("../include/login.php");
+
+
+	#
+	# load city
+	#
+
+	$saved_row = db_single(db_fetch("SELECT * FROM citycreator_saved WHERE id=:id AND user_id=:user_id", array(
+		'id'		=> $_REQUEST['saved_id'] ?? 0,
+		'user_id'	=> $cfg['user']['id'] ?? 0,
+	)));
+
+	if (empty($saved_row['id'])){
+		header("location: members.city");
+		exit;
+	}
+
+
+	#
+	# share city?
+	#
+
+	$error = '';
+
+	if (!empty($_POST['done'])){
+		$error = local_share_city();
+	}
+
+
+	function local_share_city(){
+
+		global $saved_row;
+
+		$name	= trim($_POST['your_name'] ?? '');
+		$from	= trim($_POST['your_email'] ?? '');
+		$to	= trim($_POST['friend_email'] ?? '');
+
+		if (!strlen($name)) return 'missing_fields';
+		if (!strlen($to)) return 'missing_fields';
+		if (!strlen($from)) return 'missing_fields';
+
+		if (filter_var($to, FILTER_VALIDATE_EMAIL) === false) return 'bad_email';
+		if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) return 'bad_email';
+
+
+		#
+		# do it
+		#
+
+		$check = gen_check();
+
+		$ret = db_insert('citycreator_saved', array(
+			'date_create'	=> $saved_row['date_create'],
+			'user_id'	=> 0,
+			'city_id'	=> $saved_row['city_id'],
+			'city_pieces'	=> $saved_row['city_pieces'],
+			'city_bg_id'	=> $saved_row['city_bg_id'],
+			'share_check'	=> $check,
+		));
+
+		$new_id = $ret['insert_id'];
+
+		send_share($to, $name, $from, "$new_id.$check", $_POST['message'] ?? '');
+
+		header("location: share_done.city?saved_id={$saved_row['id']}");
+		exit;
+	}
+
+
+
+	$title = "Share Your City";
+	$long = 1;
+
+	include("../templates/inc_head.txt");
+?>
+
+	<form action="share.city" method="post">
+	<input type="hidden" name="done" value="1">
+	<input type="hidden" name="saved_id" value="<?=htmlspecialchars($saved_row['id'])?>">
+
+	<b class="heading">Share Your City</b><br>
+	<br>
+
+	<img src="image.city?s=<?=htmlspecialchars($saved_row['id'])?>&thumb=1" align="left">
+
+	By sharing your city with friends, you can allow other people to continue building it.
+	Don't worry, your copy of the city will remain unchanged.
+	If the person wants to share their modifications back with you,
+	then they'll be added to your members account as a new city design - you wont lose your own designs!<br clear="all">
+	<br>
+
+	Your name:<br>
+	<input type="text" name="your_name" value="<?=htmlspecialchars(!empty($_POST['your_name']) ? $_POST['your_name'] : ($cfg['user']['username'] ?? ''))?>" class="edit"><br>
+
+	Your email address:<br>
+	<input type="text" name="your_email" value="<?=htmlspecialchars(!empty($_POST['your_email']) ? $_POST['your_email'] : ($cfg['user']['email'] ?? ''))?>" class="edit"><br>
+
+	Friend's email address:<br>
+	<input type="text" name="friend_email" value="<?=htmlspecialchars($_POST['friend_email'] ?? '')?>" class="edit"><br>
+
+	Message:<br>
+	<textarea name="message" wrap="virtual" class="edit"><?=htmlspecialchars($_POST['message'] ?? '')?></textarea><br>
+
+	<br>
+	<input type="image" src="images/btn_share.gif" width="53" height="16" border="0"><br>
+
+	<br>
+	<small><a href="faq.city#faq16">What do we do with information you provide?</a></small>
+
+	</form>
+
+<?
+	include("../templates/inc_foot.txt");
+?>

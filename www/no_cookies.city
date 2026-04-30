@@ -1,9 +1,7 @@
 <?
-	include("../include/init.php");
+	$title = 'Error';
 
-	$title = 'error';
-
-	include("../templates/inc_head.txt");
+	include("include/page_top.txt");
 ?>
 
 	<b class="heading">There was an error!</b><br>
@@ -12,5 +10,7 @@
 	<br>
 	Enable cookies on your browser then <a href="login.city">try logging in again</a> :)
 <?
-	include("../templates/inc_foot.txt");
+	include("include/page_mid.txt");
+	include("include/col2_normal.txt");
+	include("include/page_bottom.txt");
 ?>

@@ -1,0 +1,109 @@
+<?
+	include("../include/init.php");
+?>
+<html>
+<head>
+<style>
+
+body {
+	font-size: 10px;
+	font-family: arial, helvetica, sans-serif;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+td {
+	font-size: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<h1>The citycreator.com activity tracker</h1>
+
+<?
+	#$days = ceil((time() - mktime(0,0,0,8,20,2002))/(60*60*24));
+	$days = ceil((time() - mktime(0,0,0,3,17,2017))/(60*60*24));
+	$start = mktime(0,0,0,date('m'),date('d'),date('Y'));
+	$max = 0;
+	$data = array();
+
+	for($i = 1; $i <= $days; $i++){
+		$end = $start + (24 * 60 * 60);
+
+		list($count) = db_list(db_fetch("SELECT COUNT(*) FROM citycreator_cards WHERE date_create>=:start AND date_create<=:end", array(
+			'start'	=> $start,
+			'end'	=> $end,
+		)));
+
+		if ($count > $max){ $max = $count; }
+		$data[] = array('time' => $start, 'count' => $count);
+		$start -= (24 * 60 * 60);
+	}
+
+	foreach($data as $item){
+		$per = $max ? round(100*$item['count']/$max) : 1;
+		if (!$per){ $per=1; }
+		$date = date(' jS F Y ',$item['time']);
+		$day = date('w',$item['time']);
+		$color = ($day==0 || $day==6)?'blue':'green';
+		echo "$date : {$item['count']} cards<br>\n<div style=\"background-color: $color; width: $per%;\">&nbsp</div>\n";
+	}
+?>
+
+<h1>Recent Cities</h1>
+
+<table cellpadding="4" cellspacing="2" border="0">
+	<tr bgcolor="#cccccc">
+		<td colspan="3">Cities</td>
+	</tr>
+<?
+	$max_id = 0;
+	$max_count = 0;
+
+	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC LIMIT 50");
+	foreach ($ret['rows'] as $row){
+		$piece_count = count(explode(',',$row['pieces']));
+		$date = date('H:i d/m/Y',$row['date_create']);
+?>
+	<tr bgcolor="#cccccc">
+		<td><a href="pickup.city?c=<?=$row['id']?>.<?=$row['check']?>">city <?=$row['id']?></a></td>
+		<td><?=$date?></td>
+		<td><?=$piece_count?> pieces</td>
+	</tr>
+<?
+	}
+?>
+	<tr bgcolor="#cccccc">
+		<td colspan="3">Biggest City</td>
+	</tr>
+<?
+	$max_row = null;
+	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC");
+	foreach ($ret['rows'] as $row){
+		$piece_count = count(explode(',',$row['pieces']));
+		if ($piece_count > $max_count){
+			$max_count = $piece_count;
+			$max_id = $row['id'];
+			$max_row = $row;
+		}
+	}
+
+	if ($max_row){
+		$row = $max_row;
+		$piece_count = count(explode(',',$row['pieces']));
+		$date = date('H:i d/m/Y',$row['date_create']);
+?>
+	<tr bgcolor="#cccccc">
+		<td><a href="pickup.city?c=<?=$row['id']?>.<?=$row['check']?>">city <?=$row['id']?></a></td>
+		<td><?=$date?></td>
+		<td><?=$piece_count?> pieces</td>
+	</tr>
+<?
+	}
+?>
+</table>
+
+</body>
+</html>

@@ -11,8 +11,6 @@ var trash_height = 49;
 var piece_count = 0;
 var loaded_count = 0;
 
-var max_cookie_len = 4000; //we're allowed 4k (4096) but that includes the cookie name
-
 var top_count = 0;
 var piece_index = new Array();
 var preloads = new Array();
@@ -27,13 +25,16 @@ function init(){
 
 	shadow_layer = document.getElementById('shadow');
 
-	get_elm("loading").style.display = 'none';
-	get_elm("canvasinner").style.display = 'block';
+	hide_elm(get_elm("loading"));
+	show_elm(get_elm("canvasinner"));
+	show_elm(get_elm("copyright"));
 
-	if ((readCookie(cookie_hello) == null)){
+	if (!storageAvailable('localStorage')) alert('Your browser is pretty old - saving cities may not work');
+
+	if (!localStorage[cookie_hello]){
 		show_elm(get_elm('instructions'));
+		localStorage[cookie_hello] = 'hello';
 	}
-	saveCookie(cookie_hello, 'hello', 365);
 }
 
 
@@ -77,31 +78,6 @@ function add_piece(uid, palette, id, old_palette, old_id, width, height, ox, oy,
 	add_child(get_elm("palette"+palette), elm);
 
 	piece_index[old_palette+"_"+old_id] = elm;
-}
-
-function add_piece_holder(uid, palette, id, old_palette, old_id){
-	var width = 51;
-	var height = 57;
-
-	var row = Math.floor(id / 4);
-	var col = id % 4;
-
-	var x = Math.floor((58 * col) + (57 / 2) - (width / 2));
-	var y = Math.floor((67 * row) + (66 / 2) - (height / 2));
-
-	var elm = document.createElement('DIV');
-	elm.style.position = 'absolute';
-	elm.style.left = x;
-	elm.style.top = y;
-	elm.style.width = width;
-	elm.style.height = height;
-	elm.style.backgroundImage = "url(blocks/hold.gif)";
-	elm.style.fontSize = '1px';
-	elm.style.zIndex = 2;
-
-	elm.onclick = function(){ alert('To vote for a new building, click on the vote tab along the top.'); }
-
-	add_child(get_elm("palette"+palette), elm);
 }
 
 function click_wrapper(e){
@@ -170,14 +146,7 @@ function move_piece(e, palette, id, elm){
 	drag_offset_x = x - elm.pos_x;
 	drag_offset_y = y - elm.pos_y;
 
-	// reorder elements
-	var this_z = elm.style.zIndex;
-	for(var i=0; i<pieces.length; i++){
-		if (pieces[i].style.zIndex > this_z){
-			pieces[i].style.zIndex = pieces[i].style.zIndex - 1;
-		}
-	}
-	elm.style.zIndex = get_max_z() + 1;
+	move_to_last(elm);
 
 	currently_dragging = 1;
 	drag_elm = elm;
@@ -229,8 +198,9 @@ function mouse_up(){
 function get_max_z(){
 	var max_z = 0;
 	for(var i=0; i<pieces.length; i++){
-		if (pieces[i].style.zIndex > max_z){
-			max_z = parseInt(pieces[i].style.zIndex);
+		var p = parseInt(pieces[i].style.zIndex);
+		if (p > max_z){
+			max_z = p;
 		}
 	}
 	return max_z;
@@ -285,73 +255,79 @@ function delete_elm(elm){
 	elm.onmousedown = function(){};
 }
 
+
 function update_pieces(){
-	// cut up the big cookie so we don't break the browser ;)
+
 	var piece_data = serialize_all();
-	var cookie_count = 0;
-	while(piece_data.length > 0){
-		cookie_count++;
-		saveCookie(cookie_prefix+'pieces_'+cookie_count, piece_data.substr(0,max_cookie_len), 365);
-		piece_data = piece_data.substr(max_cookie_len);
-	}
-	saveCookie(cookie_prefix+'piece_count', cookie_count, 365);
-	saveCookie(cookie_prefix+'bg_id', bg_id, 365);
+
+	localStorage[cookie_prefix+'bg'] = bg_id;
+	localStorage[cookie_prefix+'pieces'] = piece_data;
 }
 
 function load_pieces(){
-	if (readCookie(cookie_prefix_old+'bg_id') > 0){
 
-		//alert("old format cookies detected - removing and converting");
-		load_pieces_guts(cookie_prefix_old);
+	//
+	// check for old-style cookies
+	//
+
+	var test = load_and_clear_cookies(cookie_prefix_old);
+	if (test.bg != null){
+		bg_nosave(test.bg);
+		unserialize_all(test.pieces);
 		update_pieces();
-
-		// kill old cookies
-		var count = readCookie(cookie_prefix_old+'piece_count');
-		if (count != null){
-			for(i=1; i<=count; i++){
-				saveCookie(cookie_prefix_old+'pieces_'+i, 0, 0);
-			}
-		}
-		saveCookie(cookie_prefix_old+'bg_id', 0, 0);
-		saveCookie(cookie_prefix_old+'piece_count', 0, 0);
-		
-	}else{
-		load_pieces_guts(cookie_prefix);
+		return;
 	}
+
+	test = load_and_clear_cookies(cookie_prefix);
+	if (test.bg != null){
+		bg_nosave(test.bg);
+		unserialize_all(test.pieces);
+		update_pieces();
+		return;
+	}
+
+
+	//
+	// no cookies - load from localStorage
+	//
+
+	bg_nosave(localStorage[cookie_prefix+'bg']);
+	unserialize_all(localStorage[cookie_prefix+'pieces']);
 }
 
-function load_pieces_guts(prefix){
+function load_and_clear_cookies(prefix){
 
-	var temp = readCookie(prefix+'bg_id');
-	if (temp != null){
-		bg_nosave(temp);
-	}
+	var data ={
+		'pieces' : '',
+		'bg' : null,
+	};
 
-	var count = readCookie(prefix+'piece_count');
+	if (readCookie(prefix+'bg_id') > 0){
 
-	var temp = null;
-	if (count != null){
-		temp = '';
-		for(i=1; i<=count; i++){
-			temp += readCookie(prefix+'pieces_'+i);
+		data.bg = readCookie(prefix+'bg_id');
+
+		var count = readCookie(prefix+'piece_count');
+		if (count != null){
+			for(var i=1; i<=count; i++){
+				data.pieces += readCookie(prefix+'pieces_'+i);
+				saveCookie(prefix+'pieces_'+i, 0, 0);
+			}
 		}
+
+		saveCookie(prefix+'bg_id', 0, 0);
+		saveCookie(prefix+'piece_count', 0, 0);
 	}
 
-	if ((temp != null) && (temp != '')){
-		unserialize_all(temp);
-	}
+	return data;
 }
 
 function unserialize_all(data){
-	//alert('unserialize_all:'+data);
+	if (data == null) return;
 	var bits = data.split(',');
 	for(var i=0; i<bits.length; i++){
-		unserialize_elm(bits[i]);
+		if (bits[i].length)
+			unserialize_elm(bits[i]);
 	}
-
-	// we call this because the saved city might have ended up with crazy indexes after
-	// a fair bit of work :)
-	reduce_zindexes();
 }
 
 function serialize_all(){
@@ -464,47 +440,42 @@ function PieceLoaded(){
 	elm.style.width = percent+'%';
 }
 
-function doIntSort(a, b){
-	if (a == b) return 0;
-	return a > b ? 1 : -1;
+function move_to_last(elm){
+
+	// make an array of the indexes into $pieces
+	var indexes = [];
+	for (var i=0; i<pieces.length; i++) indexes.push(i);
+
+	// make a map of the parsed zIndexes
+	var map = [];
+	var elm_idx = -1;
+	for (var i=0; i<pieces.length; i++){
+		map[i] = parseInt(pieces[i].style.zIndex);
+		if (elm == pieces[i]) elm_idx = i;
+	}
+
+	// sort into z-order
+	indexes.sort(function(a, b){
+		if (a == elm_idx) return 1;
+		if (b == elm_idx) return -1;
+		return map[a] - map[b];
+	});
+
+	// assign new zIndexes
+	for (var i=0; i<indexes.length; i++){
+		pieces[indexes[i]].style.zIndex = i;
+	}
 }
 
-function reduce_zindexes(){
-
-	// first, get an array of all of the current zIndexes
-
-	var zIndexes = new Array();
-	var uniq = {};
-
-	for(var i=0; i<pieces.length; i++){
-		var z = parseInt(pieces[i].style.zIndex);
-		if (uniq[z] != 1){
-			uniq[z] = 1;
-			zIndexes[zIndexes.length] = z;
-		}
+function storageAvailable(type){
+	try{
+		var storage = window[type];
+		var x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
 	}
-
-
-	// now sort them into order
-
-	var sortedZ = zIndexes.sort(doIntSort);
-
-
-	// new create a new hash of values to translate to
-
-	var newZ = {};
-	var c = 1;
-
-	for(var i=0; i<sortedZ.length; i++){
-		var z = sortedZ[i];
-		newZ[z] = c++;
-	}
-
-	// reset all the zIndexes
-
-	for(var i=0; i<pieces.length; i++){
-		var z = parseInt(pieces[i].style.zIndex);
-
-		pieces[i].style.zIndex = newZ[z];
+	catch(e){
+		return false;
 	}
 }
