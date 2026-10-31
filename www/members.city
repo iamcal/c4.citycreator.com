@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 	include('../include/login.php');
 
@@ -58,17 +58,17 @@ function delete_city(id){
 	<img src="images/title_members.gif" width="63" height="11"><br>
 	<br>
 
-<? if ($user_id){ ?>
+<?php if ($user_id){ ?>
 	<b>You are logged in as <?=HtmlSpecialChars($cfg['user']['username'] ?? '')?></b><br>
 	(<a href="logout.city">click here</a> to logout)<br>
 	<br>
 	As a member, you have your own personal "members page" which contains any city designs that you have created or been sent. To get back to this page at any time, simply click on the "members" tab at the bottom of the page. From this page you can send your cities as e-cards, share your city designs with other designers, continuing working on previously saved cities, print your city designs, and delete cities you don't want to keep any longer.<br>
 	<br>
-<? if (count($saved_rows)){ ?>
+<?php if (count($saved_rows)){ ?>
 	<b>You have saved the following cities:</b><br>
 
 	<table cellpadding="0" cellspacing="0" border="0">
-<?
+<?php
 	foreach($saved_rows as $row){
 ?>
 		<tr>
@@ -101,22 +101,22 @@ function delete_city(id){
 				<a href="javascript:print_city(<?=$row['id']?>,1);"><img src="images/button_print.gif" width="71" height="16" border="0"></a><br>
 				<img src="images/space.gif" width="71" height="8"><br>
 				<a href="javascript:delete_city(<?=$row['id']?>);"><img src="images/button_delete.gif" width="71" height="16" border="0"></a><br>
-<? if (!empty($row['gallery_date'])){ ?>
+<?php if (!empty($row['gallery_date'])){ ?>
 				<img src="images/space.gif" width="71" height="10"><br>
-<?
+<?php
 		$gallery_row = db_single(db_fetch("SELECT * FROM citycreator_gallery WHERE id=:id", array(
 			'id' => $row['gallery_id'] ?? 0,
 		)));
 		if (!empty($gallery_row['deleted'])){
 ?>
 				Removed from gallery
-<? }else{ ?>
+<?php }else{ ?>
 				<a href="Javascript:gallery_pop(<?=(int)($row['gallery_id'] ?? 0)?>);">Added to gallery <?=date('j/n/Y', $row['gallery_date'])?></a>
-<? } ?>
-<? }else{ ?>
+<?php } ?>
+<?php }else{ ?>
 				<img src="images/space.gif" width="71" height="8"><br>
 				<a href="gallery_add.city?saved_id=<?=$row['id']?>"><img src="images/button_gallery.gif" width="71" height="16" border="0"></a><br>
-<? } ?>
+<?php } ?>
 			</td>
 		</tr>
 		<tr>
@@ -125,27 +125,27 @@ function delete_city(id){
 		<tr>
 			<td colspan="5" bgcolor="#C3E1AA"><img src="images/space.gif" width="421" height="1"></td>
 		</tr>
-<?
+<?php
 	}
 ?>
 	</table>
-<? }else{ ?>
+<?php }else{ ?>
 	You have not yet saved any cities.<br>
 	<br>
 	Once you have created a city, it will be saved here so you can send it to other people, print it out or even continue working on it!<br>
-<? } ?>
+<?php } ?>
 	<br>
 
-<? }else{ ?>
+<?php }else{ ?>
 	<b>You are not currently logged in.</b><br>
 	Choose an option below:<br>
 	<br>
 	<a href="login.city<?=$extra?>"><img src="images/button_big_login.gif" width="173" height="26"></a><br>
 	<br>
 	<a href="signup.city<?=$extra?>"><img src="images/button_big_signup.gif" width="173" height="26"></a><br>
-<? } ?>
+<?php } ?>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 
 	if ($user_id){

@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$title = 'Frequently Asked Questions';
@@ -12,15 +12,15 @@
 
 	<img src="images/title_faq.gif" width="219" height="14"><br>
 	<br>
-<?
+<?php
 	foreach ($faqs as $row){
 ?>
 	<a href="#faq<?=(int)($row['id'] ?? 0)?>" class="faqlink"><?=HtmlSpecialChars($row['question'] ?? '')?></a><br>
-<?
+<?php
 	}
 ?>
 
-<?
+<?php
 	foreach ($faqs as $row){
 ?>
 	<table cellpadding="0" cellspacing="0" border="0">
@@ -32,7 +32,7 @@
 	<a name="faq<?=(int)($row['id'] ?? 0)?>"></a>
 	<b><?=HtmlSpecialChars($row['question'] ?? '')?></b><br>
 	<?=$row['answer'] ?? ''?><br>
-<?
+<?php
 	}
 ?>
 
@@ -43,7 +43,7 @@
 		<tr><td><img src="images/space.gif" width="424" height="12"></td></tr>
 	</table>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

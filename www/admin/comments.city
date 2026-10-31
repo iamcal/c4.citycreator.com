@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../../include/init.php');
 
 	if (!empty($_POST['ids'])){
@@ -28,7 +28,7 @@
 
 <h1>Pending Comments <span class="small">(<a href="comments2.city">Published Comments</a>)</span></h1>
 
-<? if ($count){ ?>
+<?php if ($count){ ?>
 
 <p>There are <?=(int)$count?> pending comments...</p>
 
@@ -43,7 +43,7 @@
 		<th>Location</th>
 		<th>&nbsp;</th>
 	</tr>
-<? foreach ($rows as $row){ ?>
+<?php foreach ($rows as $row){ ?>
 	<tr valign="top">
 		<td><?=HtmlSpecialChars($row['comment']  ?? '')?></td>
 		<td><?=HtmlSpecialChars($row['author']   ?? '')?></td>
@@ -54,20 +54,20 @@
 			<input type="radio" name="approve<?=(int)($row['id'] ?? 0)?>" id="approve<?=(int)($row['id'] ?? 0)?>0" value="0">&nbsp;<label for="approve<?=(int)($row['id'] ?? 0)?>0">Discard</label><br />
 		</td>
 	</tr>
-<? } ?>
+<?php } ?>
 </table>
 
 <p><input type="submit" class="Button" value="Approve / Discard" /></p>
 
 </form>
 
-<? }else{ ?>
+<?php }else{ ?>
 
 <p>There are no pending comments.</p>
 
-<? } ?>
+<?php } ?>
 
 
-<?
+<?php
 	include('foot.txt');
 ?>

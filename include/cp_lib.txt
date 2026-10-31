@@ -1,4 +1,4 @@
-<?	
+<?php	
 	$g_cookies = array();
 	$g_lasturl = "";
 

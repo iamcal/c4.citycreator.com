@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 	include('../include/login.php');
 
@@ -91,7 +91,7 @@
 		<tr><td class="text">Pages: <?=$markers?></td></tr>
 		<tr><td><img src="images/space.gif" width="23" height="8"></td></tr>
 		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
-<?
+<?php
 	$first = true;
 	foreach ($comments as $row){
 		$bits = array();
@@ -99,16 +99,16 @@
 		if (!empty($row['age']))      { $bits[] = HtmlSpecialChars($row['age']); }
 		if (!empty($row['location'])) { $bits[] = HtmlSpecialChars($row['location']); }
 ?>
-<? if (!$first){ ?>
+<?php if (!$first){ ?>
 		<tr><td bgcolor="#C3E1AA"><img src="images/space.gif" width="23" height="1"></td></tr>
-<? } ?>
+<?php } ?>
 		<tr><td class="text">
 			<img src="images/space.gif" width="23" height="16"><br>
 			<?=nl2br(chop(HtmlSpecialChars($row['comment'] ?? '')))?><br>
 			<b style="color: #37591B;"><?=implode(', ', $bits)?></b><br>
 			<img src="images/space.gif" width="23" height="12"><br>
 		</td></tr>
-<?
+<?php
 		$first = false;
 	}
 ?>
@@ -121,7 +121,7 @@
 
 	</table>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_comments.txt');
 	include('../templates/page_bottom.txt');

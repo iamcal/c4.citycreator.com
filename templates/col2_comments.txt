@@ -18,7 +18,7 @@
 		<img src="images/space.gif" width="100" height="4"><br>
 
 		DOB<br>
-		<? insert_date_drop('dob'); ?><br>
+		<?php insert_date_drop('dob'); ?><br>
 		<img src="images/space.gif" width="100" height="4"><br>
 
 		Hometown<br>

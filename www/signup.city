@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 	include('../include/login.php');
 
@@ -99,12 +99,12 @@
 	<br>
 	We require you to register for a few reasons. Firstly, it cuts down abuse of the system. Secondly, it means we can let you save older cities and work on them later. Thirdly, it means we can let you share cities, so you can collaborate with your friends.<br>
 
-<? if ($error){ ?>
+<?php if ($error){ ?>
 	<br>
 	<div class="errorbox">
 		<?=$error?>
 	</div>
-<? } ?>
+<?php } ?>
 
 	<br>
 	<b>Choose a username:</b><br>
@@ -127,7 +127,7 @@
 	</form>
 
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_signup.txt');
 	include('../templates/page_bottom.txt');

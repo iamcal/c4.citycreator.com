@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 	include('../include/login.php');
 
@@ -26,7 +26,7 @@
 	<br>
 	<a href="members.city" class="white">Click here</a> to return to the members page.<br>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

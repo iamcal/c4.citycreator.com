@@ -1,4 +1,4 @@
-<?
+<?php
 	include("../include/init.php");
 
 	$nav = 'build';
@@ -55,7 +55,7 @@ function pre_init(){
 		saveCookie(cookie_badcheck,'1',365);
 	}
 
-<?
+<?php
 	$buffer = '';
 	$count = 0;
 
@@ -75,7 +75,7 @@ function pre_init(){
 	echo $buffer;
 ?>
 
-<?
+<?php
 	$thumbs = array();
 
 	$ret = db_fetch('SELECT * FROM citycreator_bgs WHERE city_id=:city_id ORDER BY order_id ASC', [
@@ -88,14 +88,14 @@ function pre_init(){
 	}
 ?>
 
-<? if (isset($saved_row['id']) && $saved_row['id']){ ?>
+<?php if (isset($saved_row['id']) && $saved_row['id']){ ?>
 	bg_nosave(<?=$saved_row['city_bg_id']?>);
 	unserialize_all('<?=$saved_row['city_pieces']?>');
 	update_pieces();
-<? }else{ ?>
+<?php }else{ ?>
 	bg_nosave(1); // set default background
 	load_pieces();
-<? } ?>
+<?php } ?>
 
 }
 
@@ -103,7 +103,7 @@ function pre_init(){
 </script>
 <style>
 
-<? include('../templates/styles.txt'); ?>
+<?php include('../templates/styles.txt'); ?>
 
 #loading	{ position: relative; left:    0px; top: 0px; width: 720px; height: 422px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
 #canvasinner	{ position: relative; left:    0px; top: 0px; width: 720px; height: 422px; z-index: 1; background: url('images/build_canvas.gif'); display: none; }
@@ -127,17 +127,17 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 </head>
 <body onLoad="init()">
 
-<? include('../templates/inner_head.txt'); ?>
+<?php include('../templates/inner_head.txt'); ?>
 
 <div id="canvasinner">
 
 	<div id="logo"><a href="/"><img src="images/space.gif" width="219" height="27"></a></div>
 
 	<div id="navigation">
-<? include('../templates/tabs.txt'); ?>
+<?php include('../templates/tabs.txt'); ?>
 	</div>
 
-<?
+<?php
 	$left = 2;
 	$ret = db_fetch('SELECT * FROM citycreator_tabs WHERE city_id=:city_id  ORDER BY in_order ASC', [
 		'city_id' => $city_id,
@@ -147,7 +147,7 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 	<div id="tab<?=$row['id']?>off" class="taboff" style="width: <?=$row['width']?>px; left: <?=$left?>px;"><a href="javascript:tab(<?=$row['id']?>);"><img src="images/tab_<?=$row['id']?>_off.gif" width="<?=$row['width']?>" height="15"></a></div>
 	<div id="tab<?=$row['id']?>on"  class="tabon"  style="width: <?=$row['width']?>px; left: <?=$left?>px;"><img src="images/tab_<?=$row['id']?>_on.gif" width="<?=$row['width']?>" height="15"></div>
 	<div id="palette<?=$row['id']?>" class="palette"></div>
-<?
+<?php
 		$left += $row['width'];
 	}
 ?>
@@ -205,7 +205,7 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 	</div>
 </div>
 
-<? include('../templates/inner_foot.txt'); ?>
+<?php include('../templates/inner_foot.txt'); ?>
 
 
 <form action="save.city" method="post" name="sendform">

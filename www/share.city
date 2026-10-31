@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 	include('../include/login.php');
 
@@ -82,7 +82,7 @@
 
 	</form>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

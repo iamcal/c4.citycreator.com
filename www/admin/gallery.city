@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../../include/init.php');
 
 	$delete = $_GET['delete'] ?? 0;
@@ -41,18 +41,18 @@
 		<th>Location</th>
 		<th>&nbsp;</th>
 	</tr>
-<? foreach ($rows as $row){ ?>
+<?php foreach ($rows as $row){ ?>
 	<tr valign="top">
 		<td><a href="/gallery_pop.city?id=<?=(int)($row['id'] ?? 0)?>"><img src="/image.city?g=<?=(int)($row['id'] ?? 0)?>&mid=1" width="125" height="96"></td>
 		<td><?=HtmlSpecialChars($row['your_name']     ?? '')?></td>
 		<td><?=HtmlSpecialChars($row['your_location'] ?? '')?></td>
 		<td><a href="gallery.city?delete=<?=(int)($row['id'] ?? 0)?>&page=<?=$page?>">Discard</a></td>
 	</tr>
-<? } ?>
+<?php } ?>
 </table>
 
 <p><?=implode(' | ', $links)?></p>
 
-<?
+<?php
 	include('foot.txt');
 ?>

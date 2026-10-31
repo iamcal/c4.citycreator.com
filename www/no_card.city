@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$title = 'Error';
@@ -11,7 +11,7 @@
 	We couldn't find the card you requested - please check the URL you entered. If you copy and pasted the URL, make sure you included all of it.<br>
 	<br>
 	You can <a href="./">make a city of your own</a> if you like.
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

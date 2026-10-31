@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../../include/init.php');
 
 	list($user_count) = array_pad(db_list(db_fetch("SELECT COUNT(*) FROM citycreator_users")), 1, 0);
@@ -21,6 +21,6 @@
 <p>Number of cities in gallery: <b><?=(int)$gall_count?></b></p>
 <p>Number of comments: <b><?=(int)$com1_count?> published, <a href="comments.city"><?=(int)$com2_count?> pending</a></b></p>
 
-<?
+<?php
 	include('foot.txt');
 ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 	include('../include/login.php');
 
@@ -40,7 +40,7 @@
 ?>
 <html>
 <head>
-<title>City Creator - <? if ($auto){ ?>Print City<? }else{ ?>View City<? } ?></title>
+<title>City Creator - <?php if ($auto){ ?>Print City<?php }else{ ?>View City<?php } ?></title>
 <style>
 
 body {
@@ -54,11 +54,11 @@ img {
 
 </style>
 </head>
-<? if ($auto){ ?>
+<?php if ($auto){ ?>
 <body onload="window.print();">
-<? }else{ ?>
+<?php }else{ ?>
 <body>
-<? } ?>
+<?php } ?>
 
 <table width="100%" height="100%">
 	<tr valign="middle">

@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 ?>
 <html>
@@ -22,7 +22,7 @@ td {
 
 <h1>The citycreator.com activity tracker</h1>
 
-<?
+<?php
 	$days = (int)ceil((time() - mktime(0,0,0,8,20,2002))/(60*60*24));
 	$start = mktime(0,0,0,(int)date('m'),(int)date('d'),(int)date('Y'));
 	$max = 0;
@@ -56,7 +56,7 @@ td {
 	<tr bgcolor="#cccccc">
 		<td colspan="3">Cities</td>
 	</tr>
-<?
+<?php
 	$ret = db_fetch("SELECT * FROM citycreator_cards ORDER BY date_create DESC LIMIT 100");
 	foreach($ret['rows'] as $row){
 		$piece_count = count(explode(',', $row['pieces'] ?? ''));
@@ -67,13 +67,13 @@ td {
 		<td><?=$date?></td>
 		<td><?=$piece_count?> pieces</td>
 	</tr>
-<?
+<?php
 	}
 ?>
 	<tr bgcolor="#cccccc">
 		<td colspan="3">Top City</td>
 	</tr>
-<?
+<?php
 	$max_id = 0;
 	$max_count = 0;
 
@@ -98,7 +98,7 @@ td {
 		<td><?=$date?></td>
 		<td><?=$piece_count?> pieces</td>
 	</tr>
-<? } ?>
+<?php } ?>
 </table>
 
 </body>

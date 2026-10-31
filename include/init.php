@@ -1,4 +1,4 @@
-<?
+<?php
 	$cfg = array();
 
 	$cfg['db_host']			= 'localhost';

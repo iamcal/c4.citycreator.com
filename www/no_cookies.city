@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$title = 'Error';
@@ -11,7 +11,7 @@
 	It doesn't look like you have cookies enabled, so we can't log you in.<br>
 	<br>
 	Enable cookies on your browser then <a href="login.city">try logging in again</a> :)
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

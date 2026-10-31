@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../../include/init.php');
 
 	$delete = $_GET['delete'] ?? 0;
@@ -42,7 +42,7 @@
 		<th>Location</th>
 		<th>&nbsp;</th>
 	</tr>
-<? foreach ($rows as $row){ ?>
+<?php foreach ($rows as $row){ ?>
 	<tr valign="top">
 		<td><?=HtmlSpecialChars($row['comment']  ?? '')?></td>
 		<td><?=HtmlSpecialChars($row['author']   ?? '')?></td>
@@ -50,11 +50,11 @@
 		<td><?=HtmlSpecialChars($row['location'] ?? '')?></td>
 		<td><a href="comments2.city?delete=<?=(int)($row['id'] ?? 0)?>&page=<?=$page?>">Discard</a></td>
 	</tr>
-<? } ?>
+<?php } ?>
 </table>
 
 <p><?=implode(' | ', $links)?></p>
 
-<?
+<?php
 	include('foot.txt');
 ?>

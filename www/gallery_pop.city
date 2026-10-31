@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$id = (int)($_GET['id'] ?? 0);
@@ -40,12 +40,12 @@ img {
 
 	<img src="image.city?g=<?=$id?>"><br>
 	<br>
-<? if (!empty($row['your_name'])){ ?>
+<?php if (!empty($row['your_name'])){ ?>
 	By: <b><?=HtmlSpecialChars($row['your_name'])?></b><br>
-<? } ?>
-<? if (!empty($row['your_location'])){ ?>
+<?php } ?>
+<?php if (!empty($row['your_location'])){ ?>
 	From: <b><?=HtmlSpecialChars($row['your_location'])?></b><br>
-<? } ?>
+<?php } ?>
 	<br>
 	<a href="Javascript:window.close();">close window</a>
 

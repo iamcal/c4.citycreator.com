@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$title = 'Vote';
@@ -43,7 +43,7 @@
 			</table>
 			<img src="images/space.gif" width="117" height="9"><br>
 		</td>
-<?
+<?php
 			}else{
 ?>
 		<td align="right">
@@ -51,7 +51,7 @@
 			<img src="images/space.gif" width="117" height="5"><br>
 			<a href="vote.city?vote=<?=(int)($row['id'] ?? 0)?>"><img src="images/vote_button.gif" width="24" height="20"></a><br>
 		</td>
-<?
+<?php
 			}
 		}else{
 ?>
@@ -60,68 +60,68 @@
 			<img src="images/space.gif" width="117" height="5"><br>
 			<img src="images/vote_in.gif" width="117" height="20"><br>
 		</td>
-<?
+<?php
 		}
 	}
 
 	include('../templates/page_top.txt');
 ?>
 
-<? if ($voted){ ?>
+<?php if ($voted){ ?>
 	<img src="images/title_vote_thanks.gif" width="138" height="11"><br>
 	<br>
 	Thanks for your vote, check back next week to see which buildings made it through and vote for the next one! The results of this week's vote so far can be seen below.<br>
 	<br>
-<? }else{ ?>
+<?php }else{ ?>
 	<img src="images/title_vote.gif" width="173" height="12"><br>
 	<br>
 	Here's your chance to create the Castleford of your dreams on screen. Which one of the wierd/inpsiring buildings below do you want to be able to include in your Castleford? Cast your votes!<br>
 	<br>
-<? } ?>
+<?php } ?>
 
 	<table cellpadding="0" cellspacing="0" border="0">
 		<tr>
-<? insert_vote_cell(1); ?>
+<?php insert_vote_cell(1); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(2); ?>
+<?php insert_vote_cell(2); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(3); ?>
+<?php insert_vote_cell(3); ?>
 		</tr>
 		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
 		<tr>
-<? insert_vote_cell(4); ?>
+<?php insert_vote_cell(4); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(5); ?>
+<?php insert_vote_cell(5); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(6); ?>
+<?php insert_vote_cell(6); ?>
 		</tr>
 		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
 		<tr>
-<? insert_vote_cell(7); ?>
+<?php insert_vote_cell(7); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(8); ?>
+<?php insert_vote_cell(8); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(9); ?>
+<?php insert_vote_cell(9); ?>
 		</tr>
 		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
 		<tr>
-<? insert_vote_cell(10); ?>
+<?php insert_vote_cell(10); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(11); ?>
+<?php insert_vote_cell(11); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(12); ?>
+<?php insert_vote_cell(12); ?>
 		</tr>
 		<tr><td colspan="5"><img src="images/space.gif" width="407" height="18"></td></tr>
 		<tr>
-<? insert_vote_cell(13); ?>
+<?php insert_vote_cell(13); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(14); ?>
+<?php insert_vote_cell(14); ?>
 			<td><img src="images/space.gif" width="28" height="93"></td>
-<? insert_vote_cell(15); ?>
+<?php insert_vote_cell(15); ?>
 		</tr>
 	</table>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

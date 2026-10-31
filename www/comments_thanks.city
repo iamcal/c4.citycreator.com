@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$title = 'Comments';
@@ -13,7 +13,7 @@
 	<br>
 	<a href="comments.city">return to comments</a>
 
-<?
+<?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_normal.txt');
 	include('../templates/page_bottom.txt');

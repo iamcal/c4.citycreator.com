@@ -1,4 +1,4 @@
-<?
+<?php
 	include('../include/init.php');
 
 	$c = $_GET['c'] ?? '';
@@ -42,7 +42,7 @@
 <title>City Creator - Pickup Card</title>
 <style>
 
-<? include('../templates/styles.txt'); ?>
+<?php include('../templates/styles.txt'); ?>
 
 #board		{ position: relative; width: 469px; height: 364px; z-index: 10; clip: rect(0px 469px 364px 0px); }
 
@@ -60,7 +60,7 @@ function print_city(id){
 </head>
 <body>
 
-<? include('../templates/inner_head.txt'); ?>
+<?php include('../templates/inner_head.txt'); ?>
 
 <table border="0" cellpadding="0" cellspacing="0">
 	<tr valign="top">
@@ -83,13 +83,13 @@ function print_city(id){
 					<td><img src="images/home_col1_left.gif"  width="10"  height="379"></td>
 					<td><div class="text" style="padding: 8px;">
 
-<? if (!empty($card_row['message'])){ ?>
+<?php if (!empty($card_row['message'])){ ?>
 						<?=HtmlSpecialChars($card_row['your_name'] ?? '')?> (<?=HtmlSpecialChars($card_row['your_email'] ?? '')?>) made you a city and sent you this message:<br>
 						<br>
 						<i><?=nl2br(HtmlSpecialChars(chop($card_row['message'])))?></i><br>
-<? }else{ ?>
+<?php }else{ ?>
 						<?=HtmlSpecialChars($card_row['your_name'] ?? '')?> (<?=HtmlSpecialChars($card_row['your_email'] ?? '')?>) made you a city!<br>
-<? } ?>
+<?php } ?>
 						<br>
 						If you'd like to print this card out, <a href="Javascript:print_city('<?=HtmlSpecialChars($c)?>');">click here</a>.<br>
 						<br>
@@ -108,7 +108,7 @@ function print_city(id){
 		</td>
 		<td width="4"><img src="images/space.gif" width="4" height="422"></td>
 		<td width="477">
-<? include('../templates/tabs.txt'); ?>
+<?php include('../templates/tabs.txt'); ?>
 
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -118,7 +118,7 @@ function print_city(id){
 					<td><img src="images/pickup_left.gif" width="4" height="364"></td>
 					<td>
 			<div id="board" style="background: <?=$bg?>;">
-<?
+<?php
 	foreach(explode(',', $card_row['pieces'] ?? '') as $piece){
 		$bits = explode('|', $piece);
 		if (count($bits) == 5){
@@ -160,7 +160,7 @@ function print_city(id){
 	</tr>
 </table>
 
-<? include('../templates/inner_foot.txt'); ?>
+<?php include('../templates/inner_foot.txt'); ?>
 
 </body>
 </html>
