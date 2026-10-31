@@ -48,7 +48,6 @@
 			echo "CURL ERROR: $error<br>";
 		}
 
-		curl_close($curl);
 
 		$data = str_replace("\r", "", $data);
 

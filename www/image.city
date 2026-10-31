@@ -175,7 +175,6 @@
 		$h = floor($canvas_h * $fraction);
 		$new_img = ImageCreateTrueColor($w, $h);
 		imagecopyresized($new_img, $img, 0, 0, 0, 0, $w, $h, $canvas_w, $canvas_h);
-		ImageDestroy($img);
 		$img = $new_img;
 	}
 
@@ -186,7 +185,6 @@
 		$h = floor($canvas_h * $fraction2);
 		$new_img = ImageCreateTrueColor($w, $h);
 		imagecopyresized($new_img, $img, 0, 0, 0, 0, $w, $h, $canvas_w, $canvas_h);
-		ImageDestroy($img);
 		$img = $new_img;
 	}
 
@@ -194,5 +192,4 @@
 
 	Header('Content-type: image/png');
 	ImagePng($img);
-	ImageDestroy($img);
 ?>
