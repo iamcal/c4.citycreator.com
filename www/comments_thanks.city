@@ -4,7 +4,7 @@
 	$title = 'Comments';
 	$nav = 'comments';
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 	<img src="images/title_comments.gif" width="112" height="11"><br>
@@ -15,6 +15,6 @@
 
 <?php
 	include('../templates/page_mid.txt');
-	include('../templates/col2_normal.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/col2_normal.php');
+	include('../templates/page_bottom.php');
 ?>

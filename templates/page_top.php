@@ -19,7 +19,7 @@
 	<tr valign="top">
 		<td><img src="images/inner_logo.gif" width="243" height="45" usemap="#topbarmap"></td>
 		<td>
-<?php include(__DIR__.'/tabs.txt'); ?>
+<?php include(__DIR__.'/tabs.php'); ?>
 			<img src="images/inner_navbottom.gif" width="477" height="29"></td>
 	</tr>
 </table>

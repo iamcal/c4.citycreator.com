@@ -53,7 +53,7 @@
 	$title = 'Share Your City';
 	$nav = 'members';
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 	<b class="heading">Share A City</b><br>
@@ -89,6 +89,6 @@ function confirm_delete(){
 
 <?php
 	include('../templates/page_mid.txt');
-	include('../templates/col2_normal.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/col2_normal.php');
+	include('../templates/page_bottom.php');
 ?>

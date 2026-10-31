@@ -53,7 +53,7 @@
 	$title = 'Send City';
 	$nav = 'members';
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 	<form action="send.city" method="post">
 	<input type="hidden" name="done" value="1">
@@ -88,6 +88,6 @@
 
 <?php
 	include('../templates/page_mid.txt');
-	include('../templates/col2_normal.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/col2_normal.php');
+	include('../templates/page_bottom.php');
 ?>

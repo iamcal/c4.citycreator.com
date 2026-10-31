@@ -63,7 +63,7 @@
 	$markers = implode(' | ', $markers);
 
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 <script language="Javascript" src="gallery.js"></script>
@@ -105,5 +105,5 @@
 <?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_gallery.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/page_bottom.php');
 ?>

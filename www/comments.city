@@ -77,7 +77,7 @@
 	$markers = implode(' | ', $markers);
 
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 	<img src="images/title_comments.gif" width="112" height="11"><br>
@@ -123,6 +123,6 @@
 
 <?php
 	include('../templates/page_mid.txt');
-	include('../templates/col2_comments.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/col2_comments.php');
+	include('../templates/page_bottom.php');
 ?>

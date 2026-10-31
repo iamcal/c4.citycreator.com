@@ -134,7 +134,7 @@ div.palette	{ position: absolute; left: 4px; top: 53px; width: 231px; height: 33
 	<div id="logo"><a href="/"><img src="images/space.gif" width="219" height="27"></a></div>
 
 	<div id="navigation">
-<?php include('../templates/tabs.txt'); ?>
+<?php include('../templates/tabs.php'); ?>
 	</div>
 
 <?php

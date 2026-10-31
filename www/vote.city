@@ -64,7 +64,7 @@
 		}
 	}
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 <?php if ($voted){ ?>
@@ -123,6 +123,6 @@
 
 <?php
 	include('../templates/page_mid.txt');
-	include('../templates/col2_normal.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/col2_normal.php');
+	include('../templates/page_bottom.php');
 ?>

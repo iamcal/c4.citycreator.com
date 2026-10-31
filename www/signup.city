@@ -83,7 +83,7 @@
 	$title = 'Members Area';
 	$nav = 'members';
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 	<img src="images/title_members.gif" width="63" height="11"><br>
@@ -130,5 +130,5 @@
 <?php
 	include('../templates/page_mid.txt');
 	include('../templates/col2_signup.txt');
-	include('../templates/page_bottom.txt');
+	include('../templates/page_bottom.php');
 ?>

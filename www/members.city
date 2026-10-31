@@ -34,7 +34,7 @@
 	$title = 'Members Area';
 	$nav = 'members';
 
-	include('../templates/page_top.txt');
+	include('../templates/page_top.php');
 ?>
 
 <script language="Javascript" src="gallery.js"></script>
@@ -149,10 +149,10 @@ function delete_city(id){
 	include('../templates/page_mid.txt');
 
 	if ($user_id){
-		include('../templates/col2_normal.txt');
+		include('../templates/col2_normal.php');
 	}else{
 		include('../templates/col2_signup.txt');
 	}
 
-	include('../templates/page_bottom.txt');
+	include('../templates/page_bottom.php');
 ?>
